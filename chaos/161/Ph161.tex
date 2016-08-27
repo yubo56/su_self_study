@@ -52,13 +52,13 @@ The Lorenz Model arises as an approximation to atmospheric flow, starting with t
     \dot{Y} &= rX - Y - XZ \nonumber\\
     \dot{Z} &= b(XY - Z)
 \end{align}
-with parameters canonically set at $\sigma = 10, b = 8/3, r =27 > 1$ (note that $\sigma$ is 0.7 for an ideal gas, 1--4 for water and $>10$ for oils). Note that the equations are dissipative, i.e. volumes in phase space shrink in dynamics. Note also that they are \emph{autonomous} in that there is no explicit time dependence on the right hand side, a convenient property.
+with parameters canonically set at $\sigma = 10, b = 8/3, r =27 > 1$ (note that $\sigma$ is 0.7 for an ideal gas, 1--4 for water and $>10$ for oils). Note that the equations are dissipative, i.e.\ volumes in phase space shrink in dynamics. Note also that they are \emph{autonomous} in that there is no explicit time dependence on the right hand side, a convenient property.
 
 It turns out that the solutions to this system are chaotic, or in Lorenz's original terms ``aperiodic.'' We do many demonstrations that are no longer accessible, including \emph{strange attractors, Poincar\'e section} and \emph{1D maps}.
 
 The last is going to be covered in a later lecture, but in case I'm interested in simulating the former two, I look them up here (the website has discussions of these with the applets absent):
 \begin{itemize}
-    \item Poincar\'e section examines the intersection of an orbit with a particular plane in phase space, e.g. $Z=31$ is a common one. So we just simulate and examine every time that $Z=31$ is crossed, exactly what $(X,Y)$ are.
+    \item Poincar\'e section examines the intersection of an orbit with a particular plane in phase space, e.g.\ $Z=31$ is a common one. So we just simulate and examine every time that $Z=31$ is crossed, exactly what $(X,Y)$ are.
     \item Strange attractors are subsets of phase space with fractional dimension (fractals) that orbits at long times lie in.
 \end{itemize}
 
@@ -115,7 +115,7 @@ Let's first look at oscillations with no driving, $g=0$. We return to the second
     \ddot{x} + x &= \gamma(1-x^2)\dot{x}
 \end{align}
 
-We begin with the $\gamma=0$ solution, which is just $x(t) = ae^{it + \phi}$. Then, by secular perturbation theory \footnote{We learned as \emph{Lindstedt-Poincar\'e} in 106, but this seems to differ slightly; instead of setting up this slowly varying timescale as below, we tend to set $s = \omega t$ and expand $\omega = 1 + \epsilon \omega_1 +\dots$.}, when $\gamma \neq 0$, we can substitute $x(t) = A(t)\cos(t) + \gamma x_1 +\dots$ and also expect $A(t)$ to be some slow-varying function such that $\frac{\mathrm{d}^nA(t)}{\mathrm{d}t^n} \sim \gamma^n$ (this is introducing a second slow time scale, characteristic of secular perturbation theory apparently) and collect $O(\gamma^1)$ terms in the ODE to obtain
+We begin with the $\gamma=0$ solution, which is just $x(t) = ae^{it + \phi}$. Then, by secular perturbation theory\footnote{We learned as \emph{Lindstedt-Poincar\'e} in 106, but this seems to differ slightly; instead of setting up this slowly varying timescale as below, we tend to set $s = \omega t$ and expand $\omega = 1 + \epsilon \omega_1 +\dots$.}, when $\gamma \neq 0$, we can substitute $x(t) = A(t)\cos(t) + \gamma x_1 +\dots$ and also expect $A(t)$ to be some slow-varying function such that $\frac{\mathrm{d}^nA(t)}{\mathrm{d}t^n} \sim \gamma^n$ (this is introducing a second slow time scale, characteristic of secular perturbation theory apparently) and collect $O(\gamma^1)$ terms in the ODE to obtain
 \begin{align}
     \rtd{}{t}\left[ A\cos(t) + \gamma x_1 \right] + A\cos(t) + \gamma x_1 &= \gamma(1 - A^2\cos^2(t))\rd{}{t}(A\cos(t)) \nonumber\\
     - 2\sin(t)\rd{A}{t} + \gamma\rtd{x_1}{t} + \gamma x_1 &= -\gamma A\sin(t) + \gamma A^3\underbrace{\cos^2(t)\sin(t)}_{\frac{\sin(t)}{4} + \frac{\sin(3t)}{4}} \nonumber\\
@@ -156,7 +156,7 @@ This shows that there are free oscillations at any given $\gamma$.
 
 In general, when one drives an oscillator, one can either observe oscillations at both the free and driving frequency (in which case the power spectrum would show signatures at both frequencies), or we would see only a single frequency (and maybe harmonics). The latter case is called \emph{frequency locking}, when the driving frequency locks the free oscillation to some fixed frequency. The former case, when the driving and free oscillations are in an irrational ratio, is considered \emph{quasiperiodic}, because the sum of the two frequencies never repeats.
 
-Another way to define frequency locking is that while some parameters of the problem (e.g. drive amplitude, dissipation) are varied, all peaks in the power spectrum must remain fixed for some non-zero parameter space. If the frequency is not locked, at least some peaks should vary continuously as parameters are varied continuously. It turns out that frequency locking occurs for the vDP oscillator for high drive amplitude and small frequency differences, which is generally true.
+Another way to define frequency locking is that while some parameters of the problem (e.g.\ drive amplitude, dissipation) are varied, all peaks in the power spectrum must remain fixed for some non-zero parameter space. If the frequency is not locked, at least some peaks should vary continuously as parameters are varied continuously. It turns out that frequency locking occurs for the vDP oscillator for high drive amplitude and small frequency differences, which is generally true.
 
 The basic idea behind analyzing frequency locking (beyond the scope of this class) is to take equation of motion
 \begin{align}
@@ -188,7 +188,86 @@ does exhibit chaos for both signs apparently!
 
 \section{Day 4 --- One Dimensional Maps}
 
-Let's consider an arbitrary system $\dot{U} = f(U|r)$ with $r$ some control parameters and $U$ a vector of phase space coordinates, some autonomous system.
+Let's consider an arbitrary system
+\begin{equation}
+    \dot{U} = f(U|r)\label{4.eom}
+\end{equation}
+with $r$ some control parameters and $U$ a vector of phase space coordinates. We have studied solely such systems that are
+\begin{description}
+    \item[autonomous] no time appears on RHS
+    \item[deterministic] no stochasticity in EOM
+    \item[dissipative] volumes in phase space shrink, giving attractors
+\end{description}
+
+The structure of the phase space is of smooth \emph{vector fields} in $\mathbb{R}^N$, and the solution $U(t)$ is called a \emph{flow}. Casting in this language gives us strong categorizations of what is/isn't possible such as the \emph{Poincar\'e-Bendixson Theorem}.
+
+\subsection{Maps}
+
+In a map, we study an analogous system to\eqref{4.eom} but with a discrete timestep $U_{n+1} = F(U_n|r)$. The effect of the evolution on volumes in phase space is then given by the Jacobian
+\begin{align}
+    J = \abs{\ptd{F^{(i)}}{U^{(j)}}}
+\end{align}
+
+If $J = 1$ then the map is called \emph{volume preserving}, otherwise \emph{dissipative}. A few ways to map flows to maps:
+\begin{itemize}
+    \item Integrate the flow for $n\tau$ with $\tau$ some fixed time interval.
+    \item $N-1$ dimensional Poincar\'e section.
+\end{itemize}
+
+Some notes about flows:
+\begin{itemize}
+    \item Conventionally we scale maps to map $[0,1]$ onto itself.
+    \item Successive iterations of the map are notated $F^n(x_0)$.
+    \item Defining $x_f: F(x_f) = x_f$ fixed point, we can also ask the whether the fixed point is stable. The usual technique is to linearize the map about $x = x_f + \delta x$ and compute the Taylor expansion $\delta x_{n+1} = F'(x_f) \delta x_n$. We thus observe stability if $F'(x_f) < 1$ and instability for the opposite.
+\end{itemize}
+
+\subsubsection{Bifurcations}
+
+Suppose we have a map $F(x|a)$ with some parameter $a$. Then, as $a$ is varied, it is possible that the long time solution of the map changes. These changes are called bifurcations. We depict bifurcations by plotting long time stable $F^k(x|a)$ as a function of $a$. For instance, a period 2 orbit that is exhibited for some value of $a$ is plotted as two points $(a, x_1), (a, x_2)$ ($F^2(x_1) = F(x_2) = x_1$). Regions of $a$ for which a fixed point orbit exists show up as a single curve, and regions with chaotic dynamics show up as a continuum of points.
+
+To be able to better describe these chaotic regions, we look to a statistical description. The \emph{invariant measure} is the probability density of $x$ values that an orbit visits. We begin by defining the \emph{measure}.
+\begin{align}
+    \rho(x,x_0) \;\mathrm{d}x = \lim_{N \to \infty} \frac{1}{N} \times n(x,x_0)
+\end{align}
+where $\rho(x,x_0)$ is the density of points with initial condition $x_0$ and $n(x,x_0)$ is the number of times the orbit visits $[x-\mathrm{d}x, x+\mathrm{d}x]$ out of $N$ iterations.
+
+It turns out that this measure $\rho(x,x_0)$ doesn't actually depend on $x_0$ for almost all choices of $x_0$, so we define $\rho(x)$ the invariant measure of our attractor. Sometimes the invariant measure can be constructed directly from its definition
+\begin{align}
+    \rho_n(y) = \rho_{n+1}(y) = \int \mathrm{d}x\; \delta \left[ y - F(x) \right]\rho_n(x)
+\end{align}
+
+\subsubsection{Lyapunov Exponents}
+
+We can better quantify ``sensitive depndence on initial conditions'' by Lyapunov Exponents. We demand that for some pair of initial conditions $x_0, x_0 + \epsilon$ for the distance to grow as $\abs{\delta x_n} = \epsilon e^{n\lambda(x_0)}$. $\lambda(x_0)$ is the Lyapunov Exponent
+\begin{align}
+    \lambda(x_0) = \lim_{n \to \infty}\lim_{\epsilon \to 0}\log\abs{\frac{F^n(x_0 + \epsilon) - F^n(x_)}{\epsilon}} = \lim_{n \to \infty}\frac{1}{n}\log \abs{\rd{F^n(x_0)}{x_0}}
+\end{align}
+
+For systems with ergodic invariant measure, $\lambda$ is independent of $x_0$, so we will call $\lambda$ \emph{the Lyapunov Exponent of the map}. Note that the derivative is of the $n$-th iteration, and it turns out that
+\begin{align}
+    \lambda = \lim_{n \to \infty}\frac{1}{n}\log\abs{\rd{F^n(x_0)}{x_0}} = \lim_{n \to \infty}\frac{1}{n}\log \abs{F'(x_{n-1})F'(x_{n - 2})\dots F'(x_1) F'(x_0)} = \expvalue{\log\abs{F'}}
+\end{align}
+
+A positive $\lambda$ means that closely spaced initial conditions diverge exponentially, which is a signature of chaos and often used as a definition thereof.
+
+\section{Day 5 --- Two Dimensional Maps}
+
+One-dimensional maps are a restricted view of most dynamical systems, which cannot simply be iterated in reverse to find the initial condition (many non-invertible systems). On the other hand, integrating most dynamical equations in reverse can yield the preimage of a trajectory, which leads us to \emph{two}-dimensional maps as a faithful representation of a smooth flow in 3D phase space. Here, we will investigate four examples of 2D maps.
+
+\subsection{Henon Map}
+
+Consider the Henon map, which iterates
+\begin{align}
+    x_{n+1} &= y_n + 1 - ax_n^2 & y_{n+1} = bx_n
+\end{align}
+
+The Jacobian is $J =
+\begin{vmatrix}
+    -2ax_n & 1\\
+    b & 0
+\end{vmatrix} = |b|$, so for $b=1$ the map is area preserving and for $b < 1$ the map is dissipative, where areas in phase space contract. This is where the chaos lives. To get some intuition about what the strongly dissipitive limit looks like, we can substitute $x_{n+1} = bx_{n-1} + 1 - ax_n^2$ which for $b \to 0$ is simply $x_{n+1} \approx 1 - ax_n^2$ the quadratic map we studied in the previous chapter (that I ignored).
+
+Canonically chosen values are $a = 1.4, b = 0.3$.
 
 \end{document}
 
