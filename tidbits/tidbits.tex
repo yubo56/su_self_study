@@ -1,5 +1,6 @@
     \documentclass[10pt]{article}
-    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage, hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
     \usepackage[margin=0.5in, top=0.8in,bottom=0.8in]{geometry}
     \newcommand{\scinot}[2]{#1\times10^{#2}}
     \newcommand{\bra}[1]{\left<#1\right|}
@@ -33,7 +34,8 @@
     \everymath{\displaystyle}
     \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
 
-\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum height=2em]
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
 
 \begin{document}
 
@@ -41,28 +43,91 @@
 \rhead{Yubo Su --- Tidbits}
 \cfoot{\thepage/\pageref{LastPage}}
 
-Welcome back to my random tidbits file! When I come up with interesting problems, I will put them here.
+Welcome back to my random tidbits file! When I come up with interesting
+problems, I will put them here.
 
-\section{Probability Distributions}
+\section{Probability Distributions and Weight Loss}
 
-I was keeping track of my own weight when I realized that my scale was sufficiently inconsistent that my weight loss was dominated by the statistical noise. So then I was curious what the best way of mitigating this is, mean or median of multiple measurements. One would suspect it's the mean, or one would know simply by having taken any real statistics class, but I'm curious.
+I was keeping track of my own weight when I realized that my scale was
+sufficiently inconsistent that my weight loss was dominated by the statistical
+noise. So then I was curious what the best way of mitigating this is, mean or
+median of multiple measurements. One would suspect it's the mean, or one would
+know simply by having taken any real statistics class, but I'm curious.
 
 \subsection{Mean-based averaging}
 
-This one is easy. Assume we have $n$ iid variables $X_i$ with mean $\mu$ and variance $\sigma^2$, then the random variable corresponding to their average $\expvalue{X_i}$ has mean $\mu$ and variance $\frac{\sigma^2}{n}$, so standard deviation $\frac{\sigma}{\sqrt{n}}$. Thus, we have an unbiased estimator of the true mean and a variance that falls off like $\sim n^{-1/2}$.
+This one is easy. Assume we have $n$ iid variables $X_i$ with mean $\mu$ and
+variance $\sigma^2$, then the random variable corresponding to their average
+$\expvalue{X_i}$ has mean $\mu$ and variance $\frac{\sigma^2}{n}$, so standard
+deviation $\frac{\sigma}{\sqrt{n}}$. Thus, we have an unbiased estimator of the
+true mean and a variance that falls off like $\sim n^{-1/2}$.
 
 
 \subsection{Median-based averaging}
 
-This one is a bit more fun. Let's start with $n=3$, then defining $P(X)$ the probability density function and $F(x) = P(X \leq x)$ the cumulative distribution function, the probability density of the median $P_\mu(y)$ (forgive the reuse of notation, typing this up before work) is given
+This one is a bit more fun. Let's start with $n=3$, then defining $f(x)$ the
+probability density function and $F_X(x) = f_X(X \leq x)$ the cumulative
+distribution function, the probability density of the median $f_\eta(y)$ is
+given
 \begin{align}
-    P_\mu(y) = 2F(y)\left( 1 - F(y) \right)\label{1.mu}
+    f_\eta(y) = 6f_X(y)F_X(y)\left( 1 - F_X(y) \right)\label{1-eta}
 \end{align}
-the probability we choose one value greater than $y$ the median and one less, multiplied by $2$ for orderings. We verify that this is normalized in the case of a normally distributied $P(x)$ because the integral of \autoref{1.mu} is simply $2$ in the first term
+the probability we choose one value greater than $y$ the median and one less,
+multiplied by $6$ for orderings. This seems to be a bit difficult to verify to
+be normalized in the general case, or that
+\begin{align}
+    \int\limits_{-\infty}^{\infty}f_\eta(y)\;\mathrm{d}y &=
+    \int\limits_{-\infty}^{\infty}\left[
+        6f_X(y)\int\limits_{-\infty}^{y}f_X(\xi)\;\mathrm{d}\xi
+        \int\limits_{y}^{\infty}f_X(\zeta)\;\mathrm{d}\zeta
+    \right]\mathrm{d}y = 1
+\end{align}
 
-\subsection{Mode-based averaging?}
+Let's just verify this in the uniform distribution case, and leave the general
+case as an exercise to brighter colleagues. We consider the normalized uniform
+distribution $f_X(x) = 1, x \in [0,1]$, or $F_X(x) = x, x \in [0,1]$. We confirm
+that the expression for $f_\eta$ is normalized:
+\begin{align}
+    \int\limits_{0}^{1}6y(1-y)\;\mathrm{d}y = 1
+\end{align}
 
-% TODO
+We then wish to examine whether $f_\eta(y)$ is an unbiased estimator of $\mu$.
+Again, we begin with examining a sub-case, where $f_X(x)$ is symmetric about its
+mean $\mu$. This yields that $F_X(\mu) = 0.5$ and is odd about
+$\mu$\footnote{This is a slight abuse of terminology: we mean that $F_X(x - \mu)
+- 0.5 = -(F_X(-(x-\mu)) - 0.5)$.} and so that $F_X(y)\left( 1 - F_X(y) \right)$
+is also even/symmetric about $\mu$. Finally, this implies that $f_\eta(y)$ as
+defined in \autoref{1-eta} is also symmetric about $\mu$ and we are done.
+
+However, this analysis breaks down in the asymmetric case. We see that
+$F_X(y)\left( 1 - F_X(y) \right)$ is \emph{always} symmetric about the
+median $\eta$ of $f_X$, since $F_X(\eta) = 0.5$. In general, the mean and median
+of a probability distribution are not equal, so there is no guarantee that
+$\expvalue{f_\eta(y)} = \expvalue{f(y)}$, and indeed we can verify for some
+contrived probability distribution such as
+\begin{align}
+    f_X(x) &=
+    \begin{cases}
+        2 & 0 \leq x \leq 0.25\\
+        1 & 0.5 \leq x \leq 1\\
+        0 & \text{else}
+    \end{cases}
+\end{align}
+that $\expvalue{f_X(x)} = 0.4375$ while
+\begin{align}
+    \expvalue{f_\eta(y)} &= \int\limits_{0}^{0.25}24y^2(1-2y)\;\mathrm{d}y +
+    \int\limits_{0.5}^{1}6y^2(1-y)\;\mathrm{d}y\\
+    &\approx 0.4218
+\end{align}
+
+\subsection{Open Questions}
+
+\begin{itemize}
+    \item If we have discretized measurements, what are the statistics of
+        mode-based averaging?
+    \item Did I actually normalize the median-based averaging correctly, for a
+        general probability distribution?
+\end{itemize}
 
 \end{document}
 

@@ -1,5 +1,6 @@
     \documentclass[10pt]{article}
-    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage, hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
     \usepackage[margin=0.5in, top=0.8in,bottom=0.8in]{geometry}
     \newcommand{\scinot}[2]{#1\times10^{#2}}
     \newcommand{\bra}[1]{\left<#1\right|}
@@ -33,7 +34,8 @@
     \everymath{\displaystyle}
     \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
 
-\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum height=2em]
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
 
 \begin{document}
 
@@ -46,71 +48,120 @@
 
 \section{Day 1 --- Lorenz Model}
 
-The Lorenz Model arises as an approximation to atmospheric flow, starting with the description of the simplest mode of a convection zone and dropping terms that represent higher harmonics. This gives the following system of equations
+The Lorenz Model arises as an approximation to atmospheric flow, starting with
+the description of the simplest mode of a convection zone and dropping terms
+that represent higher harmonics. This gives the following system of equations
 \begin{align}
     \dot{X} &= -\sigma(X - Y) \nonumber\\
     \dot{Y} &= rX - Y - XZ \nonumber\\
     \dot{Z} &= b(XY - Z)
 \end{align}
-with parameters canonically set at $\sigma = 10, b = 8/3, r =27 > 1$ (note that $\sigma$ is 0.7 for an ideal gas, 1--4 for water and $>10$ for oils). Note that the equations are dissipative, i.e.\ volumes in phase space shrink in dynamics. Note also that they are \emph{autonomous} in that there is no explicit time dependence on the right hand side, a convenient property.
+with parameters canonically set at $\sigma = 10, b = 8/3, r =27 > 1$ (note that
+$\sigma$ is 0.7 for an ideal gas, 1--4 for water and $>10$ for oils). Note that
+the equations are dissipative, i.e.\ volumes in phase space shrink in dynamics.
+Note also that they are \emph{autonomous} in that there is no explicit time
+dependence on the right hand side, a convenient property.
 
-It turns out that the solutions to this system are chaotic, or in Lorenz's original terms ``aperiodic.'' We do many demonstrations that are no longer accessible, including \emph{strange attractors, Poincar\'e section} and \emph{1D maps}.
+It turns out that the solutions to this system are chaotic, or in Lorenz's
+original terms ``aperiodic.'' We do many demonstrations that are no longer
+accessible, including \emph{strange attractors, Poincar\'e section} and
+\emph{1D maps}.
 
-The last is going to be covered in a later lecture, but in case I'm interested in simulating the former two, I look them up here (the website has discussions of these with the applets absent):
+The last is going to be covered in a later lecture, but in case I'm interested
+in simulating the former two, I look them up here (the website has discussions
+of these with the applets absent):
 \begin{itemize}
-    \item Poincar\'e section examines the intersection of an orbit with a particular plane in phase space, e.g.\ $Z=31$ is a common one. So we just simulate and examine every time that $Z=31$ is crossed, exactly what $(X,Y)$ are.
-    \item Strange attractors are subsets of phase space with fractional dimension (fractals) that orbits at long times lie in.
+    \item Poincar\'e section examines the intersection of an orbit with a
+        particular plane in phase space, e.g.\ $Z=31$ is a common one. So we
+        just simulate and examine every time that $Z=31$ is crossed, exactly
+        what $(X,Y)$ are.
+    \item Strange attractors are subsets of phase space with fractional
+        dimension (fractals) that orbits at long times lie in.
 \end{itemize}
 
 \section{Day 2 --- Pendula}
 
 \subsection{Ideal Pendulum}
 
-The ideal pendulum is given by EOM $\rtd{\theta}{t} + \frac{g\sin\theta}{l} = 0$. We can plot phase space $(\theta, \omega = \dot{\theta})$ for solution trajectories. There are a few features of interest
+The ideal pendulum is given by EOM $\rtd{\theta}{t} + \frac{g\sin\theta}{l} =
+0$. We can plot phase space $(\theta, \omega = \dot{\theta})$ for solution
+trajectories. There are a few features of interest
 \begin{itemize}
-    \item Fixed points --- Two types, elliptic (stable but not asymptotically stable) and hyperbolic (unstable)
+    \item Fixed points --- Two types, elliptic (stable but not asymptotically
+        stable) and hyperbolic (unstable)
     \item Limit Cycles --- Solution trajectories.
-    \item Homoclinic orbits --- Trajectories that connect the same hyperbolic fixed point. Heteroclinic orbits connect two different hyperbolic fixed points.
+    \item Homoclinic orbits --- Trajectories that connect the same hyperbolic
+        fixed point. Heteroclinic orbits connect two different hyperbolic fixed
+        points.
 \end{itemize}
 
-We can write down the Hamiltonian for this system $H = \frac{J^2}{2I} + Mgl(1-\cos\theta)$. The importance of being able to do is that phase space volume is preserved. What do we mean by this? Well, consider Hamilton's canonical equations
+We can write down the Hamiltonian for this system $H = \frac{J^2}{2I} +
+Mgl(1-\cos\theta)$. The importance of being able to do is that phase space
+volume is preserved. What do we mean by this? Well, consider Hamilton's
+canonical equations
 \begin{align}
     \dot{\theta} = \pd{H}{J} &= \frac{J}{I} \nonumber\\
     \dot{J} = -\pd{H}{\theta} &= -Mgl\sin\theta
 \end{align}
-and if we define some phase space velocity $\vec{V} = \left( \dot{\theta}, \dot{J} \right)$ we can verify that $\nabla \cdot \vec{V} = 0$. In other words, no attractors in phase space can exist for a Hamiltonian system.
+and if we define some phase space velocity $\vec{V} = \left( \dot{\theta},
+\dot{J} \right)$ we can verify that $\nabla \cdot \vec{V} = 0$. In other words,
+no attractors in phase space can exist for a Hamiltonian system.
 
 \subsection{Dissipative Pendulum}
 
-New EOM is $\rtd{\theta}{t} + \eta \rd{\theta}{t} + \frac{g}{l}\sin\theta = 0$. This creates a fixed point at $(0,0)$, asymptotically stable (``linearly stable'' is his terminology), and $(\pi,0)$ is suddenly linearly unstable, in that we will exponentially deviate from the point (before, we still periodically returned).
+New EOM is $\rtd{\theta}{t} + \eta \rd{\theta}{t} + \frac{g}{l}\sin\theta = 0$.
+This creates a fixed point at $(0,0)$, asymptotically stable (``linearly
+stable'' is his terminology), and $(\pi,0)$ is suddenly linearly unstable, in
+that we will exponentially deviate from the point (before, we still
+periodically returned).
 
 \subsection{Driving + damping}
 
-Let's drive the pendulum and rescale variables to $\rtd{\theta}{t} + \gamma \rd{\theta}{t} + \sin\theta = g\cos(\omega_D t)$. Under small angle approximation (small amplitude of solution and driving), we know how to solve this. What about with larger driving amplitudes though?
+Let's drive the pendulum and rescale variables to $\rtd{\theta}{t} + \gamma
+\rd{\theta}{t} + \sin\theta = g\cos(\omega_D t)$. Under small angle
+approximation (small amplitude of solution and driving), we know how to solve
+this. What about with larger driving amplitudes though?
 
-To handle this, we wish to solve numerically, which is much easier with an autonomous system than with an explicit time dependence. Thus, we introduce $\dot{\theta}_D = \omega_D$ and suddenly we can write
+To handle this, we wish to solve numerically, which is much easier with an
+autonomous system than with an explicit time dependence. Thus, we introduce
+$\dot{\theta}_D = \omega_D$ and suddenly we can write
 \begin{align}
     \dot{\theta} &= \omega \nonumber\\
     \dot{\omega} &= -\gamma \omega - \sin\theta + g\cos(\theta_D) \nonumber\\
     \dot{\theta}_D &= \omega_D
 \end{align}
 
-This is a handy trick to get an autonomous system at the expense of an additional equation in the system of ODEs. We might also suspect that the behavior of the system changes when we get an extra dimension of phase space.
+This is a handy trick to get an autonomous system at the expense of an
+additional equation in the system of ODEs. We might also suspect that the
+behavior of the system changes when we get an extra dimension of phase space.
 
-Well, let's start by observing that $\vec{\nabla} \cdot \vec{v} = -\gamma$ so phase space volumes contract. This might naively lead us to conclude that any volume of initial conditions must contract to a point, but we mustn't be hasty; the Lorenz model also has contracting phase space volumes. Instead, we know that we might approach a limit cycle in a way such that while the overall phase space contracts, the space might ``stretch'' along some dimensions and contract in others such that chaotic dynamics are observed! The demonstrations illustrating this are broken, but we will definitely simulate this.
+Well, let's start by observing that $\vec{\nabla} \cdot \vec{v} = -\gamma$ so
+phase space volumes contract. This might naively lead us to conclude that any
+volume of initial conditions must contract to a point, but we mustn't be hasty;
+the Lorenz model also has contracting phase space volumes. Instead, we know
+that we might approach a limit cycle in a way such that while the overall phase
+space contracts, the space might ``stretch'' along some dimensions and contract
+in others such that chaotic dynamics are observed! The demonstrations
+illustrating this are broken, but we will definitely simulate this.
 
 \section{Day 3 --- Nonlinear Oscillators}
 
 \subsection{Van der Pol Oscillator}
 
-Consider the following model of a harmonic oscillator to include a non-linear damping. Damping is negative at small amplitudes to model local instability, but is positive for larger amplitudes; we thus expect the system to have some limit cycles where the average damping vanishes. The EOM is
+Consider the following model of a harmonic oscillator to include a non-linear
+damping. Damping is negative at small amplitudes to model local instability,
+but is positive for larger amplitudes; we thus expect the system to have some
+limit cycles where the average damping vanishes. The EOM is
 \begin{align}
     \ddot{x} - \gamma(1-x^2)\dot{x} + x &= g\cos(\omega_D t)
 \end{align}
 
 \subsubsection{Small $\gamma$, secular perturbation}
 
-Let's first look at oscillations with no driving, $g=0$. We return to the second order EOM for this. The natural starting point is to also examine for small $\gamma$ and try Lindstedt-Poincar\'e perturbation theory (also called secular perturbation theory) on
+Let's first look at oscillations with no driving, $g=0$. We return to the
+second order EOM for this. The natural starting point is to also examine for
+small $\gamma$ and try Lindstedt-Poincar\'e perturbation theory (also called
+secular perturbation theory) on
 \begin{align}
     \ddot{x} + x &= \gamma(1-x^2)\dot{x}
 \end{align}
