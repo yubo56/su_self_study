@@ -129,6 +129,8 @@ that $\expvalue{f_X(x)} = 0.4375$ while
         general probability distribution?
 \end{itemize}
 
+\clearpage
+
 \section{Feynman-style number theory}
 
 In case you have not yet seen
@@ -137,29 +139,190 @@ quite a fun read! Would recommend. That sort of thinking inspired this section.
 
 \subsection{Asymptotic behavior of primes}
 
-It's a well-known result (Prime Number Theorem) that the primes asymptote as
-$\frac{n}{\log n}$. Can we try to get a handle on this behavior via application
-of continuum analysis?
+Call $\Pi(N)$ the prime number counting function, how many primes are below $N$.
+The Prime Number Theorem is a well known result that postulates two
+approximations to $\Pi(N)$:
+\begin{align}
+    \Pi(N) \approx \frac{N}{\log N} \approx \int\limits_{2}^{N}\frac{1}{\log
+    x}\;\mathrm{d}x
+\end{align}
+
+We will attempt to derive the latter approximation. Consider $P(N)$ the
+probability density that $N$ is a prime, roughly the statement ``if I randomly
+choose a number near $N$, what is the probability it is a prime?'' The
+relationship between $P(N)$ and $\Pi(N)$ is then
+\begin{align}
+    P(N) &= \rd{\Pi}{N}
+\end{align}
+
+To attempt to derive $P(N)$, consider that a number $N$ is prime iff it is not
+divisible by any primes less than it. Thus, we have that
+\begin{align}
+    P(N) &\approx \prod_{p \in primes}^{N}\left( 1 - \frac{1}{p} \right)
+\end{align}
+
+Taking a leap of faith, we recognize that two consecutive contributions to the
+product above differ roughly by $\frac{1}{P(p)}$, the local inverse probability
+density that $p$ is prime. Thus, we can rewrite each contribution as
+$\frac{1}{P(p)}$ contributions of $\left( 1 - \frac{1}{p} \right)^{P(p)}$, and
+then allow $p$ to run over all integers. We thus propose the approximation
+\begin{align}
+    P(N) &\approx \prod_{k=2}^N\left( 1 - \frac{1}{k} \right)^{P(k)}
+\end{align}
+
+Taking the logarithm of both sides, we obtain
+\begin{align}
+    \log P(N) &= \sum\limits_{k=2}^{N}P(k)\log\left( 1 - \frac{1}{k} \right)
+\end{align}
+
+Approximating the right hand side with an integral, we obtain
+\begin{align}
+    \log P(N) &= \int\limits_{2}^{N}P(k)\log\left( 1 - \frac{1}{k}
+    \right)\;\mathrm{d}k
+\end{align}
+
+Differentiating both sides now, we obtain
+\begin{align}
+    \frac{P'(N)}{P(N)} &= P(N)\log\left( 1 - \frac{1}{N} \right)\\
+    \rd{P}{N} &= P^2\log\left( 1 - \frac{1}{N} \right)\\
+    \frac{\mathrm{d}P}{P^2} &= \mathrm{d}N \log\left( 1 - \frac{1}{N} \right)\\
+    -\frac{1}{P} &= N\log\left( 1 - \frac{1}{N} \right) - \log(N - 1)\\
+    P(N) &= \frac{1}{\log(N - 1) + O(1)}\\
+    &\approx \frac{1}{\log N}
+\end{align}
+
+This recovers the expression $\Pi(N) &= \int\limits_{2}^{N}P(N)\;\mathrm{d}N =
+\int\limits_{2}^{N}\frac{1}{\log N}\;\mathrm{d}N$.
+
+\subsection{Scratch work}
+
+\textbf{What follows is me working out loud, which is a lot less interesting.}
+
+It's a well-known result (Prime Number Theorem) that the number of primes below
+$N$ is approximated by $\Pi(N) = N/\log(N)$. Can we try to get a handle on this
+behavior via application of continuum analysis?
 
 One way of thinking of the problem is to instead look at it from a probabilistic
-standpoint, that arbitrarily choosing a number $n$, it has probability $\sim
-\frac{\log n}{n}$ of being prime. Instead of thinking of asymptotic behavior, we
-think in probabilities.
+standpoint, that arbitrarily choosing a number $n$, it has some probability of
+being prime. Can we estimate this probability and recover the prime number
+theorem? We should be able to obtain
+\begin{align}
+    \rd{\Pi}{N} &\approx \frac{\log N - 1}{\log^2(N)}
+\end{align}
+
+\subsubsection{First attempt}
 
 Let's consider the probability that some large number $N$ is divisible by some
-divisor $d$; this is just $\frac{1}{d}$. The probability that $N$ is prime then
-just the product
+divisor $d$; this is just $\frac{1}{d}$. We might think that the probability
+that $N$ is prime then just the product of probabilities it is not divisible by
+any number smaller than it
 \begin{align}
-    PRIME(N) &= \product_{k=2}^N \left( 1 - \frac{1}{k} \right)
+    P(N) &= \prod_{k=2}^N \left( 1 - \frac{1}{k} \right)\label{2-prod}
 \end{align}
 
 To try to evaluate this product, we take the logarithm of both sides
 \begin{align}
-    \log PRIME(N) &= \sum\limits_{k=2}^{N} \log \left( 1 - \frac{1}{k} \right)\\
+    \log P(N) &= \sum\limits_{k=2}^{N} \log \left( 1 - \frac{1}{k}
+    \right)\\\label{2-intapprox}
     &\approx \int\limits_{k=2}^{N}\log \left( 1 - \frac{1}{k} \right)\;\mathrm{d}k\\
 \end{align}
 
-Thus, the probability that a number is
+To compute this antiderivative, it's easiest to separate the integrand
+\begin{align}
+    \int\limits_{}^{}\log\left( \frac{k-1}{k} \right)\;\mathrm{d}k &=
+    \int\limits_{}^{}\log (k-1)\;\mathrm{d}k - \int\limits_{}^{}\log
+    k\;\mathrm{d}k\\
+    &= (k-1)\log(k-1) - k - k\log(k) + k + C\\
+    &= k\log\left( 1 - \frac{1}{k} \right) - \log(k-1) + C
+\end{align}
+with $C$ some undetermined constant that becomes irrelevant when we consider the
+definite integral. Thus, we return to our primary expression
+\begin{align}
+    \log P(N) &\sim N\log\left( 1 - \frac{1}{N} \right) - \log(N - 1)
+\end{align}
+where we drop the evaluation of the antiderivative at $k=2$ since it's a
+constant in the scaling. Then, we find
+\begin{align}
+    P(N) &\sim \frac{\left( 1 - \frac{1}{N} \right)^N}{N-1} =
+    \frac{1/e}{N-1}
+\end{align}
+
+In fact, a quick google search shows that \autoref{2-prod} evaluates to
+$\frac{1}{N}$, and so our result is pretty reasonable; we're off by a constant
+factor since our integral approximation \autoref{2-intapprox} misestimates by a
+constant factor, no surprise there. So where did we go wrong?
+
+\subsubsection{Second attempt}
+
+The iusse, as some people smarter than me may have noticed, is that our
+expression \autoref{2-prod} is faulty: we should only be multiplying \emph{over
+primes}! While this is correct, primes are not divisible by any primes smaller
+than them, it's a bit difficult to handle under our present formalism, where we
+only attach a probability to a number's being prime or not.
+
+Let's think carefully about how to integrate this into our formalism. If a
+number $k$ is not prime, it should contribute $1$ to our product, and if it is
+prime then it should contribute $\left( 1 - \frac{1}{k} \right)$. Since we're
+doing products, the natural way to ``average'' is via geometric mean, so we
+modify expression \autoref{2-prod} to
+\begin{align}
+    P(N) &= \prod\limits_{k=2}^{N}\left( 1 - \frac{1}{k}
+    \right)^{P(k)}\label{2-improved}
+\end{align}
+where we average each $k$-th contribution as $\left( 1 - \frac{1}{k}
+\right)^{P(k)}(1)^{1-P(k)}$ geometric mean\footnote{Intuitively, this means that
+we need to multiply $\frac{1}{P(k)}$ of these factors before getting a single
+one that contributes, i.e.\ the distance between primes.}. Doing the usual trick,
+\begin{align}
+    \log P(N) &= \int\limits_{2}^{N}P(k) \log\left( 1 - \frac{1}{k}
+    \right)\;\mathrm{d}k
+\end{align}
+
+Differentiating both sides,
+\begin{align}
+    \frac{P'(N)}{P(N)} &= P(N)\log\left( 1 - \frac{1}{N} \right)\\
+    \rd{P}{N} &= P^2(N)\log\left( 1 - \frac{1}{N} \right)\\
+    \frac{\mathrm{d}P}{P^2} &= \log\left( 1 - \frac{1}{N} \right)\mathrm{d}N\\
+    -\frac{1}{P} &= N\log\left( 1 - \frac{1}{N} \right) - \log\left( N - 1
+    \right)\\
+    P(N) &\approx \frac{1}{\log N}
+\end{align}
+
+Interestingly, this expression is a better approximation to $\Pi(N)$ than the
+aforementioned $\Pi(N) \approx \frac{N}{\log(N)}$, so it looks like this is a
+satisfactory conclusion, namely that
+\begin{align}
+    \Pi(N) \approx \int\limits_{2}^{N}\frac{1}{\log(m)}\;\mathrm{d}m
+\end{align}
+
+However, we pursue one last direction of thought out of curiosity.
+
+\subsubsection{Third attempt}
+
+In \autoref{2-improved}, maybe we only need to check up until $\sqrt{N}$ in the
+product. Continuing our thought above, we obtain
+\begin{align}
+    \frac{P'(N)}{P(N)} &= P(\sqrt{N})\log\left( 1 - \frac{1}{\sqrt{N}} \right)\\
+    &\approx -\frac{P(\sqrt{N})}{\sqrt{N}}
+\end{align}
+
+At this point, our expression doesn't seem particularly amenable to solution,
+but we can at least check how well $P(N) \sim \frac{1}{\log N}$ works:
+\begin{align}
+    \frac{-\frac{1}{N\log^2N}}{\frac{1}{\log N}} &= -\frac{2}{\sqrt{N}\log N}\\
+    -\frac{1}{N\log N} &= \frac{2}{\sqrt{N}\log N}
+\end{align}
+which doesn't seem to work too well. How about the original estimate $P(N) \sim
+\frac{\log N - 1}{\log^2 N}$?
+\begin{align}
+    \frac{\frac{2 - \log N}{N\log^3 N}}{\frac{\log N - 1}{\log^2 N}} &=
+    - \frac{\frac{\log\sqrt{N} - 1}{\log^2\sqrt{N}}}{\sqrt{N}}\\
+    \frac{2 - \log N}{N\log N \left( \log N - 1 \right)} &= \frac{2\left( 2 -
+    \log N\right)}{\sqrt{N}\log^2 N}
+\end{align}
+which is even worse. The obvious problem is that the $\sqrt{N}$ has nowhere tho
+go since the probability density $P$ depends only on the logarithm of $N$. So
+interesting, considering the further optimization of only going up to $\sqrt{N}$
+ruins the accuracy of our prediction!
 
 \end{document}
-
