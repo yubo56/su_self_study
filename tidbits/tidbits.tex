@@ -129,5 +129,37 @@ that $\expvalue{f_X(x)} = 0.4375$ while
         general probability distribution?
 \end{itemize}
 
+\section{Feynman-style number theory}
+
+In case you have not yet seen
+\url{http://www.lbatalha.com/blog/feynman-on-fermats-last-theorem} yet, it's
+quite a fun read! Would recommend. That sort of thinking inspired this section.
+
+\subsection{Asymptotic behavior of primes}
+
+It's a well-known result (Prime Number Theorem) that the primes asymptote as
+$\frac{n}{\log n}$. Can we try to get a handle on this behavior via application
+of continuum analysis?
+
+One way of thinking of the problem is to instead look at it from a probabilistic
+standpoint, that arbitrarily choosing a number $n$, it has probability $\sim
+\frac{\log n}{n}$ of being prime. Instead of thinking of asymptotic behavior, we
+think in probabilities.
+
+Let's consider the probability that some large number $N$ is divisible by some
+divisor $d$; this is just $\frac{1}{d}$. The probability that $N$ is prime then
+just the product
+\begin{align}
+    PRIME(N) &= \product_{k=2}^N \left( 1 - \frac{1}{k} \right)
+\end{align}
+
+To try to evaluate this product, we take the logarithm of both sides
+\begin{align}
+    \log PRIME(N) &= \sum\limits_{k=2}^{N} \log \left( 1 - \frac{1}{k} \right)\\
+    &\approx \int\limits_{k=2}^{N}\log \left( 1 - \frac{1}{k} \right)\;\mathrm{d}k\\
+\end{align}
+
+Thus, the probability that a number is
+
 \end{document}
 
