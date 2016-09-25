@@ -320,5 +320,43 @@ The Jacobian is $J =
 
 Canonically chosen values are $a = 1.4, b = 0.3$.
 
+\subsection{Baker's Map}
+
+The Baker's map is given by the mapping
+\begin{align}
+    x_{n+1} &=
+    \begin{cases}
+        \lambda_a x_n & y_n < \alpha\\
+        (1 - \lambda_b) + \lambda_b x_n & y_n > \alpha
+    \end{cases}
+    y_{n+1} &=
+    \begin{cases}
+        y_n/\alpha & y_n < \alpha\\
+        (y_n - \alpha) / \beta & y_n > \alpha
+    \end{cases}
+\end{align}
+with $\beta = 1-\alpha, \lambda_a + \lambda_b \leq 1$, so points in 2D phase
+space on either side of the $y=\alpha$ boundary are mapped to $x < \lambda_a, x
+> 1-\lambda_b$ respectively. Then when $\lambda_a + \lambda_b < 1$, the total
+phase space area decreases and the map is \emph{dissipative}. Qualitatively, we
+see that the number of vertical striations increases with increasing iterations,
+specifically with the $n$th iteration we have $\binom{n}{m}$ stries of width
+$\lambda_a^m\lambda_b^{n-m}$.
+
+Note that for the Bakers' map, the attractor is \emph{hyperbolic} in that,
+crudely, at each point phase space both an expanding and contracting direction
+can be defined such that the directions vary continuously across the map and are
+bounded to be nonzero. In the case of the Bakers' map, the map is expanding in
+the $y$ direction and contracting in the $x$ across the entire map and so is
+hyperbolic. Not many maps/flows are hyperbolic, but many useful properties can
+be proven in such cases.
+
+\subsection{Other 2D maps}
+
+Other interesting maps are the Duffing and the Kaplan-Yorke, also simulated in
+our tests. We are unable to simulate the Baker's Map because its chaos relies on
+how regions of phase space map and our simulation module is not presently
+powerful enough to handle this.
+
 \end{document}
 
