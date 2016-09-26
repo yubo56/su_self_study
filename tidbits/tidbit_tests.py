@@ -42,7 +42,8 @@ def var_median(fig,
     # expected fit, a = 1/2 here
     true_vars = [np.var(trial) for trial in medians]
     median_vars = [1 / (10 * (n - 1)) for n in n_vals]
-    new_median_vars = [1 / (4 * n) * weird_new_func(n, 3) / weird_new_func(n, 1)
+    new_median_vars = [1 / (2 * (n - 1)) *
+                       weird_new_func(n, 3) / weird_new_func(n, 1)
                        for n in n_vals]
     mean_vars = [1 / (12 * n) for n in n_vals]
 
@@ -62,9 +63,15 @@ def var_median(fig,
 
     # plot a few ratios
     axes = fig.add_subplot(1, 1, 1)
-    axes.semilogx(n_vals, [b / a for a, b in zip(true_vars, median_vars)])
-    axes.set_title('Ratio of predicted median variance to actual')
+    axes.semilogx(n_vals,
+                  [b / a for a, b in zip(true_vars, median_vars)],
+                  label='Old')
+    axes.semilogx(n_vals,
+                  [b / a for a, b in zip(true_vars, new_median_vars)],
+                  label='New')
+    axes.set_title('Ratio of predicted median variances to actual')
     axes.set_xlabel('n')
+    axes.legend()
     fig.savefig('medians_ratio_to_real.png')
     fig.clf()
 
@@ -82,7 +89,7 @@ if __name__ == '__main__':
     FIG = plt.figure()
     ROOT = 3
 
-    _, BAR = var_median(FIG, root=ROOT, max_power=9, num_samples=1000)
+    _, BAR = var_median(FIG, root=ROOT, max_power=9, num_samples=10000)
     plt.hist(BAR[4])
-    plt.title('Histogram of 1000 medians at n={}**4'.format(ROOT))
+    plt.title('Histogram of 10000 medians at n={}**4'.format(ROOT))
     plt.savefig('medians_slice_hist.png')
