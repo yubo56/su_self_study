@@ -385,12 +385,23 @@ and the other term
                 \sum\limits_{k=0}^{m}\frac{\left( -1 \right)^k}{k!(2k+3)}
             }{\
                 \sum\limits_{k=0}^{m}\frac{\left( -1 \right)^k}{k!(2k+1)}
-            }
+            }\label{1-another_result}
 \end{align}
 and we find that we reproduce our previous result for $N=3$. Crunching the
 numbers, we get something slightly better, though since factorials fall off so
 quickly the change is very slight. The results are shown in
 \autoref{fig:1-ratios}.
+
+\subsubsection{Further ruminations (TBC)}
+
+The approximation where we took the integral over interval $[-a/\sqrt{m},
+a/\sqrt{m}]$ seems to be the last point of contention, as it bears noting that
+if we allow a degree of freedom in the choice of range $\left[
+    -Ba/\sqrt{m}, Ba/\sqrt{m}
+\right]$ that our choice of $B$ propagates as a factor of $B^{2k+3}$ to the
+summation in the numerator of \autoref{1-another_result} and $B^{2k+1}$ to the
+summation in the denominator. Thus, our choice of $B$ has nontrivial
+implications on the exact prefactor we obtain.
 
 \subsection{Open Questions}
 
