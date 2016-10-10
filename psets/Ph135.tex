@@ -1,0 +1,154 @@
+    \documentclass[10pt]{article}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings, times}
+    \usepackage{geometry}
+    \newcommand{\scinot}[2]{#1\times10^{#2}}
+    \newcommand{\bra}[1]{\left<#1\right|}
+    \newcommand{\ket}[1]{\left|#1\right>}
+    \newcommand{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+    \newcommand{\abs}[1]{\left|#1\right|}
+    \newcommand{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand{\tensor}[1]{\overleftrightarrow{#1}}
+    \let\Re\undefined
+    \let\Im\undefined
+    \newcommand{\ang}[0]{\text{\AA}}
+    \newcommand{\mum}[0]{\upmu \mathrm{m}}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \newcommand{\expvalue}[1]{\left<#1\right>}
+    \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
+    \usepackage[font=scriptsize]{subcaption}
+    \everymath{\displaystyle}
+    \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
+
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
+
+\begin{document}
+
+\pagestyle{fancy}
+\rhead{Yubo Su}
+\cfoot{\thepage/\pageref{LastPage}}
+
+\section{PS1--4}
+
+\begin{enumerate}[(a)]
+    \item \emph{\textbf{Problem:} Consider
+        $\omega = \omega_0\sin\abs{\frac{ka_0}{2}}$
+        a phonon dispersion relation in 1D. Compute the resulting density of
+        states.}
+
+        We know that the density of states $\mathcal{D}(\omega)$ is the phase
+        space density in momentum space that produces frequency $\omega$ under
+        the dispersion relation. Thus, with $s$ indexing the number of types of
+        phonons,
+        \begin{align}
+            \mathcal{D}(\omega) &= \sum_s
+                    \int \frac{1}{2\pi}\delta(\omega - \omega(k))\mathrm{d}k\\
+                &= \sum_s
+                    \int \frac{1}{2\pi} \frac{1}{\omega'(k_0)}\delta(k - k_0)
+                    \mathrm{d}k
+        \end{align}
+        where $\omega(k_0) = \omega$, or $k_0 = \frac{2}{a_0}
+        \arcsin\frac{\omega}{\omega_0}$. Thus,
+        \begin{align}
+            \omega'(k_0) &=
+                \frac{a_0\omega_0}{2}\cos\abs{\arcsin{\frac{\omega}{\omega_0}}}\\
+                &= \frac{a_0\omega_0}{2}\sqrt{1 - \frac{\omega^2}{\omega_0^2}}\\
+                &= \frac{a_0}{2}\sqrt{\omega_0^2 - \omega^2}\\
+            \mathcal{D}(\omega) &= \sum_s
+                \int \frac{1}{2\pi}\frac{2}{a_0}
+                    \left( \omega_0^2 - \omega^2 \right)^{-1/2}
+                    \delta(k - k_0)\;\mathrm{d}k\\
+                &= \frac{2}{\pi a_0}\left( \omega_0^2 - \omega^2 \right)^{-1/2}
+        \end{align}
+
+    \item \emph{\textbf{Problem:} Consider now an arbitrary dispersion relation
+        in three dimensions $\omega(\vec{k})$. Compute the dependence of the
+        density of states near a maximum of $\omega$.}
+
+        Returning to our earlier expression
+        \begin{align}
+            \mathcal{D}(\omega) &= \sum_s
+                \int \frac{1}{2\pi}\delta(\omega - \omega(\vec{k}))
+                \mathrm{d}\vec{k}\label{1-integral}
+        \end{align}
+
+        Ignoring the $\sum_s$ for now, we note that the $\delta$ function
+        constrains us to a $2$-dimensional subspace. What subspace? Let's expand
+        $\omega(\vec{k})$ about its maximum
+        \begin{align}
+            \omega(\vec{k}) &= \omega_{\max} - \sum_{i=1}^3 a_i\xi_i^2
+        \end{align}
+        for positive $a_i$, $\xi_i = k_i - k_{\max}$. Then, the subspace of
+        $\mathrm{d}\vec{k}$ that we are constrained to is that satisfying
+        \begin{align}
+            \omega - \omega_{\max} + a_i\xi_i^2 &= 0\\
+            a_i\xi_i^2 &= \Delta \omega\label{1-ellipse}
+        \end{align}
+        where we define $\Delta \omega > 0 = \omega_{\max} - \omega$. This is
+        clearly an ellipse; call the set of points satisfying~\eqref{1-ellipse}
+        $S_W$, then~\eqref{1-integral} becomes
+        \begin{align}
+            \mathcal{D}(\omega) &= \sum_s
+                \int \frac{1}{2\pi}\frac{1}{v_g}\mathrm{d}S_\omega
+        \end{align}
+        with $v_g = \rd{\omega(k)}{k}$ the normal derivative to $S_\omega$,
+        generalizing from the 1-D property
+        $\delta(f(a)) = \frac{1}{f'(a_0)}\delta(a - a_0)$.
+
+        If we follow up to here, then let's switch to polar coordinates to
+        evaluate the integral. $S_\omega$ becomes
+        $r^2 \mathrm{d}\theta\mathrm{d}\phi$ and we obtain
+        \begin{align}
+            \int \frac{\mathrm{d}S_\omega}{v_g} &=
+                \int\limits_{0}^{2\pi}\int\limits_{0}^{\pi}
+                    \frac{r^2(\theta,\phi)\mathrm{d}\theta\mathrm{d}\phi}
+                        {v_g(\theta,\phi)}
+        \end{align}
+
+        But then it's clear that $r^2 \propto \Delta \omega$, since
+        $r^2 = \sum\limits_{i=1}^{3}\xi_i^2$. At the same time,
+        $v_g(\theta,\phi)$ is a linear combination of the $\xi_i$ and so scales
+        like $\sqrt{\Delta \omega}$. Thus, the above integral scales like
+        $\sqrt{\Delta \omega} = \sqrt{\omega_{\max} - \omega}$.
+
+        I know this ending is a bit shaky; can probably come up with something
+        better by explicitly finding $r^2(\theta,\phi)$, which will depend on
+        the $a_i$ coefficients.
+
+    \item \emph{\textbf{Problem:} Consider now a 2D dispersion relation. Compute
+        $\mathcal{D}$ near a saddle point of $\omega(\vec{k})$.}
+
+        Following our above reasoning, we want to know what shape $S_\omega$
+        takes on. Near a saddle point in $\omega$, a plane of constant $\omega$
+        forms a hyperbolic cross section. Thus, if we follow the same sort of
+        dimensional analysis as before, we'd expect $S_\omega \propto r \propto
+        \sqrt{\Delta \omega}$, and still $v_g \propto \sqrt{\Delta \omega}$ and
+        obtain a constant dependence on $\Delta \omega$. This is indeed correct
+        for $\vec{k}$ near an extremum of $\omega$, but not quite correct for a
+        saddle point.
+
+        We err in our analysis because we can only consider a finitely large
+        range of $k$, and with a hyperbolic cross section, a change in $\Delta
+        \omega$ not only changes the $S_w$ we are looking at but also the $k$ at
+        which we cut off our cross section. This should be a pretty small
+        correction, but the correct dependence which is $\log \Delta
+        \omega/\omega$ is also pretty small so I'm satisfied for now.
+\end{enumerate}
+
+\end{document}
+

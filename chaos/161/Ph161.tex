@@ -46,7 +46,7 @@ height=2em]
 \tableofcontents
 \clearpage
 
-\section{Day 1 --- Lorenz Model}
+\section{Lorenz Model}
 
 The Lorenz Model arises as an approximation to atmospheric flow, starting with
 the description of the simplest mode of a convection zone and dropping terms
@@ -79,7 +79,9 @@ of these with the applets absent):
         dimension (fractals) that orbits at long times lie in.
 \end{itemize}
 
-\section{Day 2 --- Pendula}
+\clearpage
+
+\section{Pendula}
 
 \subsection{Ideal Pendulum}
 
@@ -144,7 +146,9 @@ space contracts, the space might ``stretch'' along some dimensions and contract
 in others such that chaotic dynamics are observed! The demonstrations
 illustrating this are broken, but we will definitely simulate this.
 
-\section{Day 3 --- Nonlinear Oscillators}
+\clearpage
+
+\section{Nonlinear Oscillators}
 
 \subsection{Van der Pol Oscillator}
 
@@ -301,7 +305,9 @@ and EOM
 \end{align}
 does exhibit chaos for both signs apparently!
 
-\section{Day 4 --- One Dimensional Maps}
+\clearpage
+
+\section{One Dimensional Maps}
 
 Let's consider an arbitrary system
 \begin{equation}
@@ -402,7 +408,9 @@ A positive $\lambda$ means that closely spaced initial conditions diverge
 exponentially, which is a signature of chaos and often used as a definition
 thereof.
 
-\section{Day 5 --- Two Dimensional Maps}
+\clearpage
+
+\section{Two Dimensional Maps}
 
 One-dimensional maps are a restricted view of most dynamical systems, which
 cannot simply be iterated in reverse to find the initial condition (many
@@ -468,6 +476,90 @@ Other interesting maps are the Duffing and the Kaplan-Yorke, also simulated in
 our tests. We are unable to simulate the Baker's Map because its chaos relies on
 how regions of phase space map and our simulation module is not presently
 powerful enough to handle this.
+
+\clearpage
+
+\section{Power}
+
+One interesting potential criterion for chaos is the power spectrum of a signal.
+Periodic/quasidperiodic signals all give peaks at countably many frquencies,
+while chaotic dynamics tend to yield broad bands in the power spectrum.
+Nonetheless, due to observation time constraints and their impact on observed
+power spectra, we must characterize the impacts of these phenomena first before
+using this as a solid criterion.
+
+If we had an infinite time series $y(t)$, then the power spectrum of the signal
+is given simply by $P(\omega) \propto \abs{y(\omega)}^2$, and our above
+analysis would make sense. However, realistically we have a signal $y_i$
+measured in discrete intervals over a finite interval $t \in [0,T]$, so the
+power spectrum is estimated by the Fourier series
+\begin{align}
+    \tilde{y}_k &= \sum\limits_{j=0}^{N-1}y_j \exp \left( \frac{2\pi ijk}{N}
+    \right)\\
+    &= \sum\limits_{j}^{}y(t_j) \exp \left( i \omega_k t_j \right)
+\end{align}
+and the power spectrum is given
+\begin{align}
+    P(\omega) \simeq
+    \frac{1}{N^2}
+    \begin{cases}
+        \abs{\tilde{y}_0}^2 & \omega = 0\\
+        \abs{\tilde{y}_{N/2}}^2 & \omega = \frac{\pi N}{T}\\
+        \left( \abs{\tilde{y}_k}^2 + \abs{\tilde{y}_{N-k}}^2 \right)
+    \end{cases}
+\end{align}
+
+To figure out how well this power spectrum estimates the real power spectrum of
+some signal $y(t)$ that we sample with $y_i$, we can realize that our
+$\tilde{y}_k$ can be written in terms of $y(t)$ like
+\begin{align}
+    \tilde{y}(t) &= \left[ \left( y(t) \times H(t,T) \right) * S(t,T) \right]
+    \times S(t,\Delta)
+\end{align}
+with $S(t,\tau)$ a Dirac comb with period $\tau$ and $H$ the tophat function.
+The convolution represents the periodic assumption, and the product by the Dirac
+comb samples in intervals of $\Delta = \frac{T}{N}$. But we can compute the FT
+of the above function to be
+\begin{align}
+    \tilde{y}(\omega) &\propto \left[
+        \left(
+            \tilde{y}(\omega) * \tilde{H}\left( \omega, \frac{2\pi}{T} \right)
+        \right) \times S\left( \omega,\frac{2\pi}{T} \right)
+    \right] * S\left( \omega, \frac{2\pi}{\Delta} \right)
+\end{align}
+where we know that the FT of $H$ is just a sinc function with width $\sim 1/T$
+and falls off like $\omega^{-1}$.  The prescription is thus ``Take the ideal FT,
+broaden with a sinc, sample every $2\pi/T$, then convolve to periodically
+repeat.'' This last convolution means that all higher frequencies will just be
+aliased back into the Nyquist range $\pm \pi/\Delta$.
+
+It is also possible to convolve by a less sharp windowing function than $H$,
+which means that the FT falls off faster and the ideal power spectrum is less
+broadened.
+
+\section{Lyapunov Exponents}
+
+Lyapunov exponents describe how quickly nearby trajectories diverge. In one
+dimension, it was just $\expvalue{\log \abs{\rd{f}{x}}}$. Let's generalize this.
+
+\subsection{The Jacobian}
+
+Consider the map $U_{n+1} = F(U_n)$. We want to know how different the
+trajectory is starting from $U_0$ and from some small change. This is described
+by the Jacobian matrix
+\begin{align}
+    K_{ij}(U_n) &= \pd{F_i}{U^{(j)}}\Bigg|_{U=U_n}
+\end{align}
+and so if two trajectories are at $U_n, U_{n} + \epsilon_n$ then $\epsilon_{n+1}
+= \mathbf{K}(U_n)\epsilon_n$.
+
+For continuous systems $\dot{U} = f(U)$, then we have instead $\rd{\epsilon}{t}
+= \mathbf{K(U)}\epsilon$ for $K^{(ij)} = \pd{f_i}{U^{(j)}}$. But if we introduce
+a new matrix $\mathbf{M}$ satisfying
+$\rd{\mathbf{M}}{t} = \mathbf{K}(U(t))\mathbf{M}$, then we have
+\begin{align}
+    \pd{U^{(i)}(t)}{U^{(j)}(t_0)} = M_{ij}(t,t_0)
+\end{align}
 
 \end{document}
 

@@ -280,12 +280,12 @@ to computationally verify our result. The obtained results are as follows in
 \autoref{fig:1-medians}.
 \begin{figure}[!h]
     \centering
-    \begin{subfigure}{0.8\textwidth}
+    \begin{subfigure}{0.75\textwidth}
         \centering
         \includegraphics[width=\textwidth]{medians_asymptotic.png}
         \caption{Plot of medians as a function of $N$}
     \end{subfigure}
-    \begin{subfigure}{0.8\textwidth}
+    \begin{subfigure}{0.75\textwidth}
         \centering
         \includegraphics[width=\textwidth]{medians_slice_hist.png}
         \caption{Histogram of $1000$ medians at a single value of $N$}
@@ -609,5 +609,37 @@ which is even worse. The obvious problem is that the $\sqrt{N}$ has nowhere tho
 go since the probability density $P$ depends only on the logarithm of $N$. So
 interesting, considering the further optimization of only going up to $\sqrt{N}$
 ruins the accuracy of our prediction!
+
+\clearpage
+\section{Ellipsoidal surface areas}
+
+We all know that ellipses do not have a closed form for their arclength, but
+their enclosed area is well defined, namely $A = \pi ab$. This can be seen by
+defining an ellipse as a projection of a circle by unevenly scaling the axes,
+and noting that an area element $\mathrm{d}x\mathrm{d}y$ scales linearly with
+the projection factors.
+
+One series approximation to the arclength can be computed by noting the
+following: if $S$ is the arclength of an ellipse, then $S\mathrm{d}n$ for some
+small $\mathrm{d}n$ estimates the change in area by enlarging the ellipse.
+
+Systematically, exhibit an ellipse with axis lengths $a,b$, such that its area
+is $\pi ab$. Then, say that we extend both axes by some $\mathrm{d}\epsilon$,
+then its area becomes
+$\pi ab + \pi (a+b)\mathrm{d} \epsilon + \mathcal{O}(\mathrm{d}\epsilon^2)$
+, and the change in area is
+$\pi (a+b) \mathrm{d}\epsilon + \mathcal{O}(\mathrm{d}\epsilon^2)$.
+This implies that the arclength of an ellipse to first order is $\pi(a+b)$,
+which seems to make sense for $a=b$.
+
+This isn't particularly radical, and neither is this entire section, but we can
+verify it to be reasonable for three dimensions as well:
+\begin{align}
+    V &= \frac{4}{3}\pi abc + \frac{4}{3}\pi(ac + bc + ab)\mathrm{d}\epsilon
+        + \mathcal{O}(\mathrm{d}\epsilon^2)\\
+    S &= \frac{4}{3}\pi\left( ac + bc + ab \right)
+        + \mathcal{O}(\mathrm{d}\epsilon)
+\end{align}
+which again agrees with intuition for $a=b=c$
 
 \end{document}
