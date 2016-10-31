@@ -46,6 +46,30 @@ height=2em]
 \tableofcontents
 \clearpage
 
+\section{Key Concepts}
+
+Note that Poincar\'e sections allow us to turn flows into maps!
+
+We begin the class by exploring various chaotic maps, but a few
+characterizations that we've learned include:
+\begin{description}
+    \item[Power Spectrum] Typically periodic trajectories have very sharp peaks
+        in their power spectrum, and quasi-periodic trajectories simply have
+        peaks at frequencies that do not share a common factor. Chaotic
+        trajectories have a broad power spectrum.
+
+    \item[Lyapunov Exponents] Lyapunov exponents let us quantify, for a given
+        initial condition, how much phase space is expanding at that point. A
+        positive Lyapunov Exponent implies nearby points diverge exponentially
+        and are indicative of chaotic dynamics.
+
+    \item[Entropy] Kolmogorov Entropy is a measure of how many partitions a
+        single partitioning in a partition maps to under a map. In non-chaotic
+        dynamics, we would expect certain partitions to map strictly within
+        themselves, but if this mixing is always positive, then the Kolmogorov
+        Entropy is positive and suggests chaotic dynamics.
+\end{description}
+
 \section{Lorenz Model}
 
 The Lorenz Model arises as an approximation to atmospheric flow, starting with
@@ -537,6 +561,8 @@ It is also possible to convolve by a less sharp windowing function than $H$,
 which means that the FT falls off faster and the ideal power spectrum is less
 broadened.
 
+\clearpage
+
 \section{Lyapunov Exponents}
 
 Lyapunov exponents describe how quickly nearby trajectories diverge. In one
@@ -561,5 +587,619 @@ $\rd{\mathbf{M}}{t} = \mathbf{K}(U(t))\mathbf{M}$, then we have
     \pd{U^{(i)}(t)}{U^{(j)}(t_0)} = M_{ij}(t,t_0)
 \end{align}
 
-\end{document}
+\subsection{Oseledec's Multiplicative Ergodic Theorem}
 
+Developing the above formalism lets us introduce the concept of how quickly a
+particular area of phase space is expanding in all dimensions. Denote
+$\lambda_i$ to be the exponential rate of growth along dimension $i$ (e.g.\ in
+one dimension, $\lambda = \expvalue{\log\abs{\rd{f}{x}}}$).
+
+Oseldec's Multiplicative Ergodic Theorem lets us quantify this:
+\begin{center}
+    For almost any initial point $U(t_0)$, there exists an orthonormal set of
+    vectors $v_i(t_0)$ spanning the phase space such that
+    \begin{align}
+        \lambda_i &= \lim_{t \to\infty} \frac{1}{t-t_0}
+            \log\abs{\mathbf{M}(t, t_0) v_i(t_0)}
+    \end{align}
+    exists. Moreover, for an ergodic system\footnote{Ergodic means that over
+    time, the system visits all points in phase space.}, these $\lambda_i$ do
+    not depend on the choice of initial point $U(t_0)$.
+
+    The $\lambda_i$ can be calculated as the log of the eigenvalues of
+    $\sqrt{\mathbf{M}^T\mathbf{M}}$.
+\end{center}
+
+This $\lambda_i$ quantifies the exponential rate of expansion along a given
+$v_i$. The inspiration for the calculation of the $\lambda_i$ can be observed to
+be taken from the SVD of $\mathbf{M} = \mathbf{WDV}^T$.
+
+The best way to compute Lyapunov exponents is to use a sort of Gram-Schmidt
+algorithm, where we start with three orthonormal vectors, evolve, then
+renormalize. This procedure can be imagined to converge on the correct $v_i$,
+and their corresponding $\lambda_i$ can be determined by seeing how much
+stretching occurs upon evolution.
+
+The defining signature of chaos can be considered a positive Lyapunov
+exponent. On the other hand, fixed pointts have all negative exponents, limit
+cycles have one zero exponent (along the cycle) and $m$-frequency quasiperiodic
+orbits have $m$ zero eigenvalues, along the $m$ directions. Recall that a
+quasiperiodic orbit can be thought of as an $m$-torus in phase space, and so at
+any point, there are $m$ many directions that we can go in to stay on the torus.
+
+\subsection{Lyapunov Exponents for the Lorenz Model}
+
+Recall the Lorenz equations are given
+\begin{align}
+    \dot{X} &= -\sigma(X-Y)\\
+    \dot{Y} &= rX - Y - XZ\\
+    \dot{Z} &= XY - bZ
+\end{align}
+
+A small perturbation $\epsilon = (\delta X, \delta Y, \delta Z)$ evolves by the
+linearized equations
+\begin{align}
+    \delta\dot{X} &= -\sigma(\delta X-\delta Y)\\
+    \delta\dot{Y} &= r\delta X - \delta Y - (\delta X\,Z + X\, \delta Z)\\
+    \delta\dot{Z} &= \delta X\,Y + X\, \delta Y - b\, \delta Z
+\end{align}
+or
+\begin{align}
+    \rd{\epsilon}{t} &= \underbrace{\begin{bmatrix}
+        -\sigma & \sigma & 0\\
+        r - Z & -1 & -X\\
+        Y & X & -b
+    \end{bmatrix}}_{\mathbf{K}}\epsilon
+\end{align}
+where $\mathbf{K}$ is the Jacobian.
+
+To calculate the Lyapunov exponents, we can simply start with the three basis
+vectors $\hat{\imath}, \hat{\jmath}, \hat{k}$, then we evolve and project as per
+the above prescription.
+
+\clearpage
+
+\section{Entropy}
+
+In the limit of equally likely outcomes, entropy is defined as the log of the
+number of such outcomes, also associated with the ``information capacity.'' For
+$N$ possible microstates with different probabilities $p_i$, we can generalise
+entropy to be
+\begin{align}
+    I = S = \expvalue{\log p_i} = -\sum\limits_{i=1}^{N}p_i\log p_i
+\end{align}
+with $p_i$ the probability the microstate is occupied.
+
+\subsection{In Dynamical Systems}
+
+In a dynamical system, we partition its phase space $V$ into $N$ boxes $B_i$,
+and if we define some probability density $\rho(\vec{x})$ with $\vec{x} \in V$,
+then the probability of being in box $B_i$ is simply
+$p_i = \int_{B_i}\rho(\vec{x})\mathrm{d}x$,
+and the entropy of this partitioning
+$\left\{ B_i \right\}$
+is written
+\begin{align}
+    S &= -\sum\limits_{i=1}^{N}p_i\log p_i
+\end{align}
+
+While this definition is not inherently helpful without specifying the
+$\left\{B_i\right\}$, how it scales is of interest to us in two ways:
+\begin{description}
+    \item[Information Density] --- How does $S$ scale with decreasing partition
+        size $B_i$.
+    \item[Kolmogorov Entropy] --- How does $S$ evolve in time?
+\end{description}
+
+\subsection{Kolmogorov Entropy}
+
+$S$'s evolution in time directly tells us about the amount of
+uncertainty/information in the dynamical system over time. Suppose we know the
+initial conditions to some finite accuracy, then the Kolmogorov Entropy of the
+system tells us how our prediction of some future state degrades due to
+``sensitive dependence on initial conditions.''
+
+Suppose we choose some $\left\{ B_i \right\}$, then for any map $M$ we can also
+compute the pre-image $\left\{ M^{-1} B_i\right\}$, then we can choose a
+partition of $B_{ij} = B_i \cap M^{-1}(B_j)$, a much finer partitioning. Call
+this partitioning $\beta_1$ (since we are examining one preimage prior). The
+entropy of this partitioning is
+$S(\beta_1) = -\sum\limits_{ij}^{} p_{ij}\log p_{ij}$.
+
+The Kolmogorov entropy, the change in entropy as we increasingly fine grain (as
+we look at pre-images for multiple steps back), is given
+\begin{align}
+    K &= \lim_{m \to \infty} \frac{1}{m}S(\beta_m)
+\end{align}
+
+A positive $K$ can be used to define chaos. This is because $K$ has positive
+growth, i.e.\ partitions are refined indefinitely, only when nearby trajectories
+diverge (moreover, they diverge an amount that does not asymptotically vanish,
+else they could just approach a limit configuration).
+
+It turns out that the Kolmogorov entropy $K$ is bounded by the sum of the
+positive Lyapunov exponents $K \leq \sum\limits_{\lambda^i > 0}^{}\lambda^i$.
+
+\clearpage
+
+\section{Fractional dimensions}
+
+Chaotic attractors are in general not a neat subspace of their embedded space,
+not usually an area or a curve but something in between. We can characterize
+this by a fractional dimension, and we call the structure a fractal.
+
+\subsection{Capacity}
+
+The \emph{capacity} of a set (incidentally often equal to the Hausdorff
+dimension, discussed below) can be defined as follows. Consider if we have a set
+in $m$ dimensional space, then we tile the space with cubes of side length
+$\epsilon$. The capacity is defined as
+\begin{align}
+    D_C &= \lim_{\epsilon \to 0}\frac{\log N(\epsilon)}{\log(\epsilon^{-1})}
+\end{align}
+where $N(\epsilon)$ is the number of cubes containing a point in the set.
+
+We apply this to the Cantor set, where we successively remove the middle third
+of every line segment still remaining, starting with the segment $[0,1]$. If we
+choose $\epsilon_m = 3^{-m}$, then we note that at every choice of $\epsilon_m$,
+exactly $2^m$ of them contain points from the Cantor set. Thus, the capacity is
+computed to be
+$D_C = \lim_{m \to \infty}\frac{m\log 2}{m \log 3} = \frac{\log 2}{\log 3}$
+
+To apply this concept to a dynamical set is non-trivial: generally, iterating
+for too long saturates the $\epsilon$ partition, and moreover small
+perturbations in initial conditions can drastically change which boxes contain
+points. Generally, $N(\epsilon)$ will be plotted as a function and only over
+some range (for a given data set) will the plot be linear.
+
+Moreover, in many maps (e.g.\ the H\'enon), a phenomenon called
+\emph{lacunarity} means that the estimate of dimension \emph{oscillates} as we
+decrease $\epsilon$! Ruff tuff stuff.
+
+\subsection{Hausdorff dimension}
+
+The Hausdorff dimension $D_H$ is often equal to the capacity $D_C$, but
+occasionally provides more sensible answers.
+
+Cover the set with $m$-cubes of \emph{variable} edge length $l_i \leq \epsilon$.
+Define then a partition function
+\begin{align}
+    \Gamma(d, \epsilon) &= \inf \sum\limits_{i}^{}l_i^d
+\end{align}
+then there is a  $D_H$ such that
+$\Gamma(d) = \lim_{\epsilon \to 0} \Gamma(d,\epsilon) =
+\begin{cases}
+    0 & d > D_H\\
+    \infty & d < D_H
+\end{cases}$
+
+Clearly, if we choose $l_i = \epsilon$ we recover $D_C$, but some trickier
+problems may require more clever choices.
+
+\subsection{Generalized dimensions}
+
+Since phase space can be very large compared to the size of the attractor, it's
+easy for the above techniques to yield difficult-to-interpret results, as they
+concern the entire space rather than the nature of the attractor itself.
+\emph{generalized dimensions} are an attempt to remedy this, and again there are
+two definitions:
+
+\begin{description}
+    \item[Box Counting Approach] Cover the attractor with boxes of size
+        $\epsilon$ and $p_i = N_i/N$ the number of boxes in box $i$ out of a
+        total of $N$ points in the attractor. The $q$-th generalized dimension
+        is then
+        \begin{align}
+            D_q &= \lim_{\epsilon \to 0}
+            \frac{1}{q-1}\frac{\log \sum\limits_{i}^{}p_i^q}{\log \epsilon}
+        \end{align}
+
+    \item[Partition Function Approach] Similar to the Hausdorff dimension, we
+        can cover the set with $m$-boxes of size $l_i \leq \epsilon$, then
+        define partition function
+        \begin{align}
+            \Gamma(q,\tau,\epsilon) &=
+            \begin{cases}
+                \inf \sum\limits_{i}^{}\frac{p_i^q}{l_i^\tau} &
+                    q \leq 1, \tau \leq 0 \\
+                \sup \sum\limits_{i}^{} \frac{p_i^q}{l_i^\tau} &
+                    q \geq 1, \tau \geq 0
+            \end{cases}
+        \end{align}
+        and there exists a $\tau(q)$ such that $\Gamma(\tau < \tau(q)) = 0$ else
+        infininty. The $q$-th generalized dimension is then
+        $D_q^H = \frac{\tau(q)}{q-1}$.
+\end{description}
+
+Generally the $D_q$ are constant, but sets for which they are not constant yield
+\emph{multifractals}.
+
+A few special values of $q$ are:
+\begin{itemize}
+    \item $q=0$ --- This reproduces the capacity/Hausdorff dimension.
+    \item $q=1$ --- This gives
+        $D_1 = \lim_{\epsilon \to 0} \frac{-\sum\limits_{i}^{}p_i \log p_i}
+        {-\log \epsilon}$
+        which tells us how information scales with box size, so we call $D_1$
+        the information dimension.
+    \item $q=2$ --- This yields
+        $D_2 = \lim_{\epsilon \to 0}
+        \frac{\log \sum\limits_{i}^{}p_i^2}{\log \epsilon}$
+        which tells us the probability that two points lie within cells of
+        length $\epsilon$, so we call this the \emph{correlation dimension}
+\end{itemize}
+
+\subsection{Lyapunov Dimension}
+
+Can we construct a characterization of the attractor, its dimension, from
+analysis of the dynamics, which exhibit the attractor? More precisely, can we
+find a link betwween the Lyapunov exponents and the dimension? Kaplan-Yorke
+proposed
+\begin{align}
+    D_L &= \nu + \frac{1}{\abs{\lambda_\nu + 1}}
+    \sum\limits_{i=1}^{\nu}\lambda_\nu
+\end{align}
+and conjectured that $D_L = D_1$, the unproven \emph{Kaplan-Yorke conjecture}.
+
+\clearpage
+
+\section{Multifractals, chaos}
+
+\subsection{$f(\alpha)$}
+
+For many attractors, we can compute the measure of the attractor $\rho(x)$. In
+the case of $a=4$ for the quadratic map, we obtain measure
+\begin{align}
+    \rho(x) &= \frac{1}{\pi\sqrt{x(1-x)}}
+\end{align}
+which has $x^{-1/2}$ at the endpoints. But in general, the singularities exhibit
+a more complicated distribution, which generally is characterized as fractals
+with different measure singularities\dots let's see what this means!
+
+Consider covering the attractor with an $m$box with side length $l$. The
+$p_i$ of each box can be described in terms of $l^{\alpha_i}$ with $\alpha_i$
+describes the measure of the singularity. We then define $f(\alpha)$ to be the
+dimension of points with singularity measure $\alpha_i = \alpha$. In other
+words, the number of points we expect to see at points with singularity measure
+$\alpha$ should scale like $l^{-f(\alpha)}$.
+
+Thus, for our above example, the endpoints have a probability density $\rho(x)
+\propto l^{-1/2}$ and have an associated probability measure
+$\int\limits_{0}^{l}x^{ -1/2}\;\mathrm{d}x=x^{1/2}$ and corresponds to $\alpha =
+1/2$. Thus, $f(1/2) = 0, f(1) = 1$ since the rest of the interval has unit
+probability measure.
+
+\subsection{Relationship to $D_q$}
+
+Note that $D_q$ is a weighted sum over boxes of $p^q$ with $p$ being the measure
+associated with the box. However, the scaling of the probability measure with
+box size is described by the pointwise dimension $\alpha$. Thus, we see that
+these should be related.
+
+Recall that $D_q$ is defined as a sum of $\sum\limits_{i}^{}p_i^q$ over the
+boxes $\left\{ B_i \right\}$. Let's suppose we have a more general attractor
+that exhibits a continuous range of $\alpha$ with weights $w(\alpha)$, then we
+can re-express the above sum as
+\begin{align}
+    p_i^q &= \int_{B_i} l^{q\alpha}\mathrm{d}l\\
+    \rd{l}{\alpha} &= w(\alpha)l^{-f(\alpha)}\\
+    \sum\limits_{i}^{} p_i^q &\sim
+        \int \mathrm{d}\alpha\, w(\alpha) l^{-f(\alpha)} l^{q\alpha}\\
+        &\sim
+        \int \mathrm{d}\alpha\, w(\alpha) e^{\log l(q\alpha - f(\alpha))}
+\end{align}
+
+The first equation comes because $\alpha$ is defined as the singularity measure,
+or how much a certain segment $\mathrm{d}l$ contributes to the probability
+measure, and the second comes about because this is how much each $\alpha$
+value contributes to the total probability.
+
+We then use the saddle point approximation to evaluate at $\alpha = a$ where the
+exponential is maximized, where $q = f'(a(q))$, so that
+\begin{align}
+    \sum\limits_{i}^{}p_i^q &\sim e^{\log l\left[ qa(q) - f(a(q)) \right]}\\
+    D_q &= \frac{1}{q-1}\left[ q a(q) - f(a(q)) \right]
+\end{align}
+
+Typical $f(\alpha)$ are strictly convex $f'' < 0$, and so we see that their
+maximum occurs at $q=0, f(\alpha_{\max}) = D_0$. Moreover, $f(\alpha(q))$
+vanishes when $q = \pm \infty$, since $f'(\alpha) = q$ is singular there.
+
+\subsection{Example multifractal: two-scale factor Cantor set}
+
+Consider a similar construction to the Cantor set, but where instead of dropping
+the middle third of each line segment we keep the initial $l_1$ and final $l_2$
+of it. Imagine also that for each factor of $l_1$, we have dynamics with a $p_1$
+probability of visiting, and $p_2$ probability of visiting each $l_2$ factor. At
+the $n$-th subdivision level there are $\binom{n}{m}$ copies of the line segment
+with length $l_1^ml_2^{n-m}$ weighted with probability $p_1^m p_2^{n-m}$.
+
+The measure then associated with landing on a particular length segment is
+$W_{mn} = \binom{n}{m}p_1^mp_2^{n-m}$. Hitting this with Stirling's, we obtain
+\begin{align}
+    W_{mn} &= \exp\left[ -\frac{n(m/n - p_1)^2}{2p_1p_2} \right]
+\end{align}
+which is a sharply peaked Gaussian around width $m/n = p_1$, meaning we will
+tend to visit line segments with width $m/n = p_1$ with increasing probability
+as $n \to \infty$.
+
+To compute $f(\alpha)$ from this, we recall that the chance of visiting an
+interval of length $l_{nm} = l_1^ml_2^{n-m}$ is $p = p_1^mp_2^{n-m}$. But then
+$p = l^\alpha$, so doing a bit of algebra we can recover
+\begin{align}
+    \alpha &= \frac{\log p_1 + \left( \frac{n}{m} - 1 \right)\log p_2}
+        {\log l_1 + \left( \frac{n}{m} - 1 \right)\log l_2}
+\end{align}
+
+$f$ describes the dimension of the set experiencing the singularity $\alpha$.
+Thus, the number of intervals must grow like $l^{-f}$, so
+$\binom{n}{m} \sim \left( l_{nm} \right)^{-f}$, which gives
+\begin{align}
+    f &= \frac{\left( \frac{n}{m} - 1 \right)\log \left( \frac{n}{m} - 1 \right)
+        - \frac{n}{m\log \frac{n}{m}}}{\log l_1 + \left( \frac{n}{m} - 1 \right)
+        \log l_2}
+\end{align}
+which along with the above expression for $\alpha$ gives us $f(\alpha)$.
+
+Calculating $D_q$ is hard so I'm not going to think too much about it.
+
+\clearpage
+
+\section{Attractor Reconstruction}
+
+We've learned many techniques now that are able to identify chaos based on the
+phase space dynamics, i.e.\ the attractor. These diagnostics only help when
+knowing the attractor, and not when knowing only the map, which seems to limit
+their application to numerical systems.
+
+It turns out however, it is possible to measure a single dynamical variable and
+construct the phase space attractor in a way that does not destroy the
+topological diagnostics such as Lyapunov exponents etc.
+
+First, sample a single dynamical variable continuously $x(t)$ at $m$ successive
+time delays $t + i\tau, i \in [0,m-1]$. Then, construct the vector with
+components
+\begin{align}
+    \xi_\alpha(t) &= x(t + \alpha\tau)
+\end{align}
+
+This vector $\vec{\xi}(t)$ is a trajectory in an $m$-dimensional space, and it
+turns out that if $m \geq 2D_C + 1$, with $D_C$ the capacity dimension of the
+attractor, then the trajectory is a faithful reconstruction of the physicas
+phase space flow. More precisely, the infinitisemal evolution $\delta\vec{\xi}$
+in the reconstructed and physical phase space have a ratio that is uniformly
+bounded and non-vanishing.
+
+Since $D_C$ is not known \emph{a priori}, the usual technique is to sample for
+increasing $m$, come back and compute $D_C$, and see when $D_C$ stops
+increasing. The extra factor of $2$ is to account for possible extra crossings,
+e.g.\ embedding a circle in 2 dimensions can be accomplished with two tangent
+circles (a figure $8$), which violates the distance bounds in the faithfulness
+criterion. In multiple dimensions, the chances that the $\xi(t)$ crosses itself
+vanishes and so we expect a faithful reconstruction. In practice, sometimes we
+do not actually care about crossing points, and in that case $m \geq D_C + 1$ is
+sufficient to represent the trajectory.
+
+The size of $\tau$ is actually unimportant in the proof! However, for numerical
+purposes a $\tau$ around the ``correlation time'' is usually used (the timescale
+over which the autocorrelation function decays)
+
+\clearpage
+
+\section{Bifurcation Theory}
+
+A \emph{bifurcation} is when a solution exhibits a change in fundamental
+character as a control parameter is varied, e.g.\ when a stable system becomes
+unstable. In general, it arises because the Jacobian is singular (otherwise, the
+solution can be analytically continued and is generally expected to exhibit the
+same behavior).
+
+\subsection{Bifurcation from steady-state solution}
+
+Consider a system $\dot{U} = f(U|r)$. Call $U = U_0$ a steady state solution
+$f(U_0|r) = 0$, then we examine the behavior of small perturbations $\delta U$
+about $U_0$. Linearizing the dynamics
+\begin{align}
+    K_{ij} &= \pd{f^{(i)}}{U^{(j)}}\Bigg|_{U=U_0}\\
+    \delta\dot{U}^{(i)} &= K_{ij} \delta U^{(j)}
+\end{align}
+then we find that the eigenvalues $\lambda_\alpha$ determine the growth rate of
+perturbations
+$\delta U \propto \sum\limits_{\alpha}^{}A_\alpha
+e^{\lambda_\alpha t}u^{(\alpha)}$
+with $u^{(\alpha)}$ the eigenvectors of $\mathbf{K}$ and $A_\alpha$ the
+components of the initial conditions along these eigenvectors.
+
+Stability requires all $\Re \lambda_\alpha < 0$, which is a function of $r$. Two
+possible avenues of change can proceed:
+\begin{itemize}
+    \item A single real eigenvalue passes through $0$, called a \emph{stationary
+        bifurcation}.
+    \item A pair of complex conjugate eigenvalues passes through the imaginary
+        plane (their real part vanishes). This is called a Hopf bifurcation.
+\end{itemize}
+
+For each of these, as we leave the linear regime, nonlinear behavior takes over
+and a few possibilities (``normal forms'') can arise. We take a look in a
+moment, but first discuss \emph{bifurcation diagrams}. This is simply a plot of
+the stationary solutions $X$ as a function of a varied contro parameter $r$.
+Stable solutions are represented by solid lines, and unstable by dashed.
+
+\subsubsection{Stationary Bifurcations}
+
+\begin{description}
+    \item[Transcritical] This occurs when the nonlinearity is quadratic, or of
+        the first possible neglected order. For instance, consider
+        $\dot{X} = \epsilon X - X^2$, where we attach an $\epsilon$ to the
+        linear term to remind us that we operate in the nonlinear regime.
+
+        In this case, we first look for stationary solutions, of which there are
+        two $X=0, X=\epsilon$. The former is stable for $\epsilon < 0$, the
+        latter the exact opposite. We see that the two solutions ``exchange
+        stability'' at $\epsilon = 0$.
+
+    \item[Pitchfork] Often we will see symmetry in the problem $X \to -X$, which
+        makes a $X^2$ nonlinearity impossible. Thus, we examine systems with the
+        next higher order
+        $\dot{X} = \epsilon X \pm X^3$.
+        The behavior then depends on the sign:
+        \begin{description}
+            \item[Supercritical ($-X^3$)] For $\epsilon < 0$, the only solution
+                is $X = 0$ and no other stable solutions exist, but for
+                $\epsilon > 0$ we have unstable $X=0$ and two new solutions $X =
+                \pm \sqrt{\epsilon}$ that are stable.
+            \item[Subcritical ($+X^3$)] For $\epsilon < 0$, we have a stable
+                $X=0$ solution with the two solutions $X = \sqrt{-\epsilon}$
+                unstable, and for $\epsilon > 0$ we have a single unstable
+                solution at $X=0$.
+        \end{description}
+
+    \item[Saddle node] It is also possible for a normal form that looks like
+        $\dot{Y} = (r - r_0) - Y^2$
+        with $Y = X - X_0$. The bifurcation diagram for such a normal form looks
+        somewhat like a sideways quartic, where if we sweep $r$ from left to
+        right, we suddenly run into the bottom of the two minima in the quartic.
+        Thus, stable solutions ``evolve out of nowhere'', and it's only after we
+        get to the ``origin'' of the quartic (at $r_0, X_0$) that where the
+        stationary solutions evolve from is clear.
+\end{description}
+
+\subsubsection{Hopf Bifurcation}
+
+With complex eigenvalues, both $\lambda, \lambda^*$ must be eigenvalues, and the
+eigenvector is also complex $Z = \abs{Z}e^{i\phi}$. Notate the eigenvalues
+$\lambda = \epsilon + i\omega$. There are again two normal forms
+\begin{description}
+    \item[Supercritical] Of form
+        $\dot{Z} = (\epsilon + i\omega)Z - (1 + ib)\abs{Z}^2Z$
+
+        We note that for $\epsilon < 0$, we have a stable solution at $Z=0$, but
+        for $\epsilon > 0$ this solution becomes unstable. Instead, stable
+        solutions develop at $\abs{Z} = \sqrt{\epsilon}, \dot{\phi} = \omega -
+        b\epsilon$, which is simply uiform rotation on a circle. It turns out
+        that to all orders in perturbation theory, the motion is conjugate to
+        motion on a circle.
+    \item[Subcritical] Of form
+        $\dot{Z} = (\epsilon + i\omega)Z + (1 + ib)\abs{Z}^2Z$
+        then only for $\epsilon < 0$ do we incur the circular solutions from the
+        previous part, and they're demonstrably unstable.
+\end{description}
+
+\subsection{Bifurcation from a Periodic Solution}
+
+Let's consider that we have some solution $U_0(t)$ that is peridoic with frequency
+$\omega_0$. We can determine stability by Floquet analysis: we seek a solution
+of form
+\begin{align}
+    U(t) = U_0(\omega_0t) + e^{\lambda t}\delta U(\omega_0 t)
+\end{align}
+where $\delta U$ has the same period as $U_0$. WLOG, assume that
+$\abs{\Im \lambda} \leq \frac{\omega_0}{2}$
+because anything higher frequency can be ``folded into'' $\delta U$ without
+changing its period.
+
+While there are the same two types of bifurcations as before, that a real
+eigenvalue changes signs and that a complex pair of eigenvalues crosses the
+imaginary axis, but we incur third possibility as a sub-case of the latter: a
+a complex eigenvalue with $\Im \lambda = \frac{\omega_0}{2}$ crosses the
+imaginary axis: now thanks to the folding procedure above, $\lambda =
+\lambda^*$!
+
+It's easiest to analyze these possibilities on a Poincar\'e section, where
+suddenly our periodic solution becomes a fixed pointt! Consider
+\begin{align}
+    R_{n+1} &= F(R_n|r)
+\end{align}
+
+Now we just have to look at the Jacobian of this map
+$\delta R_{n+1} = K \delta R_n$
+for some $K$. But since we have a map, the growth factor isn't
+$e^{\lambda_\alpha t}$ but instead $(\lambda_\alpha)^n$. We now have three
+possibilities:
+\begin{itemize}
+    \item A real $\lambda$ passes through $+1$.
+    \item A real $\lambda$ passes at $-1$.
+    \item A complex conjugate pair of $\lambda$ pass through the unit circle.
+\end{itemize}
+
+The first case is uninteresting, a new periodic solution arises that has the
+same frequency as the original solution (since it lives on the Poincar\'e
+section) and stability is determined as usual.
+
+The second case is a bit more interesting. It's evident that at the linear
+level, new oscillations at $\omega_1 = \Im \lambda$ develop. Nonlinear behavior
+is complicated. It's possible for frequency locking to occur, depending on the
+specific frequencies involved, whether hey form an irrational or rational ratio
+etc. We will come back to this case.
+
+The third case is neat. Any perturbation incurs sign flips on the map, which
+actually produces \emph{period doubling} in the flow. We can see this by
+examining the normal form of the Poincar\'e section map
+\begin{align}
+    X_{n+1} &= -X_n - \epsilon X_n + X_n^3\\
+    X_{n+2} &\simeq X_n + 2\epsilon X_n - 2X_n^3
+\end{align}
+we see that the only fixed point solution of the every-other-time-tick solution
+is stable/unstable for $\epsilon$ values, the point being that we analyze every
+other time step and so observe period doubling.
+
+\clearpage
+
+\section{Quadratic Bifurcations}
+
+Recall the quadratic map $f(x) = ax(1-x)$. It turns out that if we plot the
+Lyapunov exponent $\lambda$ as a function of $a$, we see an infinite number of
+period doubling bifurcations between $3.0$ and $\approx 3.57$. In other words,
+for successive bifurcation points $a_n$, the period double to $2^n$ times the
+base frequency.
+
+Similar properties exist for similar maps such as the sine map. What makes these
+properties somewhat difficult to study is that the dynamics near a bifurcation
+point are difficult to study, as the Lyapunov exponentent is vanishing.
+
+Instead, it turns out that there exists a value of $a_n^{(s)}$ within each
+interval $[a_n, a_{n+1}]$ that produces a ``superstable $2^n$'' cycle, such
+that one point of the orbit is exactly the maximum of the map, and the Lyapunov
+exponent is exactly $-\infty$.
+
+Let's also demand the separation of points in the orbit as an orbit splits into
+two at a bifurcation point. Specifically, for a superstable $2^n$ orbit, it's
+noted that the maximum point exhibits the smallest splitting between itself and
+the point halfway around the orbit. Call this separation $d_n$.
+
+It turns out that the separation between the $a_n^{(s)}$ decrease geometrically,
+as do the $d_n$. We can then compute these ratios as $n \to \infty$.
+
+It turns out interestingly that these ratios hold true for the sine map
+$f(x) = \frac{1}{4}a \sin\left( \pi x \right)$ as well, the \emph{exact same
+ratios}. It turns out that all maps with a quadratic maximum yield the same
+ratio!
+
+Let's develop some notation for this. Consider an arbitrary map $f(x)$, and call
+$f^n$ its $n$th functional composition. Denote $x_0$ a fixed point of $f(x)$.
+Then it turns out that
+\begin{itemize}
+    \item The stability of a fixed point is determined by the slope of
+        $f(x=x_f)$. If $\abs{f'(x_f)} < 1$, then perturbations shrink and we
+        have a stable fixed point, else unstable (just like our analysis with
+        $K$ above except $K$ is a scalar). Period doubling bifurcations
+        correspond to $f'(x_f) = -1$.
+    \item Then, as some control parameter crosses from stable to unstable, we
+        note that $\rd{f^2}{x}\Bigg|_{x=x_f} = +1$, and moreover changes in
+        magnitude from $<1$ to $>1$. Moreover, for $a < a_c$ the critical $a$,
+        we find that $f^2$ must also have effective slope less than unity
+        (I mean for instance that $f^2$ stays below $y=x$, the line of slope
+        $1$, for $x > x_f$). Then, as we cross the critical $a_c$, the slope of
+        $f^2$ at $x_f$ increases to be above $1$. But in order to maintain
+        continuity of $f^2$, as the rest of it is still ``below'' $y=x$, it is
+        clear that $f^2$ must cross $y=x$ again, this time with a slope $<1$.
+
+
+        Thus, we see that for these bifurcations where a stable fixed point
+        becomes unstable, two new stable fixed points must arise. But these two
+        new fixed points cannot be fixed points of $f$, only of $f^2$, and so
+        manifestly $f$ flips them back and forth (more precisely, $(x_1, x_2)$
+        are the points of a period $2$ orbit of $f$).
+\end{itemize}
+
+\end{document}
