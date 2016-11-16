@@ -1202,4 +1202,61 @@ Then it turns out that
         are the points of a period $2$ orbit of $f$).
 \end{itemize}
 
+\clearpage
+\section{Renormalization Group Theory}
+
+Renormalization is all about ``functional composition and rescaling.'' Let's
+again examine the quadratic map, but this time make a small coordinate shift
+$x \to x - \frac{1}{2}$. Let's now examine the following functional operator
+\begin{align}
+    T_\alpha[f(x)] &= -\alpha f\left( f\left( -\frac{x}{\alpha} \right) \right)
+\end{align}
+
+It is then clear that
+\begin{itemize}
+    \item For particular $\alpha$, $T$ has a fixed point solution $g(x)$, e.g.
+        \begin{align}
+            g(x) &= -\alpha g\left( \left( -\frac{x}{\alpha} \right) \right)
+        \end{align}
+
+        As in linear algebra, there is a family of $g$ that satisfy the above,
+        so we fix the ``normalization'' and require $g(0) = 1$. Otherwise, if
+        $g(x)$ is a solution then so too is $\mu g(x/\mu)$.
+
+    \item It turns out that linearizing $T$ about the fixed point $g(x)$ yields
+        a \emph{single} unstable eigenvector with eigenvalue $\delta$.
+
+        More precisely, if we let $f(x) = g(x) + \varepsilon(x)$, then let's define
+        linearized operator $L[\varepsilon] = T[g+\varepsilon] - T[g]$, and define
+        $\lambda^{(i)}, \varepsilon^{(i)}$ eigen-thingies sorted in descending order
+        by the $\lambda$ to be such that
+        \begin{align}
+            L[\varepsilon^{(i)}(x)] = \lambda^{(i)}\varepsilon^{(i)}(x)
+        \end{align}
+        then per our above claim $\lambda^{(1)} = \delta > 0$ and the other
+        $\lambda^{(i)}$ are all negative.
+\end{itemize}
+
+More interestingly, it turns out that $\alpha, \delta$ are fixed values
+\emph{independent} of $T, g$. Examine the first powers of $g(x) = 1 + bx^2$,
+then
+\begin{align}
+    g(x) &= g\left( g\left( -\frac{x}{\alpha} \right) \right)\\
+    &= 1 + b\left( 1 + b\frac{x^2}{a^2} \right)\\
+    1 + bx^2 &= -\alpha
+    \left[
+        1 + b + x^2\left( \frac{2b^2}{\alpha^2} \right)
+    \right]
+\end{align}
+which forces $\alpha = 1 + \sqrt{3}, b = -\frac{\alpha}{2}$ ($b$ must be
+negative since $g(x)$ is convex).
+
+$\delta$ is fixed by literally approximating $g(x) = 1$ and mandating that the
+linearized $L$ of operator $T$ be satisfied at $x=0$, which produces
+$\delta = \alpha^2 - \alpha \approx 4.73$.
+
+More precise values than the above can be obtained, but these approximations
+serve to show that the above two observations alone constrain the effect of $T$
+with no knowledge of any physical system!
+
 \end{document}
