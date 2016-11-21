@@ -1,7 +1,7 @@
-    \documentclass[10pt]{article}
+    \documentclass[12pt]{article}
     \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
     hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
-    \usepackage[margin=0.5in, top=0.8in,bottom=0.8in]{geometry}
+    \usepackage{geometry}
     \newcommand{\scinot}[2]{#1\times10^{#2}}
     \newcommand{\bra}[1]{\left<#1\right|}
     \newcommand{\ket}[1]{\left|#1\right>}
@@ -38,6 +38,8 @@
 height=2em]
 
 \begin{document}
+
+\onehalfspacing
 
 \pagestyle{fancy}
 \rhead{Yubo Su --- Independent Study: Ph161}
@@ -1144,7 +1146,7 @@ is stable/unstable for $\epsilon$ values. Thus, the period of the orbit doubles.
 
 \clearpage
 
-\section{Quadratic Bifurcations}
+\subsection{Quadratic Bifurcations}
 
 Recall the quadratic map $f(x) = ax(1-x)$. It turns out that if we plot the
 Lyapunov exponent $\lambda$ as a function of $a$, we see an infinite number of
@@ -1257,5 +1259,393 @@ $\delta = \alpha^2 - \alpha \approx 4.73$.
 More precise values than the above can be obtained, but these approximations
 serve to show that the above two observations alone constrain the effect of $T$
 with no knowledge of any physical system!
+
+Now, let's call the single expanding eigenvector (with eigenvalue $\delta$)
+$h$. Then let's examine a class of solutions
+\begin{align}
+    g_r(x) &= g(x) + \delta^{-r}h(x)
+\end{align}
+with $h$ the eigenvector and $r$ a large number. Then we find that
+\begin{align}
+    T[g_r(x)] \approx g_{r-1}(x)
+\end{align}
+when we linearize about $g(x)$.
+
+Let's apply our intuition from discrete maps for a moment. Suppose $g(x)$ is
+thought of as a map and has a stable $2^n$ cycle, then $g(g(x))$ must have a
+stable $2^{n-1}$ cycle. Thus, we see that composition of the $g$ serves to halve
+the period, and so $T[g(x)]$ serves equally to halve the period (since it's just
+a constant multiple of a functional composition). Thus, we see that each $g_r(x)$
+can be thought of as having period $2^r$.
+
+For convenience's sake, let's terminate the series at some $g_0$. This isn't
+explained well in the lecture notes, but I imagine this to be the most basic
+solution, e.g.\ the SHO solution or the period $1$ solution. It's understandable
+that such a ``unit time solution'' should exist, but what happens when we
+operate on it with $T$ is beyond me\dots
+
+\subsection{Bifurcations in the physical map}
+
+What about the rest of the function space? Since there is a single unstable
+direction about $g(x)$, we see that there must exist a ``stable manifold'' for
+which repeated iteration of $T$ brings all functions to $g(x)$ the fixed point.
+This manifold is expected to have codimension $1$ (I envision this as a space
+orthogonal to the unstable $h(x)$ direction). Then, for a family of functions
+$f_R(x)$ parameterized by a single value $R$, we might expect for a single value
+of $R$ for $f_R(x)$ to live in this stable manifold. Define this single value of
+$R$ to be $R_\infty$, then we would have
+$n \to \infty, T^n f_{R_\infty} \to g(x)$.
+
+Now, what about $f_R$ for $R$ \emph{near} $R_\infty$? We would expect repeated
+iteration of $T$ to bring us very close to the fixed point, tracking the
+$f_{R_\infty}$ evolution, until eventually the nonzero component along $h(x)$
+kicks in. This is the point at which we must be careful. Let's examine the
+evolution in steps:
+\begin{itemize}
+    \item First, we evolve a finite $q$ number of times to bring $T^qf_R$ into
+        the ``vicinity'' of the fixed point. In general, so long as $R -
+        R_\infty$ is a small number, $q$ is fixed; it's however long it takes
+        for $f_{R_\infty}$ to come close to the fixed point.
+
+        Next, we might ask how big the $h(x)$ component is after $q$ iterations.
+        Taylor expanding. It might be a bit difficult to determine \emph{a
+        priori}, so let's just call this component $\bar{c}(R - R_\infty)$. Thus
+        we can notate
+        \begin{align}
+            T^q f_R &= g(x) + \bar{c}(R - R_\infty)h(x)
+        \end{align}
+
+    \item Next, we evolve some $p$ number of times such that the function is
+        dominated by the $h(x)$ component but still such that the linearization
+        holds. Naturally, since $\bar{c}(R - R_\infty)$ should be a roughly
+        proportional function of $R - R_\infty$, we will see an inverse
+        proportionality between $p, \bar{c}(R - R_\infty)$, since we'll ``need
+        more iterations to leave the domain where linearization holds.''
+
+    \item Finally, we complete $T^n$ iterations with a further $n-p-q$
+        iterations which is expected to take us into the nonlinear regime.
+\end{itemize}
+
+Using this highly qualitative terminology, we can rewrite
+\begin{align}
+    T^nf_R &= T^{n-p-q}\left[ g(x) + \bar{c}(R-R_\infty)\delta^ph(x) \right]\\
+    &= T^{n-p}\left[ g(x) + c(R-R_\infty) \delta^ph(x) \right]
+\end{align}
+where we redefine $c(R - R_\infty) = \bar{c}(R - R_\infty)\delta^q$ for
+simplicity.
+
+Let's now make special choices of
+$R = R_m$ such that $c(R - R_\infty) = \delta^{-m}$, then we instead obtain
+\begin{align}
+    T^nf_{R_m} &= g(x) + T^{n-p}\delta^{p-m}h(x)\\
+    &= g_{m-n}
+\end{align}
+where $g_{n-m}$ is just the $g_r$ we discussed earlier. Since we saw earlier
+that $T$ acts on these functions by simply changing the index (and the period),
+we find that $f_{R_m}$ must also have a $2^m$ cycle.
+
+Phew, this was a mounthful, what does it all amount to? We've shown that
+universal to all maps $T$ satisfying the assumed two properties from the
+beginning of this section, period doubling cascades show up. In this particular
+case, the cascade appears as $R_\infty - R_m \to 0$, and the period doubles
+without bound. Moreover, since we only need a stable manifold with codimension
+$1$ for this cascade to happen, this should be a reasonably common occurence.
+
+\subsection{Rescaled maps}
+
+Let's fiddle a bit more:
+\begin{align}
+    f^{2^n}(x) &= \left( -\alpha \right)^{-n} T^n f\left( (-\alpha)^nx \right)\\
+    f^{2^n}_{R_m}(x) &= (-\alpha)^{-n}g_{m-n}\left( (-\alpha)^nx \right)
+\end{align}
+
+In particular, if we take $m=n$ then
+\begin{align}
+    \lim_{n \to \infty} f^{2^n}_{R_m}(x) &= (-\alpha)^{-n}g_0((-\alpha)^nx)
+\end{align}
+where $g_0(x)$ is the first in the $g_r$ series we studied earlier. We can
+converge to any of the $g$ via this rescaling procedure by appropriate choice of
+$m$. Moreover, if we start from $R_m = R_\infty$ instead, we get $g$ the
+universal stable point $g(x)$.
+
+There's a chapter here that concerns ``advanced topics'' but I forgo this for my
+sanity. Some notable points include an analysis of the power spectrum of the
+period doubling route to chaos (subharmonic peaks appear as well as a broad
+band), a structure of the dynamics (regular frequency bands but random jumping
+within each band), and behavior in the presence of noise (higher frequencies are
+attenuated, thus chaos onsets earlier).
+
+\clearpage
+
+\section{Driven Pendulum and 2D circle map}
+
+One common route to chaos is the breakdown from a quasiperiodic state of $n$
+discordant frequencies, which looks like an $n$-torus. It might be expected
+that, similar to period doubling, an $n$-torus must go to a more complex torus
+before it can reach a chaotic state. It turns out that's not always the case.
+
+\subsection{Driven Pendulum}
+
+Consider the EOM
+\begin{align}
+    \ddot{\theta} + \gamma\dot{\theta} + \sin\theta &= d + g \cos \omega_D t
+\end{align}
+which is just a running oscillation with a fixed nonzero
+$\expvalue{\dot{\theta}}$. Frequency locking can then occur between $\omega_D,
+\expvalue{\dot{\theta}}$.
+
+Let's turn this into a flow in 3D space
+\begin{align}
+    \dot{\theta} &= \omega\\
+    \dot{\omega} &= -\gamma \omega - \sin\theta + d\cos\theta_D\\
+    \dot{\theta_D} &= \omega_D
+\end{align}
+
+Or we can turn it into a 2D map by strobing at $\omega_D$ and plotting
+$(\theta,\omega)$. The exact form of the mapping function is complicated, given
+that it is the integral of the flow, but examining the Jacobian we find that it
+is equal to $J = e^{2\pi \gamma/\omega_D} < 1$, so the map uniformly contracts.
+
+\subsection{Periodically kicked rotor}
+
+Quantitative study of the above is complicated, since we'd actually have to
+quantitatively state the reduction of the flow to the map. Instead, let's
+consider a simpler example, where we have a SHO that is periodically kicked
+\begin{align}
+    \ddot{\theta} + \gamma\dot{\theta} &=
+    (A - B\sin\theta)\sum\limits_{n}^{}\delta(t-n)
+\end{align}
+
+The plus is that the motion is easily integrable between kicks, since it's just
+a free SHO then. Integrating and strobing at $t=n$, we find
+\begin{align}
+    \theta_{n+1} &= \theta_n + \frac{1 - e^{-\gamma}}{\gamma}
+        \left( \dot{\theta}_n + A - B\sin\theta_n \right)
+\end{align}
+
+We can then make a couple of definitions and obtain
+\begin{align}
+    \Omega &= \frac{A}{2\pi \gamma},
+    r_n = \frac{e^\gamma - 1}{\gamma} \dot{\theta}_n - 2\pi \Omega,
+    \frac{K}{2\pi} = \frac{1 - e^{-\gamma}}{\gamma}B,
+    b = e^{-\gamma}\\
+    \theta_{n+1} &= \theta_n + 2\pi \Omega - K\sin \theta_n + br_n\\
+    r_{n+1} &= br_n - k\sin \theta_n
+\end{align}
+
+The determinant of the Jacobian is $b$, so areas contract if $b < 1$.
+
+Then there are demonstrations. Welp. I guess this lecture just introduced a
+couple of systems. Don't think I can do these demonstrations though since I
+don't know what to examine.
+
+\clearpage
+
+\section{Circle Map}
+
+The one dimensional circle map is given by
+\begin{align}
+    x_{n+1} &= x_n + \Omega - \frac{K}{2\pi}\sin 2\pi x_n
+\end{align}
+which is then mapped back to the unit interval by a modulus operator. We define
+the winding number
+\begin{align}
+    W &= \lim_{n \to \infty} \frac{x_n - x_0}{n}
+\end{align}
+to be the average number of rotations around the unit interval that $x$
+performs.
+
+\subsection{$K < 1$}
+
+For $K < 1$, we observe monotonic, invertible growth. We observe a couple of
+properties:
+\begin{itemize}
+    \item The winding number is either rational (corresponding to locked motion
+        at the frequency of the stobing) or irrational (corresponding to
+        unlocked motion e.g.\ quasiperiodic).
+
+    \item $W$ is a continuous function of $\Omega$. It exhibits a structure
+        that is shown below in \autoref{fig:19.devil}.
+        \begin{figure}[!h]
+            \centering
+            \includegraphics[width=0.6\textwidth]{media/Devil.png}
+            \caption{A plot of $W(\Omega)$ grabbed from
+            \url{http://mathworld.wolfram.com/DevilsStaircase.html}.\label{fig:19.devil}}
+        \end{figure}
+
+    \item The sum of the widths of the rational steps in the figure above tends
+        to $0$ for $K \to 0$ and to unity as $K \to 1$. Interestingly, these
+        rational steps are known as ``Arnold tongues.''
+\end{itemize}
+
+\subsection{$K = 1$}
+
+\begin{itemize}
+    \item At $K = 1$, the map develops an inflection point at $x=0$.
+
+    \item The measure of $\Omega$ giving irrational $W$ is $0$, as the sum of
+        the widths of the rational steps is $1$ from above. It turns out the set
+        has fractal dimension $0.87$.
+
+    \item Since passing through the inflection point yields chaos, and
+        irrational winding number solutions tend to visit every point on the
+        interval, irrational winding number solutions break down to chaos at
+        $K=1$.
+
+    \item Since rational winding number solutions visit a discrete number of
+        points of the map, they tend not to break down to chaos.
+\end{itemize}
+
+\subsection{$K > 1$}
+
+\begin{itemize}
+    \item The Arnold tongues may overlap, which produces hysteresis.
+
+    \item The map has a quadratic maximum, and similar to the quadratic map even
+        periodic solutions can break down to chaos via period doubling cascades.
+\end{itemize}
+
+\clearpage
+
+\section{Universal Onset of Chaos from a 2-torus}
+
+We will adopt a similar approach to that used for the circle map for a
+quasiperiodic torus, but the best way to examine the problem isn't to increase
+$K$ for fixed $\Omega$, but rather to increas for fixed winding number $W$. This
+makes the theory a bit more difficult, but let's sketch the argument here.
+
+For any quasiperiodic orbit, we must examine irrational winding numbers. We will
+formulate our plan of attack with a series of rational approximations, the
+theory for which is founded in the theorem that any irrational number can be
+uniquely written in a continued fraction expansion. Truncating this continued
+fraction at the $n$th level gives the $n$th rational approximant $W_n$ to
+irrational $W$.
+
+Just a curious fact before we continue: define integers $(a_1, a_2,\dots)$ to be
+the integers in the continued fraction
+\begin{align}
+    W &= \frac{1}{a_1 + \frac{1}{a_2 + \frac{1}{\dots}}},
+\end{align}
+then it turns out that all solutions to quadratic equations have periodic
+rational expansion $(a_1, a_2,\dots)$. Moreover, the Golden mean
+$\frac{\sqrt{5} - 1}{2}$ corresponds to $(1,1,\dots)$, which produces the
+slowest converging rational expansion. The silver mean donetos $\sqrt{2} - 1$,
+which corresponds to $(2,2,2\dots)$.
+
+We will first motivate the discussion with some numerical results for the circle
+map, then study the renormalization group theory for this system.
+
+\subsection{Circle Map Results}
+
+\begin{itemize}
+    \item Define $G_n$ the $n$th rational approximation to the golden mean, then
+        $\Omega_n(K)$ is the value of $\Omega$ for a given $K$ that produces
+        winding number $G_n$. This results in the trajectory
+        $f_{K,\Omega_n}^{F_{n+1}}$. We can then find that
+        \begin{align}
+            \lim_{n \to \infty}\Omega_n(K) &=
+                \Omega_\infty(K) - c\tilde{\delta}^{-n}
+        \end{align}
+        where $\Omega_\infty(K)$ produces winding number $G$ the golden mean
+        itself, and
+        \begin{align}
+            \tilde{\delta} &=
+            \begin{cases}
+                G^{-2} = 2.618\dots & K < 1\\
+                2.8336\dots & K = 1
+            \end{cases}
+        \end{align}
+        where the $K < 1$ case can be determined simply by looking at uniform
+        rotation, but the $K = 1$ must be computed numerically.
+
+    \item The distance $d_n$ from $x=0$ to the nearest other element of the
+        $G_n$ cycle scales as
+        \begin{align}
+            \frac{d_n}{d_{n+1}} \to \tilde{\alpha}
+        \end{align}
+        with
+        \begin{align}
+            \tilde{\alpha} &=
+            \begin{cases}
+                -G^{-1} = -1.618\dots & K < 1\\
+                -1.28857\dots & K = 1
+            \end{cases}
+        \end{align}
+
+    \item Note that $\tilde{\delta}, \tilde{\alpha}$ are universal to all maps
+        for a given winding number.
+\end{itemize}
+
+\subsection{Renormalization}
+
+Since we notice that the point separation has some nice scaling structure, let's
+renormalize the orbits. Define
+\begin{align}
+    \bar{f}^n(x) &= f^{F_{n+1}}(x) - F_n
+\end{align}
+and the scaled
+\begin{align}
+    \bar{f}_n(x) &= \tilde{\alpha}^n f^{F_{n+1}}(\tilde{\alpha}^{-n}x) - F_n.
+\end{align}
+
+These functions exhibit the property
+\begin{align}
+    \bar{f}^{n+1}(x) &= \bar{f}^n\left( \bar{f}^{n-1}(x) \right)
+\end{align}
+
+We now look for a fixed point structure, i.e.\ a function $\bar{f}^*$ satisfying
+\begin{align}
+    \bar{f}^*(x) &= \tilde{\alpha} \bar{f}^*\left(
+        \tilde{\alpha}\bar{f}^*\left( \tilde{\alpha}^{-2}x \right)
+    \right)
+\end{align}
+
+One such solution is $\bar{f}^*(x) = x + C$, which gives $\tilde{\alpha} =
+-G^{-1}$. When $K=1$, the linear term disappears, and a second solution with the
+numerical $\tilde{\alpha}$ appears. We can perform this analysis by linearizing
+about the fixed point.
+
+\clearpage
+
+\section{Ruelle-Takens Theorem}
+
+The Ruelle-Takens Theorem, later extended with Newhouse (henceforth referred to
+as RTN), was initially misunderstood due to its highly mathematical language but
+is still very useful. It concerns whether chaos arises from accumulation of
+bifurcations or whether low-dimensional chaos is an additional route to chaos.
+Its statement follows:
+\begin{center}
+    Let $v$ be a constant vector field on the torus $T^n = R^n/Z^n$. If $n \geq
+    3$ then every $C^2$ neighborhood of $v$ contains a vector field $v'$ with a
+    strange \emph{Axiom A} attractor. If $n \geq 4$ we may take $C^{\infty}$
+    instead of $C^2$.
+\end{center}
+
+That's a mouthful. Can we clarify a bit?
+\begin{itemize}
+    \item For a set of ODEs $\rd{\vec{x}}{t} = \vec{v}(\vec{x})$, we call
+        $\vec{v}(x)$ the vector field that generates the flow $\vec{x}(t)$.
+
+    \item A constant vector field on an $n$-torus corresponds to uniform
+        rotation in each of the $n$ directions, generally quasiperiodic.
+
+    \item $C^2$ refers to twice differentiable, $C^\infty$ means
+        smoothl/infinitely differentiable.
+
+    \item An \emph{Axiom A} attractor is an attractor with many nice properties
+        such as robustness under small parameter changes.
+\end{itemize}
+
+Thus, the RTN theorem says that it's possible to make certain arbitrarily small
+perturbations to turn motion from an quasiperiodic $n$torus to chaotic for $n
+\geq 3$. However, the chaotic motion remains \emph{on} the torus, and is robust
+to further arbitrarily small perturbations. The ``every'' neighborhood refers to
+the fact that all points in the vector field have such perturbations, but not
+that a generic perturbation effects chaos. This was a stumbling point in early
+use/interpretation of the theorem.
+
+We do some numerical investigations of the theorem to illustrate precisely this
+point, that a system that moves beyond linear dynamics is equally likely to
+break down to period locked motion as to chaos.
 
 \end{document}
