@@ -1,5 +1,5 @@
 % Intro Options
-\ProvidesClass{deedy-resume-openfont}[2014/04/30 CV class]
+\ProvidesClass{yubo-resume-openfont}[2016/11/27 CV class]
 \NeedsTeXFormat{LaTeX2e}
 \DeclareOption{print}{\def\@cv@print{}}
 \DeclareOption*{%
@@ -48,14 +48,9 @@ Last Updated on
 		\fontspec[Path = fonts/lato/]{Lato-Lig}\selectfont #2
 	} \\
 	\vspace{5pt}
-    \centering{\color{headings}\fontspec[Path = fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{14pt}\selectfont #3}\\
+    \centering{\color{headings}\fontspec[Path = fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{14pt}\selectfont #3}
     \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
-    \vspace{-15pt}
-    % \raggedright{{\color{headings} \scshape \fontspec[Path = fonts/lato/]{Lato-Lig}
-    %     \fontsize{16pt}{24pt}\selectfont \uppercase
-    %     {Objective} \normalfont}
-    %     {\fontsize{16pt}{24pt}#4}
-    % }
+    \vspace{-18pt}
 }
 \titlespacing{\section}{0pt}{0pt}{0pt}
 
