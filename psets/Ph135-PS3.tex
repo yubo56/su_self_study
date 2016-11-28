@@ -1,0 +1,166 @@
+    \documentclass[12pt]{article}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings, times}
+    \usepackage{geometry}
+    \newcommand{\scinot}[2]{#1\times10^{#2}}
+    \newcommand{\bra}[1]{\left<#1\right|}
+    \newcommand{\ket}[1]{\left|#1\right>}
+    \newcommand{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+    \newcommand{\abs}[1]{\left|#1\right|}
+    \newcommand{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand{\tensor}[1]{\overleftrightarrow{#1}}
+    \let\Re\undefined
+    \let\Im\undefined
+    \newcommand{\ang}[0]{\text{\AA}}
+    \newcommand{\mum}[0]{\upmu \mathrm{m}}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \newcommand{\expvalue}[1]{\left<#1\right>}
+    \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
+    \usepackage[font=scriptsize]{subcaption}
+    \everymath{\displaystyle}
+    \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
+
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
+
+\begin{document}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\rhead{Yubo Su}
+\cfoot{\thepage/\pageref{LastPage}}
+
+\section{4a}
+
+Our objective is to compute the following integral
+\begin{align}
+    \varepsilon &= \int \frac{\Theta(\vec{k}) - \Theta(\vec{k} + \vec{q})}
+    {E(\vec{k} + \vec{q}) - E(\vec{k})}\;\mathrm{d}\vec{k}
+\end{align}
+for $\Theta$ the zero temperature Fermi-Dirac distribution and
+$E(\vec{v}) = \frac{\hbar^2 v^2}{2m}$.
+
+First, we separate the integral into two parts. Define $\pvec{k} = \vec{k} +
+\vec{q}$, then
+\begin{align}
+    \varepsilon &= \int \frac{\Theta(\vec{k})}{E\left( \vec{k} + \vec{q} \right) -
+    E\left( \vec{k} \right)}\;\mathrm{d}\vec{k} -
+    \int \frac{\Theta(\pvec{k})}{E\left( \pvec{k} \right) - E\left( \pvec{k} -
+    \vec{q} \right)}\;\mathrm{d}\pvec{k}
+\end{align}
+where both $\vec{k}, \pvec{k}$ are integrated in $k_F$-spheres about their
+respective origins. Thus, we can drop the prime and write
+\begin{align}
+    \varepsilon &= \int \frac{\Theta(\vec{k})}{E\left( \vec{k} + \vec{q} \right) -
+    E\left( \vec{k} \right)}\;\mathrm{d}\vec{k} -
+    \int \frac{\Theta(\vec{k})}{E\left( \vec{k} \right) - E\left( \vec{k} -
+    \vec{q} \right)}\;\mathrm{d}\vec{k}
+\end{align}
+
+Let's focus on the first integral, since the results for the second integral
+follow. Recall that $\abs{ \vec{a} + \vec{b} }^2 = a^2 + b^2 + 2\vec{a}\cdot
+\vec{b}$.  This allows us to write
+\begin{align}
+    \frac{\hbar^2}{2m}I_1 &= \int
+        \frac{1}{2\vec{q} \cdot \vec{k} + q^2}\;\mathrm{d}\vec{k}\label{four}\\
+    &= 2\pi \int\limits_{0}^{k_F}\int\limits_{0}^{\pi}
+        \frac{1}{2qk\cos\theta + q^2}\;k^2\sin\theta
+        \mathrm{d}\theta \mathrm{d}k\\
+    &= 2\pi \int\limits_{0}^{k_F}\int\limits_{0}^{\pi}
+        \frac{(k/2q)\sin\theta}{\cos\theta + q/2k}\;
+        \mathrm{d}\theta \mathrm{d}k\\
+    &= 2\pi \int\limits_{0}^{k_F}\frac{k}{2q}
+        \left[ -\log\left| \cos \theta + \frac{q}{2k} \right| \right]_0^\pi
+        \mathrm{d}\theta \mathrm{d}k\\
+    &= 2\pi \int\limits_{0}^{k_F}\frac{k}{2q}
+        \log \abs{\frac{1 + \frac{q}{2k}}{-1 + \frac{q}{2k}}}
+        \mathrm{d}\theta \mathrm{d}k\\
+    &= 2\pi \int\limits_{0}^{k_F}\frac{k}{2q}
+        \log \abs{\frac{q/2 + k}{q/2 - k}}
+        \mathrm{d}\theta \mathrm{d}k\label{nine}
+\end{align}
+
+Now, we can look up the following integral (derived later):
+\begin{align}
+    \int k \log \frac{C+k}{C-k}\;\mathrm{d}k &= \frac{1}{2} \left(
+        \left( k^2 - C^2 \right)\log \frac{C+k}{C-k}
+    \right) + kC\label{equation}
+\end{align}
+
+For us, $C = q/2$, and so we instantly obtain
+\begin{align}
+    I_1 &= \frac{\pi m}{\hbar^2 q} \left(
+        \frac{\left( k_F^2 - \frac{q^2}{4} \right)}{2}
+        \log \abs{\frac{q/2+k_F}{q/2-k_F}} + \frac{k_F q}{2}
+    \right)
+\end{align}
+where we leverage the fact that $k=0$ forces both the $kC$ and the logarithm to
+vanish in~\eqref{equation}.
+
+For $I_2$, we note that in~\eqref{four}, the $q^2$ term changes sign.
+Propagating this all the way through, we see that in~\eqref{nine}, the
+$q/2$ changes sign. Pulling out a negative sign from the top and bottom, we find
+that $I_2$ has the reciprocal of the log found in $I_1$ (i.e.\ if we were to
+pursue the same algebra as above, in~\eqref{nine} we would obtain
+$\frac{q/2-k}{q/2+k}$ as the argument of the logarithm). Thus, $I_2 = -I_1$\footnote
+    {This should have been obvious in hindsight. Since we are integrating a
+    spherical region of $\vec{k}$ about the origin, for every $\vec{k}$ we also
+    include the contribution of $-\vec{k}$, and so the integrand of $I_2$ is
+    equivalently $\left( E(\vec{k}) - E(\vec{k} + \vec{q}) \right)^{-1}$ which
+    even more obviously yields $-I_1$.}
+, and
+so we find that
+\begin{align}
+    \varepsilon &= \frac{2\pi m}{\hbar^2 q} \left(
+        \frac{\left( k_F^2 - \frac{q^2}{4} \right)}{2}
+        \log \abs{\frac{q/2+k_F}{q/2-k_F}} + \frac{k_F q}{2}
+    \right)\\
+    &= \frac{2\pi m k_F}{\hbar^2} \left(
+        \frac{\left( k_F^2 - \frac{q^2}{4} \right)}{2k_Fq}
+        \log \abs{\frac{q/2+k_F}{q/2-k_F}} + \frac{1}{2}
+    \right)\\
+    &= \frac{2\pi m k_F}{\hbar^2} \left(
+        \frac{\left( 4k_F^2 - q^2 \right)}{8k_Fq}
+        \log \abs{\frac{q+2k_F}{q-2k_F}} + \frac{1}{2}
+    \right)
+\end{align}
+which agrees with the desired answer up to a sign in the absolute value.
+
+\textbf{Lemma:} We argue for the integral formula used above. We simply compute
+for one sign
+\begin{align}
+    \int k \log(C + k)\;\mathrm{d}k ={}&
+        k \left[ (C + k) \log (C + k) - k \right] \nonumber\\
+    &- \int (C + k) \log (C + k) - k\;\mathrm{d}k \\
+    ={}& k(C+k)\log(C+k) - k^2 - C\left[ (C + k) \log (C + k) - k \right]
+        \nonumber\\
+    &+ \frac{k^2}{2} - \int k\log(C+k)\;\mathrm{d}k\\
+    2 \int k\log(C+k)\;\mathrm{d}k ={}&
+        (k-C)(C+k)\log(C+k) - \frac{k^2}{2} - Ck\\
+    \int k\log(C+k)\;\mathrm{d}k ={}&
+        \frac{1}{2}\left[(k^2 - C^2)\log(C+k) - \frac{k^2}{2} - Ck\right]
+        \label{final}
+\end{align}
+
+The second sign is obtained by flipping the sign of $k$, and the desired
+integral is the difference between the two. The log terms in~\eqref{final} then
+combine, the $\frac{k^2}{2}$ term cancels since it's the same in both signs, and
+$Ck$ doubles since it incurs a sign flip. This reproduces~\eqref{equation}.
+
+\end{document}
+

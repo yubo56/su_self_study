@@ -1,0 +1,253 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Deedy - One Page Two Column Resume
+% LaTeX Template
+% Version 1.1 (30/4/2014)
+%
+% Original author:
+% Debarghya Das (http://debarghyadas.com)
+%
+% Original repository:
+% https://github.com/deedydas/Deedy-Resume
+%
+% IMPORTANT: THIS TEMPLATE NEEDS TO BE COMPILED WITH XeLaTeX
+%
+% This template uses several fonts not included with Windows/Linux by
+% default. If you get compilation errors saying a font is missing, find the line
+% on which the font is used and either change it to a font included with your
+% operating system or comment the line out to use the default font.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% TODO:
+% 1. Integrate biber/bibtex for article citation under publications.
+% 2. Figure out a smoother way for the document to flow onto the next page.
+% 3. Add styling information for a "Projects/Hacks" section.
+% 4. Add location/address information
+% 5. Merge OpenFont and MacFonts as a single sty with options.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CHANGELOG:
+% v1.1:
+% 1. Fixed several compilation bugs with \renewcommand
+% 2. Got Open-source fonts (Windows/Linux support)
+% 3. Added Last Updated
+% 4. Move Title styling into .sty
+% 5. Commented .sty file.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Known Issues:
+% 1. Overflows onto second page if any column's contents are more than the
+% vertical limit
+% 2. Hacky space on the first bullet point on the second column.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[]{deedy-resume-openfont}
+
+\begin{document}
+
+\newcommand{\tab}{\hspace{10pt}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     LAST UPDATED DATE
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lastupdated
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     TITLE NAME
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\namesection{Yubo}{Su}{\href{mailto:yssu@caltech.edu}{yssu@caltech.edu}
+    $\bullet$ 770.527.2575\\
+    \urlstyle{same}{http://www.linkedin.com/in/yubosu} $\bullet$
+    \urlstyle{same}{https://github.com/yubo56}
+}
+% {Apply analytic and computational experience to complex problems in
+% scalable ways.
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     COLUMN ONE
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{minipage}[t]{0.33\textwidth}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     EDUCATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Education}
+
+    \subsection[CIT]{California Institute\\
+        of Technology}
+    \descript{B.S.~in Physics, \\
+        \tab Computer Science}
+    \location{June 2016 | Pasadena, CA \\
+        GPA:\@ 3.74}
+\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     SKILLS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Skills}
+    \subsection{Programming}
+    Javascript (Node.js) $\bullet$ Python $\bullet$ C/C++\\
+    Java $\bullet$ Shell $\bullet$ Assembly $\bullet$ CUDA\\
+    \sectionsep
+    \subsection{Skillset}
+    Numerical Simulation\\
+    Systems Infrastructure \&\\
+        \tab Optimization\\
+    Data Management \& Security
+    \sectionsep
+    \subsection{Tools}
+    Matlab $\bullet$ Mathematica $\bullet$ \LaTeX\\
+    MongoDB $\bullet$ PostgreSQL \\
+    AWS (EC2, S3, etc.) $\bullet$ Docker\\
+    Ansible $\bullet$ Jenkins $\bullet$ Git $\bullet$ Linux\\
+    \sectionsep
+    \subsection{Languages}
+    English $\bullet$ Chinese $\bullet$ French
+    \sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     LINKS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% (ys) not using
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     COURSEWORK
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Coursework}
+    \subsection{Physics}
+        Stellar Astrophysics\\
+        Group Theory in Physics\\
+        Introduction to Particle Physics\\
+        Introduction to Solid State Physics\\
+    \sectionsep
+
+    \subsection{Computer Science}
+        Machine Learning\\
+        GPU Programming\\
+        Biomolecular Computation\\
+        Networks: Communications and\\
+            \tab Economics\\
+        Relational Databases
+    \sectionsep
+
+    \subsection{Teaching}
+        Ordinary and Partial\\
+            \tab Differential Equations (1x)\\
+        Complex Analysis (1x)\\
+        Freshman Physics Lab (4x)\\
+        C++ Language Workshop (1x)
+    \sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%     COLUMN TWO
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.66\textwidth}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     EXPERIENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Experience}
+
+\runsubsection{Blend Labs}
+\descript{| Software Engineer}
+\location{July 2016--Present | San Francisco, CA}
+\vspace{\topsep} % Hacky fix for awkward extra vertical space
+\begin{tightemize}
+    \item Developed AWS S3 file management microservice. Implemented per-file
+        encryption, set up load testing suite and stabilized all microservice
+        deploys.
+    \item Profiled and optimized unit tests and app deploy by parallelizing
+        tests, improving build caching and decreasing app size.\@ Average speed
+        up of 50\%.
+    \item Improved scope/accessibility of data backup \& restore in app.
+    \item Worked heavily with Node.js, Python, Docker, Shell, Ansible and AWS
+        services.
+    \item Participate in on-site career fairs and phone interviews.
+\end{tightemize}
+\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     RESEARCH
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Research}
+\subsection{California Institute of Technology}
+\descript{Undergraduate Researcher (Computational Astronomy)}
+\location{Jan 2015--Jun 2016 | Pasadana, CA}
+\begin{tightemize}
+    \item Senior Thesis Project.
+    \item Worked with \textbf{\href{TODO}{Prof Sunil Golwala}} to quantify
+        detectability of kinetic Sunyaev-Zel'dovich Effect with future
+        sub-millimeter telescopes.
+    \item Developed a procedure to remove contaminating sources from
+        simulated 2D telescope data conforming to accuracy bounds in optimal
+        filtering theory.
+    \item Code is publically available at % TODO URL, Sunil link
+    \item Signal Processing, IDL, Linux
+\end{tightemize}
+\sectionsep
+
+\subsection{NASA Jet Propulsion Laboratory}
+\descript{Undergraduate Researcher (Solar Physics)}
+\location{Jun 2014--Dec 2014 | Pasadena, CA}
+\begin{tightemize}
+    \item Worked with \textbf{\href{TODO}{Dr. Paulett Liewer}} to generate
+        synthetic white light images for solar phenomena simulating Solar Probe
+        Plus (exp.~2020) view parameters.
+    \item AGU LINK % TODO
+    \item Raytracing, IDL, C
+\end{tightemize}
+\sectionsep
+
+\subsection{California Institute of Technology}
+\descript{Undergraduate Researcher (Computational Chemistry)}
+\location{Mar 2013--Aug 2013 | Pasadena, CA}
+\begin{tightemize}
+    \item Worked with \textbf{\href{TODO}{Prof William A. Goddard}} and
+        \textbf{\href{TODO}{Prof Jose L. Mendoza-Cortes}} to develop \emph{ab
+        initio} force field parameters to compute hydrogen adsorption of various
+        COF/MOFs.
+    \item Numerical Optimization, Monte Carlo methods
+\end{tightemize}
+\sectionsep
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     AWARDS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Awards}
+\begin{tabular}{p{20pt}p{80pt}p{7.5cm}}
+    2016 & Best TA---Teaching Feedback & Among all Caltech Undergraduate and
+    Graduate TAs. 22/24 students who responded gave perfect reviews in all
+    categories.\\
+    2016 & Outstanding Teaching Award & Nominated by students among teachers and
+    TAs, selected by student body.\\
+    2015 & NSF GRFP Honorable Mention & Proposed to study core-collapse
+    supernovae gravitational waves using machine learning techinques.
+\end{tabular}
+\sectionsep
+
+\end{minipage}
+\end{document}
