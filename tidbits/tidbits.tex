@@ -642,4 +642,101 @@ verify it to be reasonable for three dimensions as well:
 \end{align}
 which again agrees with intuition for $a=b=c$
 
+\clearpage
+\section{12/04/16---Musings on Hamiltonian Chaos}
+
+We learned in our chaos readings that given an integrable Hamiltonian (can be
+written in terms of action-angle variables, has $N$ constants of motion for $2N$
+dimensional phase space), a small perturbation generally breaks the toroidal
+phase space trajectory into chaotic motion. Let's see how much of this we can
+actually understand.
+
+\subsection{Action-Angle variables}
+
+I don't have my 106 notes handy, so let's rederive some action-angle stuff. The
+archetypal Hamiltonian to use is the SHO $H = (p^2 + q^2)/2$. While we may have
+suspicions for the choice of action-angle, we look up that
+\begin{align}
+    I &= \frac{1}{2\pi}\oint \mathrm{d}(pq)
+\end{align}
+the integral over one period. For us, let's note that
+$E = H = \frac{p^2 + q^2}{2}$
+is a constant of motion, thus we can write
+\begin{align}
+    p &= \sqrt{2E - q^2}\\
+    I &= \frac{1}{2\pi} \left[ 2 \int\limits_{-\sqrt{2E}}^{\sqrt{2E}}
+        \sqrt{2E - q^2}\;\mathrm{d}q \right]\\
+    &= E
+\end{align}
+where we recognize the integral to just be the integral of the circle. This
+makes sense, as we recognize that the action integral $I$ is just the area of
+phase space enclosed within a full period, which for us is just $2\pi E$ since
+we enclose a circle in phase space with radius $r^2 = 2E$.
+
+The angle $\theta$ must be such that the above expression also holds, i.e.
+\begin{align}
+    \oint \mathrm{d}(pq) &= \oint \mathrm{d}(I\theta)
+\end{align}
+so that the phase space volume enclosed in one rotation is the same for both
+variables. We can then differentiate both sides by $I$ to obtain
+\begin{align}
+    \theta &= \pd{}{I}\oint \mathrm{d}pq.
+\end{align}
+
+Since the $\oint$ depends only on the bounds of integration, we see that
+$\theta$ is simply the limit on the integral, which further algebra shows to be
+$\arctan \frac{q}{p}$. We can verify that this is canonical by computing the PB
+\begin{align}
+    \pd{I}{p}\pd{\theta}{q} - \pd{I}{q}\pd{\theta}{p} &=
+        p \frac{1}{p}\frac{1}{1 + \left( \frac{q}{p} \right)^2} -
+        q \left( - \frac{q}{p^2} \right)
+        \frac{1}{1 + \left( \frac{q}{p} \right)^2}\\
+    &= 1
+\end{align}
+so we're in good shape.
+
+\subsection{Multi-dimensional SHOs}
+
+In more generality, if we have a multidimensional SHO, we see that the
+Hamiltonian is just their sum, and so $H$ in terms of action angle variables is
+still the sum of the actions, while their angles evolve separately.
+
+What is the rate at which the angle evolves? For our above single-dimensional
+oscillator, it's easy to simply solve the EOM and find that $\frac{q}{p} = \tan
+t$, and so that the angle evolves with unit frequency. More generally, if the
+Hamiltonian is of form $H = p^2 + Cq^2$, it is easy to associate $C = \omega^2$
+thanks to Hamilton's canonical equations $\dot{p} = H_q, \dot{q} = -H_p$ or
+something like that up to a sign. Thus, in general our Hamiltonian takes on form
+\begin{align}
+    H &= \frac{\sum_j p_j^2 + \omega_j^2q_j^2}{2} = \sum_j I_j
+\end{align}
+with each of the $I_j$ having a corresponding angle $\theta_j$ that evolves at
+$\omega_j$.
+
+\subsection{With perturbation}
+
+How can we handle the perturbation? I have no idea, but I'll give it a shot.
+Let's adopt a phase space where each $(q_j, p_j)$ are components of a complex
+number. Then the $I_j$ are the magnitudes of each component, the $\theta_j$ the
+phases, and the Hamiltonian acts simply to rotate each component. It's easy to
+write down a system of equations that reproduces this behavior, but can we
+express it in terms of the Hamiltonian? Put another way, is there a way we can
+cast the $2N$-dimensional real Hamiltonian system above into an $N$-dimensional
+complex system with similar rules?
+
+The defining property of a Hamiltonian system is Hamilton's canonical equations
+$\dot{p} = \pd{H}{q}, \dot{q} = -\pd{H}{p}$. If each dynamical variable is
+instead $z_j = p_j + iq_j$, we instead want a property that looks something like
+$\dot{z}_j &= iz_j = i\pd{H}{z_j}$. Thus, we see that the Hamiltonian must be
+$H = \sum_j\frac{z_j^2}{2}$\footnote{We have made a choice of convention in
+putting the $i$ with the partial derivative rather than in the Hamiltonian,
+motivated by keeping the HAmiltonian clean and most in analog with the
+real-variable Hamiltonian}, and it produces dynamics that can be expressed in
+terms of the $\vec{z}$ vector as $\dot{\vec{z}} = i\vec{z}$\footnote{This seems
+eerily similar to the quantum mechanical analog, where $p = -i\hbar \pd{}{x}$.
+Probably not coincidence but a simple property of the symplectic phase space our
+dynamics exist in.}.
+
+We see now that $H =$
+
 \end{document}
