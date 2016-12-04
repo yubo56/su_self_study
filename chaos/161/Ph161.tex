@@ -70,6 +70,24 @@ characterizations that we've learned include:
         dynamics, we would expect certain partitions to map strictly within
         themselves, but if this mixing is always positive, then the Kolmogorov
         Entropy is positive and suggests chaotic dynamics.
+
+    \item[Period Doubling Route to Chaos] Some dynamical systems parameterized
+        by some $\alpha$ will exhibit period doubling bifurcations as $\alpha$
+        is increased. If these bifurcations happen for increasingly small
+        changes in $\alpha$, its possible for some finite $\alpha$ that the
+        system enters chaos i.e.\ infinite period.
+
+    \item[Renormalization Group] In large broad strokes, renormalization in
+        chaos is the procedure $T[f(x)] = -\alpha f(f(-x/\alpha))$, whereby we
+        rescale coordinates. In period doubling cascades, renormalization shows
+        us given a rather general set of assumptions how period doubling comes
+        about.
+
+    \item[Chaos in non-attracting sets] Chaos can also be described in terms of
+        symbolic dynamics, where we construct some mapping from phase space to a
+        discrete sequence of variables e.g.\ $0$s and $1$s. We then state that a
+        system is chaotic if for every such sequence we can find a set of
+        initial conditions to produce this sequence.
 \end{description}
 
 \section{Lorenz Model}
@@ -1647,5 +1665,254 @@ use/interpretation of the theorem.
 We do some numerical investigations of the theorem to illustrate precisely this
 point, that a system that moves beyond linear dynamics is equally likely to
 break down to period locked motion as to chaos.
+
+\clearpage
+
+\section{Mathematical Chaos}
+
+\subsection{Definitions}
+
+\begin{description}
+    \item[Stable/Unstable Manifolds] In a given map $F(x)$ and a fixed point
+        $x_f$, the stable manifold is the set of points such that $\abs{F^n(y) -
+        F^n(x_f)} \to 0$ as $n \to \infty$, while the unstable manifold is the
+        set of points such that $\abs{F^{-n}(y) - F^{-n}(x_f)} \to 0$ as $n \to
+        \infty$.
+
+        In a 2D map, the stable/unstable manifolds are 1D manifolds, where a
+        manifold is a set that exhibits nice properties e.g.\ no fractal
+        properties. A 1D manifold in particular must look locally like a single
+        line everywhere (e.g.\ the letter A would not be a 1D manifold since the
+        intersection points don't look like single lines but intersections).
+        More generally, a manifold must at every point look ``like Euclidean
+        space.''
+
+    \item[Hyperbolic Invariant Sets] Hyperbolic invariant sets are
+        generalizations of saddle points in multiple dimensions. For some point
+        $x$ in a map $F$, we look at the linearized map about $x$, called the
+        \emph{tangent space} $T_x$. An invariant set $\Sigma$ under $F$ is said
+        to be hyperbolic if it decomposes into stable and unstable spaces $T_x =
+        E^s \oplus E^u$ such that
+        \begin{itemize}
+            \item The splitting varies continuously with $x$.
+            \item The action of the Jacobian about any $F^n(x)$ on any $v$ in
+                the manifolds is bounded away from $0$, i.e.\ the exponetial
+                growth/decayof the stable/unstable manifolds is bounded away
+                from $0$.
+        \end{itemize}
+
+    \item[Axiom A attractor] These are attractors of differentiable maps that
+        are hyperbolic and mixing. A mixing attractor means that for any two
+        sets in the phase space
+        \begin{align}
+            \lim_{n \to \infty}\mu\left[ S_a \cap F^n(S_b) \right] &=
+            \mu(S_a)\mu(S_b)
+        \end{align}
+        where $\mu$ is the measure of the attractor. In other words, points in
+        the phase space are spread evenly over the attractor over time. Axiom A
+        attractors are the nicest attractors and are structurally stable to
+        small perturbations to the map.
+\end{description}
+
+Many physical attractors are non-hyperbolic b/c their stable/unstable manifolds
+are tangent, and structural stability is in general hard to find. One example of
+a map with an Axiom A attractor is the Ansov map
+\begin{align}
+    x_{n+1} &= x_n + y_n \mod 1\\
+    y_{n+1} &= x_n + 2y_n \mod 1
+\end{align}
+since initial conditions fill the space with uniform measure. The Sinai map
+\begin{align}
+    x_{n+1} &= x_n + y_n + \delta \cos\left( 2\pi y_n \right)\mod 1\\
+    y_{n+1} &= x_n + 2y_n \mod 1
+\end{align}
+is a small perturbation which therefore is also hyperbolic. However, dynamics
+don't generally fill the map uniformly anymore, and we will explore this
+next lecture.
+
+\clearpage
+
+\section{Predicting Chaos}
+
+We want to be able to predict chaos, so we need to understand how homoclinic and
+heteroclinic orbits behave under perturbation. We will develop these ideas from
+sets that are not necessarily attractors, starting with the shift map.
+
+The shift map is defined $x_{n+1} = 2x_n \pmod 1$. Consider our initial value as
+an infinite decimal in binary, then the shift map serves simply to bitshift and
+truncate the integer part. This exhibits the following properties
+\begin{description}
+    \item[Sensitivity to initial conditions] Two initial conditions arbitrarily
+        close diverge after a sufficient number of iterations.
+
+    \item[Symbolic dynamics] If we consider each value in a sequence of values
+        generated by the map and round to $0,1$, we get a perfectly random
+        sequence. The mapping of chaotic dynamics to random sequences is known
+        as symbolic dynamics. A sequence of $0,1$s is a Bernoulli sequence.
+
+    \item[Kolmogorov Entropy] Information is created at $1$ bit per iteration,
+        thus the Kolmogorov entropy is $1$.
+
+    \item[Most initial conditions are chaotic] All rational $x_0$ lead to
+        periodic orbits, which is of measure zero; irrationals lead to chaotic
+        orbits.
+\end{description}
+
+\subsection{Chaos in non-attractor sets: Smale Horseshoe}
+
+We can define chaos as following: given any Bernoulli sequence, we can find an
+initial state that reproduces exactly that sequence.
+
+Let's consider this in the case of the Smale Horseshoe. The construction is as
+follows:
+\begin{itemize}
+    \item Take a unit square and stretch it into a long vertical rectangle with
+        width $1/\lambda$ and height such that two $1/\mu$-height sections at
+        the top and bottom of the original unit square are now unit height.
+
+    \item Map the images of these $1/\mu$-height sections (which are now unit
+        height and $1/\lambda$ width) to the left and right of a new unit
+        square.
+\end{itemize}
+
+We note that nothing with $y \in [1/\mu, 1-1/\mu]$ of the pre-image is mapped
+into the image, and nothing with $x \in [1/\lambda, 1-1/\lambda/]$ has a
+pre-image. Thus, with repeated iteration of this map, only a measure $0$ set of
+the initial unit square survives, the invariant set.
+
+We can denote each point with a $0, 1$ depending on which of the two slices it
+lives in. Then, each point in the invariant set is denoted by an infinite
+sequence of $0,1$s, and the effect of each iteration is to left-pop the sequence.
+Since for any arbitrary sequence of $0,1$s, we can find a point in the invariant
+set that generates this sequence, the Smale Horseshoe exhibits chaos.
+
+\subsection{Homoclinic Tangles}
+
+We introduced stable/unstable manifolds last section. Note that [un]stable
+manifolds cannot intersect any other [un]stable manifolds, including itself,
+since then that point will not have a unique inverse (or forward iteration of
+the map). However, a stable manifold can intersect an unstable manifold, and if
+the intersection is transverse rather than tangential, then the neighborhood of
+the intersection can be shown to look like a Smale horseshoe (with all the
+stretching/compressing dynamics at play\dots). This is called a homoclinic
+tangle.
+
+\subsection{Controlling Chaos}
+
+There are a few chapters here that I don't feel like reading that talk about how
+to control chaos. Since all chaotic attractors have unstable periodic orbits of
+arbitrary period, it's possible to apply small perturbations to restore a
+trajectory deviating from an unstable trajectory to keep it on. This goes into
+some control theory.
+
+It's also a cool way to compute gravitational slingshot-like problems: since the
+systems are chaotic, it's possible to effect a large change in the trajectory
+with an appropriately small perturbation. The formalism to do so is to grow the
+trajectory backwards from the target and a stability zone, and forward from the
+initial condition, find the minimum distance between these spheres and make the
+appropriate perturbation.
+
+\clearpage
+
+\section{Hamiltonian Chaos}
+
+The majority of Hamiltonian systems are not integrable, and most Hamiltonian
+systems exhibit chaos. Since Hamiltonian systems preserve phase space, there can
+be no attractors. Let's set out the basics of the discussion.
+
+\subsection{Phase Space}
+
+Phase space is described by $N$ position and momentum coordinates each, forming
+a $2N$ phase space. The Hamiltonian satisfies the property
+\begin{align}
+    \rd{\vec{p}}{t} &= -\pd{H}{\vec{q}} & \rd{\vec{q}}{t} &= \pd{H}{\vec{p}}
+\end{align}
+where $H(\vec{p}, \vec{q}, t)$. Note that if $H$ has no explicit time dependence
+then $\rd{H}{t} = 0$ is a constant that we call the energy. Hamiltonian dynamics
+are volume preserving, i.e.
+\begin{align}
+    \vec{\nabla} \cdot \vec{V}_{ph} &= \pd{}{\vec{p}}\rd{\vec{p}}{t} +
+        \pd{}{\vec{q}}\rd{\vec{q}}{t} = 0
+\end{align}
+or more strictly the symplectic property
+\begin{align}
+    \rd{}{t}\left( \delta \vec{p} \delta\pvec{q} -
+        \delta \vec{q} \delta \pvec{p}\right) = 0
+\end{align}
+where $(\delta \vec{p}, \delta \vec{q})$ and its primed counter part are the two
+separations between three infinitesimally separated orbits.
+
+Canonical transformations are defined by a generating function
+\begin{align}
+    \pvec{q} &= \pd{S}{\pvec{p}}& \vec{p} &= \pd{S}{}\vec{q}
+\end{align}
+where $S(\pvec{p}, \vec{q}, t)$ is one possible choice of generating function.
+
+For a $2N$-dimensional Hamiltonian, dynamics operate on a $2N-1$ subspace
+constrained by the energy. Then, if we examine along a single constant plane
+(e.g.\ maybe constant $q_i$) then we obtain a map. Moreover, thanks to the
+Hamiltonian properties, we can show that the map is also symplectic. This means
+that the eigenvalues governing displacement from a fixed point must come in
+$(\lambda, 1/\lambda)$ pairs.
+
+\subsection{Non-integrable systems}
+
+An integrable Hamiltonian means that there are $N$ independent constants of
+motion. We can start examining this by perturbing an integrable Hamiltonian
+\begin{align}
+    H &= H_0 + \epsilon H_1.
+\end{align}
+
+In general, $H$ is non-integrable for any $\epsilon > 0$. The motion under $H_0$
+is an $n$torus with some frequency vector $\vec{\omega}$ at which the torus is
+traversed (recall action-angle canonical transformations). What happens to these
+trajectories as $\epsilon$ is increased?
+
+For $2D$ tori (easiest to reason about since winding numbers only exist for
+ratios of two frequencies), rational winding numbers break down for any
+$\epsilon$, and irrational winding numbers break down depending on how close
+they are to rationals (e.g.\ when we earlier talked about repeated fraction
+expansions of irrational numbers, smaller numbers = ``more irrational.'').
+
+The qualitative exploration of this behavior is in a lost set of lecture notes
+\frownie.
+
+\clearpage
+
+\section{Quantum Chaos}
+
+We explore what happens when we include $\hbar$ in chaotic classical
+Hamiltonians. There should be some correspondence when $\hbar \to 0$ right?
+
+We note that with a nonzero $\hbar$, the energy spectrum is no longer continuous
+but discrete, and so the power spectrum cannot exhibit the broad bands
+characteristic of chaos but is instead quasiperiodic, with frequencies
+corresponding to the $E_n$. For instance, the energy dependent solutions look
+something like
+$\sum\limits_{n}^{} A_ne^{-i E_n t/\hbar}$.
+
+The average splitting between energy levels can be estimated by phase space
+volume: if we have a particle in a 2D box of dimensions $L$ and maximum energy
+$E$, then there are of order $mEL^2/\hbar^2$ eigenstates, which gives an energy
+splitting of $\hbar^2/mL^2$. Thus, in general, quantization should squelch
+chaotic behavior since there's a maxiumum frequency!
+
+\subsection{Energy Level Distribution}
+
+It is difficult to predict the exact energy levels of quantum analogs to
+classical chaotic systems given our poor characterization of the classical
+motion, we probably can only make statistical predictions about the dynamics. We
+choose $P(s)$ the probability distribution of $s$ the separation of adjacent
+energy levels relative to the mean energy level spacing at that energy.
+
+It turns out that $P(s)$ has functional form $\frac{\pi}{2}se^{-\pi s^2/4}$,
+suggested by Wigner. This differs from what we would expect if the levels were
+randomly distributed, which would produce Poissonian distributions.
+
+It also turns out that the correct distribution can be produced by the
+eigenvalues of random real, Hermitian matricies, with a distribution that turns
+out to be simply Gaussian in each element $H_{jk}$. Real Hamiltonians are only
+when time reversal is satisfied, and when it is broken, we can have just random
+Hermitian matricies.
 
 \end{document}
