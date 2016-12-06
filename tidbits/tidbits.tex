@@ -708,7 +708,7 @@ Hamiltonian is of form $H = p^2 + Cq^2$, it is easy to associate $C = \omega^2$
 thanks to Hamilton's canonical equations $\dot{p} = H_q, \dot{q} = -H_p$ or
 something like that up to a sign. Thus, in general our Hamiltonian takes on form
 \begin{align}
-    H &= \frac{\sum_j p_j^2 + \omega_j^2q_j^2}{2} = \sum_j I_j
+    H &= \frac{\sum_j p_j^2 + \omega_j^2q_j^2}{2} = \sum_j \omega_j I_j
 \end{align}
 with each of the $I_j$ having a corresponding angle $\theta_j$ that evolves at
 $\omega_j$.
@@ -727,16 +727,69 @@ complex system with similar rules?
 The defining property of a Hamiltonian system is Hamilton's canonical equations
 $\dot{p} = \pd{H}{q}, \dot{q} = -\pd{H}{p}$. If each dynamical variable is
 instead $z_j = p_j + iq_j$, we instead want a property that looks something like
-$\dot{z}_j &= iz_j = i\pd{H}{z_j}$. Thus, we see that the Hamiltonian must be
-$H = \sum_j\frac{z_j^2}{2}$\footnote{We have made a choice of convention in
+$\dot{z}_j = i\pd{H}{z_j}$\footnote{We have made a choice of convention in
 putting the $i$ with the partial derivative rather than in the Hamiltonian,
-motivated by keeping the HAmiltonian clean and most in analog with the
-real-variable Hamiltonian}, and it produces dynamics that can be expressed in
-terms of the $\vec{z}$ vector as $\dot{\vec{z}} = i\vec{z}$\footnote{This seems
-eerily similar to the quantum mechanical analog, where $p = -i\hbar \pd{}{x}$.
-Probably not coincidence but a simple property of the symplectic phase space our
-dynamics exist in.}.
+motivated by keeping the Hamiltonian clean and most in analog with the
+real-variable Hamiltonian}.
 
-We see now that $H =$
+Specializing to the SHO, given an $\omega$ in the SHO, we should make the
+correspondence $z_j = p_j + i\omega_jq_j$. Then we can write $H = \sum_j
+\omega_j z_j^2/2$ which gives us results something like
+$\dot{p}_j = -\omega_jq_j, \omega_j\dot{q}_j = p_j$ which is in accordance with
+what we expect. Thus, for an SHO we have
+\begin{align}
+    \dot{z_j} &= i\pd{H}{z_j} = i\omega_jz_j
+\end{align}
 
+In other words, the evolution of the system is fully diagonal with eigenvalues
+$\omega_j$. This is awfully reminescent of quantum mechanics! However, in QM,
+first order perturbation theory always gives us a result for a new orthogonal
+basis; why would any tori in classical mechanics break down? What does it even
+mean for a torus to break down? Why am I so stupid? These are not rhetorical
+questions but rather live musings as I type this up.
+
+Consider if we then perturb the above EOM to something like
+\begin{align}
+    \dot{z}_j &= i\omega_jz_j + i\epsilon \pd{\delta
+    H\left(\vec{z}\right)}{z_j}
+\end{align}
+
+Let's do the sensible thing and linearize $\delta H$ so that
+$\delta H(\vec{z}) = \delta \mathbf{H}\vec{z}$. We seek a new set of $z_j$
+such that the EOM is again diagonal. If we treat the $z_j$ coordinates as
+vectors in a vector space, we can do this via perturbation theory
+analogous to QM\@. Let's write down ansatz for new eigenbasis
+\begin{align}
+    \vec{z}_j &= \vec{z}_j + \sum_kA_{jk}\vec{z}_k
+\end{align}
+
+We then seek that $\pd{(\mathbf{H} + \delta \mathbf{H})(\pvec{z}_j)}{z'_j} =
+\omega_j' \pvec{z}_j$, and so (goodness the algebra below is so so wrong, but
+suck it up)
+\begin{align}
+    \pd{\mathbf{H}\vec{z}_j}{z_j} + \pd{\delta \mathbf{H}\vec{z}_j}{z_j} +
+        \pd{}{z_j}\mathbf{H}\sum_k A_{jk}\vec{z}_k
+        &= \omega_j z_j\hat{\jmath} + \delta
+        \omega_j \vec{z}_j + \omega_j \sum_k A_{jk}\vec{z}_k\\
+    \sum_k (\delta H)_{kj}\hat{k} + \sum_kA_{jk}\omega_k \vec{z}_k &=
+        \delta \omega_j z_j\hat{\jmath} + \omega_j \sum_k A_{jk}\vec{z}_k\\
+    A_{jk} &= \frac{(\delta H)_{jk}}{\omega_j - \omega_k}
+\end{align}
+which is in line with the result from QM\@. I don't trust the algebra but I
+think the result is reasonable.
+
+Not really sure where to go from here, but I found old lecture notes on the
+topic so I'll just consult them. Oops. It's been fun!
+
+The correct approach (which we may or may not work through) attacks this from
+the generating function perspective, computing the Hamilton-Jacobi generating
+function for the canonical transformation in terms of the small perturbation,
+then showing that for purely rational $\omega_j$, the perturbation theory fails
+to converge. It would appear then that the transformation of coordinates we
+propose above in general is not canonical for a rational winding number or
+something like that, if $H_1$ has a sufficiently high frequency component.
+
+The moral of the story is that in classical mechanics, to change coordinates we
+must approach from a generating function to show that the transformation is
+canonical. Duly noted.
 \end{document}
