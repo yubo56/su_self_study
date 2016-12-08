@@ -1915,4 +1915,83 @@ out to be simply Gaussian in each element $H_{jk}$. Real Hamiltonians are only
 when time reversal is satisfied, and when it is broken, we can have just random
 Hermitian matricies.
 
+\clearpage
+
+\appendix
+
+\section{Revisiting Hamiltonian Chaos (borrowed from 106 notes)}
+
+We will perform the entire discussion for only $N=1$, but since the Hamiltonian
+and all of the operations are linear in the action or the angle, the
+generalization should be obvious.
+
+\subsection{Action-angle canonical transformation}
+
+We start from the perspective of action-angle variables and canonical
+transformations. An integrable system with $N$ degrees of freedom has $N$
+constants of motion that can be chosen as action variables in action-angle
+transformations. The motion of the system can then be thought of as on an
+$N$-torus phase space, corresponding to the $N$ constants of motion.
+
+To make the transformation to action-angle variables, consider the generating
+function $S(I,q)$ satisfying
+\begin{align}
+    \theta &= \pd{S}{I} & p &= \pd{S}{q}\\
+    H\left( \pd{S}{q}, q \right) &= H(I) = \text{constant}
+\end{align}
+such that the Hamiltonian is independent of $\theta$ the angle coordinate, which
+idly ambles forward at a constant rate $\pd{H}{I}$. This formalism generalizes
+naturally to multiple dimensioens.
+
+\subsection{Perturbation theory of generating function}
+
+Now we wish to add $H = H_0 + \epsilon H_1$ and see whether the new Hamiltonian
+preserves the $N$-torus. If so, there must be another set of action-angle
+variables $(\theta', I')$ for the new Hamiltonian. Let's construct a generating
+function for the change of dynamical variables $(\theta, I) \to (\theta', I')$,
+expressable as a power series
+\begin{align}
+    S(I', \theta) &= I'\theta + \epsilon S_1(I', \theta)
+\end{align}
+where the zeroth order term is simply the identity generating function. We plug
+this into the Hamilton-Jacobi equation $H(I,\theta) = H'(I')$. This affects the
+Hamiltonian as
+\begin{align}
+    H_0(I) + \epsilon\left[
+        \omega_0(I) \cdot \pd{S_1}{\theta} + H_1(I,\theta)\right]
+        + \mathcal{O}(\epsilon^2) &= H'(I')
+\end{align}
+where $\omega_0$ is just the zeroth order frequency. We must make the first
+order terms cancel out.
+
+We then leverage the fact that $S, S_1$ must both be periodic in $\theta$, since
+$\theta$ is an angle coordinate (with period $2\pi$), and so we can express
+$S_1, H_1$ in a Fourier series
+\begin{align}
+    H_1 &= \sum\limits_{m \neq 0}^{} H_{1,m}(I)e^{im\theta} &
+    S_1 &= \sum\limits_{m \neq 0}^{} S_{1,m}(I)e^{im\theta}
+\end{align}
+which we can then substitute into the Hamilton-Jacobi equation to produce with
+some small effort
+\begin{align}
+    S_{1,m} &= i\frac{H_{1,m}(I,\theta)}{m\omega}
+\end{align}
+
+For the multi-dimensional result, we replace $m\omega \to \vec{m} \cdot
+\vec{\omega}$ and we obtain
+\begin{align}
+    S(\vec{I}, \vec{\theta}) &= \vec{I} \cdot \vec{\theta} + i\epsilon
+        \sum\limits_{\vec{m} \neq 0}^{}\frac{H_{1,m}(\vec{I}, \vec{\theta})}
+        {\vec{m} \cdot \vec{\omega}}e^{i\vec{m} \cdot \vec{\omega}}
+\end{align}
+and we obtain the expected result, that if the frequencies $\omega$ are such
+that $\vec{m} \cdot \vec{\omega} = 0$ for any choice of $\vec{m}$ then the
+perturbation theory diverges. Moereover, we see that the perturbation theory
+term explodes inversely with ``how irrational'' the ratio between the
+$\vec{\omega}$ are, since it dictates how small of a number $\vec{m} \cdot
+\vec{\omega}$ can be for choices of $\vec{m}$.
+
+We have thus proved a fraction of the Kolmogorov–Arnold–Moser (KAM) theorem. How
+irrational winding numbers break down (they approach rational winding numbers
+then break down) is a subject of another discussion, beyond my reach.
 \end{document}
