@@ -29,6 +29,7 @@
     \DeclareMathOperator{\Im}{Im}
     \DeclareMathOperator{\Log}{Log}
     \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\diag}{diag}
     \DeclareMathOperator{\Tr}{Tr}
     \DeclareMathOperator{\E}{E}
     \DeclareMathOperator{\Var}{Var}
@@ -713,7 +714,7 @@ something like that up to a sign. Thus, in general our Hamiltonian takes on form
 with each of the $I_j$ having a corresponding angle $\theta_j$ that evolves at
 $\omega_j$.
 
-\subsection{With perturbation}
+\subsection{With perturbation (incorrect result and faulty method)}
 
 How can we handle the perturbation? I have no idea, but I'll give it a shot.
 Let's adopt a phase space where each $(q_j, p_j)$ are components of a complex
@@ -796,4 +797,272 @@ canonical. Duly noted.
 I continue this discussion in a separate section in my chaos notes, and conclude
 this discussion to pursue more interesting musings about the classical-quantum
 correspondence we began to uncover above.
+
+\clearpage
+
+\section{12/07/16---Musings on Quantum-Classical correspondence}
+
+I'll repeat a small amount of the earlier discussion for my own benefit as I
+write this up.
+
+The definiting characteristic of the Hamiltonian formalism are Hamilton's
+canonical equations
+\begin{align}
+    \pd{H}{p_i} &= \dot{q}_i & \pd{H}{q_i} &= -\dot{p}_i
+\end{align}
+
+Above, we tried to map $z_i = q_i + ip_i$. However, part of what we did
+incorrectly in the above section was to assume that $\pd{H}{z_i}$ exists, i.e.
+$H$ is analytic in the $z_i$. This is generally not true, obviously, so we need
+to do some work here.
+
+I still want to try and make some sort of $z_i$ transformation, so let's
+consider the following: let's try to construct some $\mathcal{H} = H + iH'$ such
+that $\mathcal{H}$ is an analytic function of the $z_i = q_i + ip_i$. Recall the
+Cauchy-Riemann equations for differentiability of a function $f(z) = u(z) +
+iv(z), z = x + iy$:
+\begin{align}
+    \pd{v}{y} &= \pd{u}{x}& i\pd{v}{x} &= -i\pd{u}{y}
+\end{align}
+and so for us
+\begin{align}
+    \pd{H'}{p_i} &= \pd{H}{x_i}& \pd{H'}{q_i} &= -\pd{H}{p_i}
+\end{align}
+
+We then wish to compute $\pd{\mathcal{H}}{z_i}$. Since $\mathcal{H}$ is
+analytic, it doesn't matter along which direction in the complex plane we
+approach $z_i$, so we choose to fix $p_i$, and we obtain
+\begin{align}
+    \pd{\mathcal{H}}{z_i}\Bigg|_{p_i} &=
+        \pd{H(q_i, p_i)}{q_i} + i\pd{H'(q_i, p_i)}{q_i}\\
+        &= \pd{H}{q_i} - i\rd{H}{p_i}
+\end{align}
+
+Hey, that's super nice, since now we can write $\dot{z_i} =
+-i\pd{\mathcal{H}}{z_i}$, or in slightly more familiar form
+\begin{align}
+    i\pd{z_i}{t} &= \pd{\mathcal{H}}{z_i}
+\end{align}
+
+But wait! We can do even better. Since for any $N$-dimensional system, we have
+$N$ conserved quantities, we can always make canonical transformation for
+$H(p_i, q_i) \to H(I_i)$ the action-angle transformation. I won't bother
+checking canonical-ness here, but the new Hamiltonian $H(I_i) = \omega_iI_i$.
+
+Furthermore, from here we can always make a canonical transformation $H(I_i) \to
+H(a_i, b_i)$ where $a_i = \sqrt{2I_i}\cos\theta, b_i = \sqrt{2I_i}\sin\theta$
+with $\theta$ the angle variable.  Let's verify that this is canonical
+\begin{align}
+    \pd{a_i}{I_i}\pd{b_i}{\theta_i} - \pd{b_i}{I_i}\pd{a_i}{\theta_i} &=
+        \left( \frac{\cos\theta}{\sqrt{2I_i}} \right)
+        \left( \sqrt{2I_i}(-\cos\theta) \right) -
+        \left( \frac{\sin\theta}{\sqrt{2I_i}} \right)
+        \left( \sqrt{2I_i}\sin\theta \right)\\
+        &= -1
+\end{align}
+which means the Hamiltonian becomes
+\begin{align}
+    H &= \sum\limits_{i}^{}\frac{\omega_i}{2}(a_i^2 + b_i^2)
+\end{align}
+which is basically an SHO in $a_i, b_i$. But what's nice about this formulation
+in particular is that
+\begin{align}
+    \pd{\mathcal{H}}{z_i} &= \pd{H}{a_i} - i\pd{H}{b_i}\\
+    &= \omega_i(a_i + ib_i) = \omega_iz_i
+\end{align}
+and ergo we obtain
+\begin{align}
+    i\pd{z_i}{t} &= \omega_iz_i
+\end{align}
+which is exactly the Sch\"odinger equation in the energy eigenbasis! In other
+words, write the matrix $H_{QM} = \diag(\hbar \omega_i)$, then we have
+\begin{align}
+    i\hbar \pd{\vec{z}}{t} &= H_{QM}\vec{z}\label{5.SE}
+\end{align}
+
+I'm off by a sign, which is simply a convention of the definition of $z_i$, or
+alternatively a definiton on $i$. But we can start to see the emergence of the
+QM interpretation: there are certain dynamical orbits that are invariant under
+evolution by the Hamiltonian, and these correspond to the energy levels in QM
+that have energy $\hbar \omega$ associated with them.
+
+It should be noted in hindsight that our jubilance is slightly overeager: we
+have showed that the Hamiltonian in classical mechanics can be interpreted to
+dictate each component of $\vec{z}$ in a way that corresponds to $\omega_i$ the
+rate of change of the angle variable, but we have in no way derived any energy
+levels or the sort. This should not surprise us, as the quantization of energy
+levels is a purely quantum mechanical phenomenon, but the resemblance
+in~\autoref{5.SE} is still slightly superficial.
+
+\subsection{Significance of $\pd{\mathcal{H}}{z_i} \Rightarrow H_{QM}\vec{z}$}
+
+Note that to arrive at~\eqref{5.SE}, we made what amounted to the correspondence
+$\pd{\mathcal{H}}{z_i} \Rightarrow \left( H_{QM}\vec{z} \right)_i$ up to
+$\hbar$. This result makes perfect sense when $H$ is a quadratic sum of the
+$q_i, p_i$, but how the hell do the other operators enter the picture?
+
+It would seem that the key identification we must make here is how the complex
+$\vec{z}$ vector relates to dynamical measurements in classical mechanics, since
+the correspondence between $\vec{z}$ and state vector $\ket{\psi}$ is clear. In
+order to measure, say, the $q_j$ position of the system given $\vec{z}$, we need
+simply to compute the change-of-basis operation from the $z_i = a_i + ib_i$ to
+the $q_i, p_i$ basis, then project out the $j$th index.
+
+Another way to extract $q_j$ that perhaps seems more promising is to construct
+the generating function $S$ (which exists for all canonical transformations).
+Let's choose the generating function $S(a,b)$ such that $q = S_a, p=S_b$. It
+seems clear that we can use the same complexification trick above to obtain a
+$\mathcal{S}$ such that
+\begin{align}
+    q + ip &= \pd{\mathcal{S}(a + ib)}{(a+ib)}
+\end{align}
+
+Let's call $w=q+ip$, then we find that the $q_j$ component can be computed by computing
+\begin{align}
+    q_j &= \Re\left(-i\hat{w}_j \cdot \pd{\mathcal{S}}{\vec{z}}\right)
+\end{align}
+where I use the shorthand
+$\left[ \pd{\mathcal{S}}{\vec{z}} \right]_j = \pd{\mathcal{S}}{z_j}$. Compare
+this to the QM result, which would be $\dotp{q_j}{\psi}$, where in order to
+evaluate the dot product we must compute the components of $\psi$ in the
+$\left\{ q_j \right\}$ basis. We now interpret $\pd{\mathcal{S}}{\vec{z}}$ to be
+the $\vec{z}$ under the basis tranformation dictated by $\mathcal{S}$. The
+quantum mechanical equivalent of this operator would be $\sum_k
+\ket{q_k}\bra{q_k}$ the resolution of identity but also the change of basis
+operator.
+
+There seems to be at first glance a trend here: quantum mechanical operators
+tend to correspond to classical functions that act on a variable by
+\emph{differentiating} about that variable. In other words, the classical
+correspondence of some operator $\Omega$ that acts on a wavefunction
+$\ket{\psi}$ is $\mathbf{\Omega} = \pd{\Omega}{[~]}$ to be such that
+$\mathbf{\Omega}\vec{v} = \pd{\Omega}{\vec{v}}$ and where $\Omega$ is some
+complexified analytic function of its real/Hamiltonian counterpart. We have seen
+this to be true for the resolution of identity and for the Hamiltonian itself.
+
+Let's note that, heuristically, this explains the mapping of Poisson Brackets
+to commutators. Recall that a set of coordinates is classically canonical if its
+PB with $q,p$ is unity, and a set of variables is conjugate if their commutator
+is $i\hbar$. These are both phase space-preserving constraints, so it's clear
+that the latter is really the stipulation that the commutator of conjugate
+variables must equal $\left[ X,P \right] = i\hbar$, just as the PB is just that
+the change of coordinates has Jacobian with unit determinant. Let's try to flesh
+this out a bit more.
+
+\subsection{Classical Observables and Quantum Mechanical Operators}
+
+Let's formalize the above a little bit. When we speak of a classical dynamical
+variable $a$, it means that given a full specification of a state $\left\{ x_i,
+p_i\right\}$, we can measure $a$ for the given state. Similarly, when we speak
+of a quantum mechanical Hermitian operator (an observable) $A$, we mean that
+given a $\ket{\psi}$ we can determine the probability of measuring $A$ given
+$\ket{\psi}$ and observing any eigenvalue $\lambda$ of $A$, the probability
+$\ket{\psi}$ is eigenstate $\ket{\lambda}$.
+
+Under our above formalism, we mean the following: when we speak of a classical
+dynamical variable $a$, we mean that the value of $a$ in a classical state
+described by the complexified $\vec{z}_i$ can be computed by
+\begin{align}
+    a &= \Re\left(-i\hat{a}\cdot \pd{\mathcal{S}}{\vec{z}}\right)
+\end{align}
+where $\mathcal{S} = S + iS'$, $S$ being the generating function describing a
+canonical transformation from $\left\{ x_i, p_i \right\}$ to some set of
+canonical variables involving $a$ and $S'$ such that $\mathcal{S}$ is analytic.
+
+For instance, if we want to compute $x_j$, we note that the generating function
+has form $S = x_ip_i$, and so
+\begin{align}
+    \left[ \pd{\mathcal{S}}{\vec{z}} \right]_j &= \pd{\mathcal{S}}{z_j}\\
+    &= p_j + ix_j\\
+    x_j &= \Re(-i * (p_i + ix_j)) = x_j
+\end{align}
+
+The insertion of the $-i$ is a bit inconvenient, and clearly would have been
+different were we trying to measure $p_j$. This seems a bit inconvenient, until
+we remember that we can probably absorb these factors into $\mathcal{S}$ by
+defining different operators; indeed, $X,P$ are different operators in QM, and
+there seems to be little reason for us to use the same $\mathcal{S}$ for them!
+
+Thus, under our formalism, classical dynamical variables $a$ map to second-order
+tensors (matricies), which is again right for our correspondence.
+
+As one last parting shot of the merit of our formalism, let's observe that if we
+define a canonical transformation $\left\{ x_i, p_i \right\} \to \left\{ z_i,
+z_i^* \right\}$ a classic trick, where $z_i = \frac{x_i + p_i}{\sqrt{2}}$, we
+obtain that the PB is equal to $i$. The significance of this eludes me, but
+certainly the agreement with QM up to an omnipresent $\hbar$ ought to be
+encouraging?
+
+
+\subsection{Normalizing the state vector}
+
+An astute reader (all zero of you) would have objected a while ago that our
+Hamiltonian only superficially resembled a quantum mechancical one, since as I
+mentioned, the frequencies above correspond to the rate of change of the action
+variable, which is a constant of the Hamiltonian and the \emph{system}, not the
+state of the system. Contrast this with quantum mechanics, where the $\hbar
+\omega$ eigenvalues of the Hamiltonian depend on the \emph{state} of the system
+equally well as the Hamiltonian/configuration of the system itself.
+
+We can see why we err: the $\omega$ above does not change when the amplitude of
+motion changes, but the energy of the system clearly increases. To better
+understand where this comes from, let's focus on a single dimension for now, so
+two dimensions of phase space. If we recall how we wrote down the formula to
+measure $x_j$ above, it relied on the fact that the $x_j$ component of some
+vector was equal to the $x_j$ position of the taste. But $x_j \in \left(
+-\infty,\infty \right)$, so this won't do if we try to normalize the state
+vector. The only way we can get around this is by turning the single $x_j$
+component into an infinity of components, one for each value of $x_j$. Then we
+can ask whether the system's $x_j$ coordinate is some $x_0$ value by examining
+whether the $x_0$ component is nonzero! (Now we see why we prefer to discuss
+only a single dimension for now\dots)
+
+Consider our system to be in a state $z_0 = x_0 + ip_0$, and map it to a
+continuous function $\psi(z=x+ip) = \delta(x-x_0)\delta(p-p_0)$. It is easy to
+verify that $\psi$ is normalized $\int \abs{\psi^2} = 1$, and we may measure the
+position of $\psi$ by integrating it against an operator
+\begin{align}
+    x_0 &= \int x \abs{\psi}^2 \;\mathrm{d}x\mathrm{d}p
+\end{align}
+
+Lest I be accused of cherry-picking my normalization criterion for $\psi$, I
+remind you this is the standard normalization procedure for vectors. My argument
+above holds equally well whether using $\int \psi$ or $\int \abs{\psi}^2$, since
+we're only dealing with $\delta$ functions. So I guess it's a tossup.
+
+We can find similar expressions to measure the energy etc.\ of the system, and we
+see that we have moved from a $\mathbb{C}^n$-component vector representation of
+the state of the system to a representation that has unit norm albeit is a
+continuous function on $\mathbb{C}^n$. One can easily contest that this is an
+obfuscation of the physics, but is a natural starting ground for quantum
+mechanical states, where the phase space is discretized and we can have linear
+superpositions of states.
+
+\subsection{Afterword}
+
+We are officially at an impasse: without foresight of the quantization that
+quantum mechanics brings, without supposing that systems have finite precision
+in conjugate dynamical variables, it is impossible to proceed. These assumptions
+have no place in a classical worldview, and it seems that we have largely
+exhausted the range of speculations we can accomplish. But what a rich theory it
+is already! We have shown that it is possible to
+\begin{itemize}
+    \item Map a $2N$ real phase space to a normalized state vector without
+        losing any expressiveness.
+
+    \item Proposed a second-order tensor form for all classical dynamical
+        variables that act similarly to quantum observables.
+
+    \item Accidentally come across the canonical commutation relation and an
+        eerily remeniscent version of the Schr\"odinger Equation.
+\end{itemize}
+
+A symplectic manifold is a system endowed with an antisymmetric two-form, called
+the symplectic form. I think that this association of the antisymmetric two-form
+with a complexified function is generalizable and perhaps broadly applicable as
+a useful way of thinking about these two-forms. Of course, $n$-forms are
+probably just generalizations of the complex numbers, on second thought, but
+alas that is far beyond the scope of my intellect.
+
+With this I close my analysis. Thanks for listening!
 \end{document}
