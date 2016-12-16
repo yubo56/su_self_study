@@ -1065,4 +1065,47 @@ probably just generalizations of the complex numbers, on second thought, but
 alas that is far beyond the scope of my intellect.
 
 With this I close my analysis. Thanks for listening!
+
+\section{12/14/16---Matricies}
+
+We saw earlier in quantum chaos that the way that the continuous energy spectrum
+breaks down into discrete eigenvalues (which governs the power spectrum of the
+trajectory) is described by random matrix theory, specifically the distribution
+of gaps between eigenvalues of random matricies follows the same distribution.
+Let's see how much ground we can make on these results.
+
+\subsection{Prelim: Distributions of combinations of random variables}
+
+Suppose we want the difference of two random variables $X, Y$. For simplicity,
+let's say that they're normally distributed. Of course, if we're just talking
+expectation and variance then this is a trivial problem; how about the shape of
+the distribution? Differences of normal variables are also normally distributed,
+but let's see one way we can describe this. Call $Z = X - Y$, with both $X,Y$
+chosen with zero mean and standard deviation $\sigma$, then we should obtain
+\begin{align}
+    P_Z(z) &= \iint P_X(x) P_y(y) \delta(x - y - z)\;\mathrm{d}x\mathrm{d}y\\
+    &= \int\limits_{-\infty}^{\infty}P_X(x)P_y(x-z)\;\mathrm{d}x
+\end{align}
+and if we specialize $P_X = P_Y = N(0, \sigma)$ then (dropping normalizations)
+\begin{align}
+    P_Z(z) &\propto \int\limits_{-\infty}^{\infty}e^{-\frac{x^2}{2\sigma^2}}
+        e^{-\frac{(x-z)^2}{2\sigma^2}}\;\mathrm{d}x\\
+    &\propto \int\limits_{-\infty}^{\infty}
+        \exp\left[ \frac{-(2x^2 - 2xz + z^2)}{2\sigma^2} \right]\;\mathrm{d}x\\
+    &\propto \int\limits_{-\infty}^{\infty}e^{-\frac{2(x - z/2)^2}{2\sigma^2}}
+        e^{-\frac{z^2/2}{2\sigma^2}}\;\mathrm{d}x
+\end{align}
+and since the former exponent integrates to a constant and the latter a Gaussian
+of width $\sigma \sqrt{2}$, we haeve our answer. It is worth noting the former
+exponent integrates to a constant with an extra factor of $\sqrt{2}$ that
+provides exactly the correct normalization for the latter.
+
+In fact, this is trivially generalizable. If we want the distribution of a
+random variable $Z = f\left(\left\{ X_i \right\}\right)$ with each $X_i$ obeying
+its own probability distribution $P_i(x_i)$, the distribution is simply
+\begin{align}
+    P_Z(z) &= \int \delta\left(z - f\left( \left\{ x_i \right\} \right)\right)
+        \prod_i P_i(x_i)\;\mathbf{d}x_i\\
+    &= abc
+\end{align}
 \end{document}
