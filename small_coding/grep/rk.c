@@ -5,7 +5,8 @@
 int BASE = 101;
 unsigned int OVERFLOW_RISK = UINT_MAX >> 7; /* *101 <= 7 bitshifts */
 
-unsigned int _shift_hash(unsigned int hash) {
+unsigned int shift_hash(unsigned int hash)
+{
     if (hash >= OVERFLOW_RISK)
     {
         /* OVERFLOW_RISK is also a bitmask with top 7 bits zeroed out */
@@ -14,20 +15,22 @@ unsigned int _shift_hash(unsigned int hash) {
     return hash * BASE;
 }
 
-unsigned int _rabin_hash(char *str, int m) {
+unsigned int rabin_hash(char *str, int m)
+{
     /* compute the base (BASE) Rabin fingerprint of str with length m */
     unsigned int hash = 0;
     int i;
 
     for (i = 0; i < m; i++)
     {
-        hash = _shift_hash(hash);
+        hash = shift_hash(hash);
         hash += *(str + i);
     }
     return hash;
 }
 
-unsigned int _update_rabin_hash(unsigned int hash, int m, char pop, char push) {
+unsigned int _update_rabin_hash(unsigned int hash, int m, char pop, char push)
+{
     /*
      * Update the rabin hash by popping the third argument and pushing the
      * fourth on a string of length m
@@ -38,10 +41,10 @@ unsigned int _update_rabin_hash(unsigned int hash, int m, char pop, char push) {
 
     for (i = 1; i < m; i++)
     {
-        pop_hash = _shift_hash(pop_hash);
+        pop_hash = shift_hash(pop_hash);
     }
     ret_hash = ret_hash - pop_hash;
-    ret_hash = _shift_hash(ret_hash);
+    ret_hash = shift_hash(ret_hash);
     return ret_hash + push;
 }
 
@@ -51,15 +54,26 @@ int match_rk(char *text, char *target)
      * Performs O(n*m) naive matching
      */
     int m = strlen(target);
+    int i;
 
-    unsigned int text_hash = _rabin_hash(text, m);
-    unsigned int target_hash = _rabin_hash(target, m);
+    unsigned int text_hash = rabin_hash(text, m);
+    unsigned int target_hash = rabin_hash(target, m);
 
     while (*(text + m))
     {
         if (text_hash == target_hash)
         {
-            return 1;
+            for (i = 0; i < m; i++)
+            {
+                if (*(text + i) != *(target + i))
+                {
+                    break;
+                }
+            }
+            if (i == m)
+            {
+                return 1;
+            }
         }
         text_hash = _update_rabin_hash(text_hash, m, *text, *(text + m));
         text++;

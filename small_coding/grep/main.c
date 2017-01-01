@@ -1,21 +1,27 @@
 #include <stdio.h>
 #include "naive.h"
 #include "rk.h"
+#include "kmp.h"
 
 void test(char *text, char *target)
 {
     /*
      * Prints test results for each matching type for a text and target string
      */
-    printf("(%s, %s): %d, %d\n", text, target,
+    printf("(\"%s\", \"%s\"):\n\t%d, %d, %d\n", text, target,
         match_naive(text, target),
-        match_rk(text, target)
+        match_rk(text, target),
+        match_kmp(text, target)
     );
 }
 
 int main(int argc, const char *argv[])
 {
-    printf("(%s, %s): %s\n", "[text]", "[target]", "[naive], [rk]");
+    printf("(\"%s\", \"%s\"):\n\t%s, %s, %s\n", "[text]", "[target]",
+        "[naive]",
+        "[rk]",
+        "[kmp]"
+    );
 
     /* test cases */
     test("abac", "abac"); /* trivial */

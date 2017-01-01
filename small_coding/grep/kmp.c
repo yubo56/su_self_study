@@ -1,0 +1,70 @@
+#include <assert.h> /* for some domain checking */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* printable characters between 0x20 and 0x7E */
+#define PRINT_MAX 127 /* exclusive */
+#define PRINT_MIN 32 /* inclusive */
+int PRINT_RANGE = PRINT_MAX - PRINT_MIN;
+
+int table_idx(char ch)
+{
+    /* compute what index to use for a given character (32-127 range) */
+    assert(ch >= PRINT_MIN && ch < PRINT_MAX); /* in case illegal chars */
+    return ch - PRINT_MIN; /* guaranteed >= 0, < PRINT_RANGE */
+}
+
+int get_idx(int i, char j)
+{
+    /* utility function for 2D array as 1D array */
+    return i * PRINT_RANGE + table_idx(j);
+}
+
+int *kmp_jump_table(char *target, int m)
+{
+    /**
+     * precompute kmp jump table. This is a map saying "if I'm at index i of
+     * target and reading character c from text, what is the next index of
+     * target I look at?"
+     *
+     * more precisely for each substr_len prefix of target, does a prefix of
+     * length prefix_len - 1 match a suffix of (prefix_len - 1)? If so, compute
+     * the next index of target to compare
+     *
+     *      jumps[current index of substr (substr_len)]
+     *          [next character (target[prefix_len]] =
+     *          next index to examine (prefix_len + 1)
+     *
+     * Return: user-free (strlen(target) * PRINT_RANGE * sizeof(int))
+     *      containing jump table
+     */
+    /* we use calloc to zero the memory */
+    int *jumps = (int *) calloc(m * PRINT_RANGE, sizeof(int));
+    int substr_len;
+
+    for (substr_len = 0; substr_len < m; substr_len++)
+    {
+        jumps[get_idx(substr_len, target[substr_len])] = substr_len + 1;
+    }
+    return jumps;
+}
+
+int match_kmp(char *text, char *target) {
+    int m = strlen(target);
+    int *jumps = kmp_jump_table(target, m);
+    int target_idx = 0;
+
+    while (*text)
+    {
+        if (target_idx >= m) /* match condition */
+        {
+            return 1;
+        }
+        target_idx = jumps[get_idx(target_idx, *text)];
+        text++;
+    }
+
+    free(jumps);
+    return target_idx >= m;
+}

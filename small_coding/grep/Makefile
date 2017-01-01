@@ -5,7 +5,7 @@ BIN = match
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 
-all: clean main run
+all: main run
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<
