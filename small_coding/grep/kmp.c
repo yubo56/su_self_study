@@ -41,10 +41,28 @@ int *kmp_jump_table(char *target, int m)
      */
     /* we use calloc to zero the memory */
     int *jumps = (int *) calloc(m * PRINT_RANGE, sizeof(int));
-    int substr_len;
+    int substr_len, prefix_len, i;
 
     for (substr_len = 0; substr_len < m; substr_len++)
     {
+        for (prefix_len = 1; prefix_len < substr_len; prefix_len++)
+        {
+            /* compare prefix_len - 1 prefix and suffix of substr_len */
+            for (i = 0; i < prefix_len; i++)
+            {
+                if (*(target + i) !=
+                    *(target + substr_len - (prefix_len - 1) + i))
+                {
+                    break;
+                }
+            }
+            if (i == prefix_len - 1)
+            {
+                /* match */
+                jumps[get_idx(substr_len, target[prefix_len])] = prefix_len + 1;
+            }
+        }
+        /* special case since we don't need string comparison here */
         jumps[get_idx(substr_len, target[substr_len])] = substr_len + 1;
     }
     return jumps;
