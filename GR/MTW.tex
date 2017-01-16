@@ -1,0 +1,196 @@
+    \documentclass[12pt]{report}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings, times}
+    \usepackage{geometry}
+    \newcommand{\scinot}[2]{#1\times10^{#2}}
+    \newcommand{\bra}[1]{\left<#1\right|}
+    \newcommand{\ket}[1]{\left|#1\right>}
+    \newcommand{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+    \newcommand{\abs}[1]{\left|#1\right|}
+    \newcommand{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand{\svec}[1]{\vec{#1}\;\!}
+    \newcommand{\tensor}[1]{\overleftrightarrow{#1}}
+    \let\Re\undefined
+    \let\Im\undefined
+    \newcommand{\ang}[0]{\text{\AA}}
+    \newcommand{\mum}[0]{\upmu \mathrm{m}}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \DeclareMathOperator{\diag}{diag}
+    \newcommand{\expvalue}[1]{\left<#1\right>}
+    \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
+    \usepackage[font=scriptsize]{subcaption}
+    \everymath{\displaystyle}
+    \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
+
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
+
+\begin{document}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\rhead{Yubo Su}
+\cfoot{\thepage/\pageref{LastPage}}
+
+\tableofcontents
+
+\chapter{Flat Spacetime}
+
+\section{Spacetime Physics}
+
+\subsection{Notes}
+
+\begin{itemize}
+    \item Space tells matter how to move, matter tells space how to curve.
+        Physics is simple when local, and when we eliminate force at a distance
+        life is good.
+
+    \item \emph{Events} are coordinate-independent points in spacetime that are
+        defined by ``what happens there'' or more concretely by an intersection
+        of worldlines.
+
+    \item Spacetime is locally Lorentzian, a.k.a.\ flat or non-accelerating.
+        Gravitation/curvature is defined as the acceleration of the separation
+        between two nearby geodesics.
+
+        We measure curvature by the following: characterize $\xi$ the separation
+        between two originally parallel geodesics, then propagate each forward
+        by distance $s$. They are not necessarily parallel anymore (e.g.\ two
+        great circles on a sphere), and the separation obeys the following EOM
+        \begin{align}
+            \rtd{\xi}{s} + R\xi &= 0
+        \end{align}
+        where $R$ is the \emph{Gaussian Curvature} of the surface.
+
+        Generalizing to multiple dimensions, the separation $\mathbf{\xi}$ is a
+        vector, and we describe $\frac{\mathrm{D}^2\mathbf{\xi}}{\mathrm{d}^2s}$
+        with a capital $\mathrm{D}$ since the coordinates of the derivative
+        $\rtd{\mathbf{\xi}}{s}$ is subject to the whims of the coordinate lines,
+        which should not affect the separation between these two geodesics that
+        live beyond coordinates. The curvature is instead described by the
+        Reiman curvature tensor, which takes as arguments the 4-velocity
+        $\mathbf{u} = \rd{x^\alpha}{\tau}$ and yields
+        \begin{align}
+            \frac{\mathrm{D}^2\xi^\alpha}{\mathrm{d}^2\tau^2} +
+                R^{\alpha}_{\beta\gamma\delta}
+                \rd{x^\beta}{\tau}\xi^\gamma \rd{x^\delta}{\tau} &= 0
+        \end{align}
+        where $\mathbf{R}$ is the 4-component Reimann curvature tensor. We call
+        this the \emph{equation of geodesic deviation}.
+
+        These functions are sister functions of the Lorentz force equation in
+        electromagnetism
+        \begin{align*}
+            \rtd{x^\alpha}{\tau} - \frac{e}{m}F^\alpha_\beta \rd{x^\alpha}{\tau}
+                &= 0.
+        \end{align*}
+
+    \item $\mathbf{R}$ is a fickle object, subject to perturbation e.g.\ by
+        gravitational waves. A certain piece of the tensor is generated only
+        by the local mass distribution though, $\mathbf{G}$ the \emph{Einstein
+        curvature tensor}, incidently proportional to the \emph{stress-energy
+        tensor} as $\mathbf{G} = 8\pi \mathbf{T}$. Its interpretation is a local
+        average curvature.
+\end{itemize}
+
+\subsection{Practice Problems}
+
+\begin{description}
+    \item[Exercise 1.1] \emph{Show that the Gaussian curvature of a cylinder
+        $R=0$.}
+
+        Choose cylindrical coordinates $(a, \theta, z)$ for the surface of the
+        cylinder of radius $a$. We assert temporarily that all geodesics can be
+        parameterized as $g(s|\omega, \dot{z}) = (a, \omega s, \dot{z}s)$, i.e.\
+        correspond to uniform translation along and rotation about the axis of
+        the cylinder. Then, using the equation of geodesic deviation with
+        Gaussian Curvatures
+        \begin{align*}
+            \rtd{\xi}{s} + R\xi &= 0
+        \end{align*}
+        for $\xi = g_1 - g_2$ the separation, then since $g_1, g_2$ are linear
+        functions of $s$, their second derivatives with respect to $s$ are zero
+        and thus $\rtd{\xi}{s} = 0$. Observe that this happens regardless of the
+        value of $\xi$, thus $R=0$.
+
+        We now justify our parameterization $g(s|\omega, \dot{z})$. Two points
+        separated infinitisemally $(a, \theta, z), (a, \theta + \delta\theta, z
+        + \delta z)$ are separated by distance
+        \begin{align*}
+            \sqrt{\delta z^2 + a^2 \delta \theta^2} =
+                \mathrm{d}\theta\sqrt{\left(\rd{z}{\theta}\right)^2 + a^2}.
+        \end{align*}
+
+        The distance between two points $(\theta_1, z_1), (\theta_2, z_2)$ is
+        then given by
+        \begin{align*}
+            D[z(\theta)] &= \int\limits_{z_1}^{z_2}
+                \sqrt{\left(\rd{z}{\theta}\right)^2 + a^2}\;\mathrm{d}\theta
+        \end{align*}
+        where $z(\theta)$ is any trajectory that runs between the desired
+        endpoints. This is then a variational calculus problem, and thus the
+        $z(\theta)$ that minimizes the path must satisfy the Euler-Lagrange
+        Equation
+        \begin{align*}
+            \rd{}{\theta}\pd{I(z', z)}{z'} - \pd{I(z', z)}{z} &= 0.
+        \end{align*}
+
+        We note then that
+        $I(z', z) = \sqrt{\left(\rd{z}{\theta}\right)^2 + a^2}$ is independent
+        of $z$ and so we instantly find that $I(z',z) = C$ a constant. This
+        furthermore implies that $\rd{z}{\theta}$ is a constant and so that $z
+        \propto \theta$. Call the constant of proportionality $z \propto \alpha
+        \theta$.
+
+        Armed with this, we find that the arclength of the geodesic between the
+        desired endpoints is
+        \begin{align}
+            D[z(\theta)] &= \int\limits_{z_1}^{z_2}
+                \sqrt{\alpha^2 + a^2}\;\mathrm{d}\theta\\
+                &= \sqrt{\alpha^2 + a^2}\Delta z.
+        \end{align}
+
+        Recalling that $s$ parameterizes the length of our geodesic, we find
+        that $s, z, \theta$ must all be proportional. Call the ratios
+        $\frac{\theta}{s} = \omega, \frac{z}{s} = \dot{z}$, justifying our
+        parameterization.
+
+    \item[Exercise 1.1b] \emph{Alternatively, employ $R =
+        \frac{1}{\rho_1\rho_2}$ where $\rho_1, \rho_2$ are the principal radii
+        of curvature at the point in question in the enveloping Euclidean 3D
+        space.}
+
+        We note that one of the radii in a cylinder is $a$ while the other is
+        infinite, thus $R=0$.
+
+    \item[Exercise 1.3] \emph{Show that given $\omega$, the rotational frequency
+        of a planet about a fixed central mass $M$, we can not individually
+        determine $r$ the radius of orbit or $M$. Instead, derive a relation
+        between $\omega$ and $\rho$ the \emph{Kepler Density} of the mass, the
+        density if $M$ were spread over the sphere of radius $r$.}
+
+        We know that a central acceleration $\ddot{r} = r\omega^2 =
+        \frac{GM}{c^2r^2}$ under Newton's Law of Gravitation. Thus, we have
+        \begin{align*}
+            \omega^2 &= \frac{GM}{c^2r^3} = \frac{4\pi}{3}\frac{G}{c^2}\rho
+        \end{align*}
+        where since there are no other constraints on the motion we are done.
+\end{description}
+
+\end{document}
+
