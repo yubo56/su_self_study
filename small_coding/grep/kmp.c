@@ -9,10 +9,14 @@
 #define PRINT_MIN 32 /* inclusive */
 int PRINT_RANGE = PRINT_MAX - PRINT_MIN;
 
+int is_legal(char ch)
+{
+    return ch >= PRINT_MIN && ch < PRINT_MAX;
+}
 int table_idx(char ch)
 {
     /* compute what index to use for a given character (32-127 range) */
-    assert(ch >= PRINT_MIN && ch < PRINT_MAX); /* in case illegal chars */
+    assert(is_legal(ch)); /* in case illegal chars */
     return ch - PRINT_MIN; /* guaranteed >= 0, < PRINT_RANGE */
 }
 
@@ -22,7 +26,7 @@ int get_idx(int i, char j)
     return i * PRINT_RANGE + table_idx(j);
 }
 
-int *kmp_jump_table(char *target, int m)
+int *kmp_jump_table(const char *target, int m)
 {
     /**
      * precompute kmp jump table. This is a map saying "if I'm at index i of
@@ -86,7 +90,15 @@ int match_kmp(circular_buffer *text, const char *target) {
         {
             break;
         }
-        target_idx = jumps[get_idx(target_idx, text_char)];
+
+        if (!is_legal(text_char))
+        {
+            target_idx = 0;
+        }
+        else
+        {
+            target_idx = jumps[get_idx(target_idx, text_char)];
+        }
         text_idx++;
     }
 

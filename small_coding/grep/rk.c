@@ -3,18 +3,10 @@
 
 #include "rk.h"
 
-int BASE = 101;
-unsigned int OVERFLOW_RISK = UINT_MAX >> 7; /* *101 <= 7 bitshifts */
+/* we don't need to worry about overflow logic since overflowing is basically
+ * just a 32-bit bitmask */
 
-unsigned int shift_hash(unsigned int hash)
-{
-    if (hash >= OVERFLOW_RISK)
-    {
-        /* OVERFLOW_RISK is also a bitmask with top 7 bits zeroed out */
-        hash = OVERFLOW_RISK & hash;
-    }
-    return hash * BASE;
-}
+int BASE = 101;
 
 unsigned int rabin_hash(const char *str, int m)
 {
@@ -24,13 +16,18 @@ unsigned int rabin_hash(const char *str, int m)
 
     for (i = 0; i < m; i++)
     {
-        hash = shift_hash(hash);
+        hash *= BASE;
         hash += *(str + i);
     }
     return hash;
 }
 
-unsigned int _update_rabin_hash(unsigned int hash, int m, char pop, char push)
+unsigned int _update_rabin_hash(
+    unsigned int hash,
+    unsigned int shift,
+    char pop,
+    char push
+)
 {
     /*
      * Update the rabin hash by popping the third argument and pushing the
@@ -40,12 +37,9 @@ unsigned int _update_rabin_hash(unsigned int hash, int m, char pop, char push)
     unsigned int ret_hash = hash;
     int i;
 
-    for (i = 1; i < m; i++)
-    {
-        pop_hash = shift_hash(pop_hash);
-    }
+    pop_hash *= shift;
     ret_hash = ret_hash - pop_hash;
-    ret_hash = shift_hash(ret_hash);
+    ret_hash *= BASE;
     return ret_hash + push;
 }
 
@@ -57,14 +51,22 @@ int match_rk(circular_buffer *text, const char *target)
     int m = strlen(target);
     int i;
     int text_idx = 0;
+    unsigned int shift = 1;
 
     unsigned int text_hash = rabin_hash(text->buf, m);
     unsigned int target_hash = rabin_hash(target, m);
+
+    /* compute BASE^{m-1} for hash */
+    for (i = 1; i < m; i++)
+    {
+        shift *= BASE;
+    }
 
     while (!text->ended)
     {
         if (text_hash == target_hash)
         {
+            /* hash collision, check whether match */
             for (i = 0; i < m; i++)
             {
                 if (buf_get(text, text_idx + i) != *(target + i))
@@ -79,7 +81,7 @@ int match_rk(circular_buffer *text, const char *target)
         }
         text_hash = _update_rabin_hash(
             text_hash,
-            m,
+            shift,
             buf_get(text, text_idx),
             buf_get(text, text_idx + m)
         );

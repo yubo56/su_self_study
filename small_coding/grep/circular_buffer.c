@@ -38,14 +38,14 @@ char buf_get(circular_buffer *buf, int idx)
     /**
      * gets the character at index idx for buf, returns (-1) if none or out of scope
      * */
-    if (buf->length == 0)
+    if (buf->length == 0) /* edge case */
     {
         buf->ended = 1;
         return -1;
     }
-    while (idx > buf->end_index)
+    while (idx > buf->end_index && !buf->ended)
     {
-        if (buf->ended || _read(buf) == EOF)
+        if (_read(buf) == EOF)
         {
             buf->ended = 1;
             return -1;

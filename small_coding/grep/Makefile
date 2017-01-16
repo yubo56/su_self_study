@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall -ansi -pedantic -Wstrict-prototypes -lm -D_GNU_SOURCE
+CFLAGS = -g -Wall -ansi -pedantic -Wstrict-prototypes -lm -D_GNU_SOURCE -Ofast
 BIN = match
 
 SRCS = $(wildcard *.c)
