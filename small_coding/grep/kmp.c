@@ -80,15 +80,11 @@ int match_kmp(circular_buffer *text, const char *target) {
     int text_idx = 0;
     char text_char = 0;
 
-    while (!text->ended)
+    while ((text_char = buf_get(text, text_idx)) != -1)
     {
         if (target_idx >= m) /* match condition */
         {
             return 1;
-        }
-        if ((text_char = buf_get(text, text_idx)) == -1) /* end of string */
-        {
-            break;
         }
 
         if (!is_legal(text_char))

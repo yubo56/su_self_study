@@ -9,8 +9,8 @@ Implementing some algs for substring search for fun.
 
 - Naive actually does shockingly well when it's not on worst case performance
     - Worst case = searching for a^mb in a^n
-- Runtimes on a corpus of all of Shakespeare with 's/./a/g' with "a^142b" look
-  something like
-    - Naive: ~= 0.63 +- 0.05s
-    - RK: ~= 0.11 +- 0.02s
-    - KMP: ~= 0.10 +- 0.02s
+- Ran on a corpus with `wc` stats of `871192 805007 38207393 corpus.txt`, containing all 'a's
+- Runtimes with "a^154b" look something like
+    - Naive: ~= 4.71 +- 0.04s
+    - RK: ~= 0.74 +- 0.02s
+    - KMP: ~= 0.58 +- 0.01s
