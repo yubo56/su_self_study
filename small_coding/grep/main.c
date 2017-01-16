@@ -1,37 +1,58 @@
 #include <stdio.h>
+#include <string.h>
+
+#include "tests.h"
 #include "naive.h"
 #include "rk.h"
 #include "kmp.h"
 
-void test(char *text, char *target)
+void print_usage(void)
 {
-    /*
-     * Prints test results for each matching type for a text and target string
-     */
-    printf("(\"%s\", \"%s\"):\n\t%d, %d, %d\n", text, target,
-        match_naive(text, target),
-        match_rk(text, target),
-        match_kmp(text, target)
-    );
+    char *usage = "Usage: ./match [ALGORITHM] [TARGET] < [TEXT]\n"
+        "\t[ALGORITHM]: one of ['naive', 'rk', 'kmp', 'test']\n"
+        "\t[TARGET]: if ALGORITHM is not 'test', the target string to seek\n"
+        "\t[TEXT]: pipe the search text into stdin";
+    printf("%s\n", usage);
 }
 
 int main(int argc, const char *argv[])
 {
-    printf("(\"%s\", \"%s\"):\n\t%s, %s, %s\n", "[text]", "[target]",
-        "[naive]",
-        "[rk]",
-        "[kmp]"
-    );
+    const char *target;
+    circular_buffer buf;
+    if (argc < 2)
+    {
+        print_usage();
+    }
+    else if (strcmp(argv[1], "test") == 0)
+    {
+        match_tests();
+        circbuf_tests();
+    }
+    else
+    {
+        if (argc != 3)
+        {
+            print_usage();
+        }
+        target = argv[2];
+        buf = new_buf(strlen(target), stdin);
 
-    /* test cases */
-    test("abac", "abac"); /* trivial */
-    test("abcabcabc", "abcd"); /* terminate midway through a match */
-    test("ababac", "abac"); /* correct lookback */
-    test("", "abac"); /* target is empty */
-    test("abadac", ""); /* text is empty */
-
-    test("i am a foo bar baz", "foo bar"); /* generic test */
-    test("abcdeabcdfabcdabcaba", "abcdabcaba"); /* tricky KMP table */
-
+        if (strcmp(argv[1], "naive") == 0)
+        {
+            printf("Naive algorithm returned %d\n", match_naive(&buf, target));
+        }
+        else if (strcmp(argv[1], "rk") == 0)
+        {
+            printf("Rk algorithm returned %d\n", match_rk(&buf, target));
+        }
+        else if (strcmp(argv[1], "kmp") == 0)
+        {
+            printf("KMP algorithm returned %d\n", match_kmp(&buf, target));
+        }
+        else
+        {
+            print_usage();
+        }
+    }
     return 0;
 }

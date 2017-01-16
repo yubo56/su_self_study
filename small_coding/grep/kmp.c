@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "kmp.h"
 
 /* printable characters between 0x20 and 0x7E */
 #define PRINT_MAX 127 /* exclusive */
@@ -68,19 +69,25 @@ int *kmp_jump_table(char *target, int m)
     return jumps;
 }
 
-int match_kmp(char *text, char *target) {
+int match_kmp(circular_buffer *text, const char *target) {
     int m = strlen(target);
     int *jumps = kmp_jump_table(target, m);
     int target_idx = 0;
+    int text_idx = 0;
+    char text_char = 0;
 
-    while (*text)
+    while (!text->ended)
     {
         if (target_idx >= m) /* match condition */
         {
             return 1;
         }
-        target_idx = jumps[get_idx(target_idx, *text)];
-        text++;
+        if ((text_char = buf_get(text, text_idx)) == -1) /* end of string */
+        {
+            break;
+        }
+        target_idx = jumps[get_idx(target_idx, text_char)];
+        text_idx++;
     }
 
     free(jumps);

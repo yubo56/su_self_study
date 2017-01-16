@@ -1,6 +1,7 @@
-#include "rk.h"
 #include <string.h>
 #include <limits.h>
+
+#include "rk.h"
 
 int BASE = 101;
 unsigned int OVERFLOW_RISK = UINT_MAX >> 7; /* *101 <= 7 bitshifts */
@@ -15,7 +16,7 @@ unsigned int shift_hash(unsigned int hash)
     return hash * BASE;
 }
 
-unsigned int rabin_hash(char *str, int m)
+unsigned int rabin_hash(const char *str, int m)
 {
     /* compute the base (BASE) Rabin fingerprint of str with length m */
     unsigned int hash = 0;
@@ -48,24 +49,25 @@ unsigned int _update_rabin_hash(unsigned int hash, int m, char pop, char push)
     return ret_hash + push;
 }
 
-int match_rk(char *text, char *target)
+int match_rk(circular_buffer *text, const char *target)
 {
     /*
      * Performs O(n*m) naive matching
      */
     int m = strlen(target);
     int i;
+    int text_idx = 0;
 
-    unsigned int text_hash = rabin_hash(text, m);
+    unsigned int text_hash = rabin_hash(text->buf, m);
     unsigned int target_hash = rabin_hash(target, m);
 
-    while (*(text + m))
+    while (!text->ended)
     {
         if (text_hash == target_hash)
         {
             for (i = 0; i < m; i++)
             {
-                if (*(text + i) != *(target + i))
+                if (buf_get(text, text_idx + i) != *(target + i))
                 {
                     break;
                 }
@@ -75,8 +77,13 @@ int match_rk(char *text, char *target)
                 return 1;
             }
         }
-        text_hash = _update_rabin_hash(text_hash, m, *text, *(text + m));
-        text++;
+        text_hash = _update_rabin_hash(
+            text_hash,
+            m,
+            buf_get(text, text_idx),
+            buf_get(text, text_idx + m)
+        );
+        text_idx++;
     }
     return text_hash == target_hash;
 }
