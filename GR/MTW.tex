@@ -1,7 +1,8 @@
     \documentclass[12pt]{report}
     \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
-    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings, times}
-    \usepackage{geometry}
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings,
+    times}
+    \usepackage[margin=1in]{geometry}
     \newcommand{\scinot}[2]{#1\times10^{#2}}
     \newcommand{\bra}[1]{\left<#1\right|}
     \newcommand{\ket}[1]{\left|#1\right>}
@@ -52,8 +53,6 @@ height=2em]
 \chapter{Flat Spacetime}
 
 \section{Spacetime Physics}
-
-\subsection{Notes}
 
 \begin{itemize}
     \item Space tells matter how to move, matter tells space how to curve.
@@ -129,7 +128,7 @@ height=2em]
         value of $\xi$, thus $R=0$.
 
         We now justify our parameterization $g(s|\omega, \dot{z})$. Two points
-        separated infinitisemally $(a, \theta, z), (a, \theta + \delta\theta, z
+        separated infinitisemally $(a, \theta, z)$, $(a, \theta + \delta\theta, z
         + \delta z)$ are separated by distance
         \begin{align*}
             \sqrt{\delta z^2 + a^2 \delta \theta^2} =
@@ -190,6 +189,254 @@ height=2em]
             \omega^2 &= \frac{GM}{c^2r^3} = \frac{4\pi}{3}\frac{G}{c^2}\rho
         \end{align*}
         where since there are no other constraints on the motion we are done.
+\end{description}
+
+\section{Special Relativity and 1-forms}
+
+SR/GR aspire to describe all laws as relationships between geometric objects,
+i.e.\ events are points, [tangent] vectors connect points, and the metric
+(defining lengths of vectors) is also geometric. First some definitions
+
+\begin{description}
+    \item[Vector] The vector joining $A,B$ as $\rd{}{\lambda}P(\lambda)$ where
+        $P(\lambda)$ is the straight line joining $A,B$.
+
+    \item[Metric tensor] $G(\mathbf{u}, \mathbf{v}) = \mathbf{u} \cdot
+        \mathbf{v}$.
+
+    \item[Differential forms] Consider the propagation of a plane wave with
+        wavevector $\vec{k}$. There are surfaces of codimension $1$ that have
+        equal phase. Define $\mathbf{\tilde{k}}$ such that a vector $\vec{v}$
+        incurs phase difference $\expvalue{\mathbf{\tilde{k}}, \vec{v}}$.
+
+        This is an example of a 1-form, a differential form that takes a single
+        vector and returns a scalar, often also denoted by $\mathbf{\sigma}$
+        boldface greek letters. We call $\expvalue{\mathbf{\sigma}, \vec{v}}$
+        the contraction of $\mathbf{\sigma}$ with $\mathbf{\vec{v}}$.
+
+        Note that there is a one-to-one correspondence $\mathbf{\tilde{p}}$ and
+        $\mathbf{p}$, i.e.\ $\expvalue{\mathbf{\tilde{p}}, \mathbf{u}}$ is the
+        same as $\mathbf{p} \cdot \mathbf{u}$, and so we sometimes omit the
+        tilde.
+
+        More generally, a 1-form is a local approximation the same way a vector
+        is a local derivative, i.e.\ if we want the phase of a point $P$ close
+        to $P_0$, we have
+        \begin{align}
+            \phi(P) = \phi(P_0) + \expvalue{\mathbf{\tilde{k}}, P - P_0} + \dots
+        \end{align}
+
+    \item[Gradient as a 1-form] The gradient is a 1-form, not a vector, since it
+        is the first-order approximation
+        \begin{align}
+            f(P) = f(P_0) + \expvalue{\mathbf{d}f, P - P_0} +\dots
+        \end{align}
+
+    \item[Coordinates] Choose an orthonormal basis $\mathbf{e}_\alpha$ for
+        vectors, then there is also a basis $\mathbf{w}^\alpha =
+        \mathbf{d}x^\alpha$ for 1-forms, such that
+        \begin{align}
+            \expvalue{\mathbf{w}^\alpha, \mathbf{e}_\beta} &=
+                \delta^\alpha_\beta\\
+            \expvalue{v^\alpha \mathbf{w}^\alpha, \sigma_\beta \mathbf{e}_\beta}
+                &= \expvalue{\mathbf{\sigma}, \mathbf{v}} = \sigma_\alpha
+                v^\alpha
+        \end{align}
+
+    \item[4-velocity] To work w/ dynamical variables, we need to start mapping
+        quantities to geometric objects somewhere. Start with the 4-velocity,
+        which in specific Lorentz reference frame has components
+        \begin{align}
+            u^0 &= \rd{t}{\tau} &= \frac{1}{\sqrt{1 - \abs{\vec{v}^2}}} \nonumber\\
+            u^j &= \rd{x^j}{\tau} &= \frac{v^j}{\sqrt{1 - \abs{\vec{v}}^2}}
+        \end{align}
+
+    \item[Lorentz Transformations] Two types, rotations and boosts, generate a
+        tensor $\Lambda^\alpha_\beta$. Rotations look like
+        \begin{align}
+            \Lambda &= \begin{bmatrix}
+            1 & 0 & 0 & 0
+            0 & \cos\theta & \sin\theta & 0\\
+            0 & -\sin\theta & \cos\theta & 0\\
+            0 & 0 & 0 & 1
+            \end{bmatrix}
+        \end{align}
+        while boosts look like
+        \begin{align}
+            \Lambda &= \begin{bmatrix}
+                \cosh \alpha & 0 & 0 & \sinh\alpha\\
+                0 & 1 & 0 & 0\\
+                0 & 0 & 1 & 0\\
+                \sinh\alpha & 0 & 0 & \cosh\alpha
+            \end{bmatrix}
+        \end{align}
+        where velocity $\beta = \tanh \alpha$.
+
+        Then both components and basis vectors are simply contracted w/ this
+        tensor. Lorentz transformations obey $\Lambda^T \eta \Lambda = \eta$
+        transpose.
+\end{description}
+
+\subsection{Exercises}
+
+\begin{description}
+    \item[2.2--2.4] \emph{Derive the following formulae:}
+        \begin{align*}
+            u_\alpha &= \eta_{\alpha\beta}u^\beta\\
+            u^\alpha &= \eta^{\alpha\beta}u_\beta\\
+            \mathbf{u} \cdot \mathbf{v} &= u^\alpha v^\beta \eta_{\alpha\beta}
+                = u^\alpha v_\alpha
+                = u_\alpha v_\beta \eta^{\alpha\beta}
+        \end{align*}
+
+        This is trivial,
+        \begin{align}
+            \mathbf{u} \cdot \mathbf{v} &= u_\alpha v_\beta \eta^{\alpha\beta}
+                \nonumber\\
+            &= \expvalue{\mathbf{\tilde{u}}, \mathbf{v}} = u^\alpha v_\beta
+                \nonumber\\
+            &= \expvalue{\mathbf{u}, \mathbf{\tilde{v}}} = u^\alpha v^\beta
+                \nonumber\\
+            u_\alpha \eta^{\alpha\beta} &= u^\alpha\\
+            v_\beta \eta^{\alpha\beta} &= v^\beta
+        \end{align}
+
+    \item[2.5] \emph{Verify the following coordinate-free relations a particle
+        of mass $m$ and 4-momentum $\mathbf{p}$ measured by an observer with
+        4-velocity $\mathbf{u}$:}
+        \begin{align*}
+            \mathbf{u}^2 &= -1\\
+            E &= -\mathbf{p} \cdot \mathbf{u}\\
+            m^2 &= -\mathbf{p}^2\\
+            \abs{\vec{p}} &= \sqrt{(\mathbf{p} \cdot \mathbf{u})^2 +
+                (\mathbf{p} \cdot \mathbf{p})}\\
+            \abs{\vec{v}} &= \frac{\abs{\vec{p}}}{E}\\
+            \mathbf{v} &= \frac{\mathbf{p + (\mathbf{p} \cdot
+                \mathbf{u})\mathbf{u}}}{-\mathbf{p} \cdot \mathbf{u}}
+        \end{align*}
+
+        We must go into an arbitrary Lorentz frame for this:
+        \begin{align}
+            \mathbf{u}^2 &= -\frac{1}{1 - v^2} + \sum\limits_{i}^{}
+                \frac{v_i^2}{1 - v^2} \nonumber\\
+            &= -1
+        \end{align}
+
+        We know that $E^2 = m^2 + \abs{\vec{p}}^2$, where $\vec{p} = \gamma m
+        \vec{v}$, and so
+        \begin{align}
+            -\mathbf{p} \cdot \mathbf{u} &= -m\mathbf{v} \cdot \mathbf{u}
+                \nonumber\\
+            &= m\frac{1}{\sqrt{1 - v^2}} \nonumber\\
+            m^2 + \abs{\vec{p}}^2 &= m^2\frac{1}{1-v^2} \nonumber\\
+            E^2 &= (\mathbf{p} \cdot \mathbf{u})^2
+        \end{align}
+        and the sign is chosen by defining $E$ as positive.
+
+        But then, knowing the definition $\mathbf{p} = m\mathbf{u}$, this yields
+        $m^2 = -\mathbf{p}^2$.
+
+        Again, $E^2 = m^2 + \abs{\vec{p}}^2$, so since
+        $E^2 = (\mathbf{p} \cdot \mathbf{u})^2$ and $m^2 = \mathbf{p} \cdot
+        \mathbf{p}$, we find
+        $\abs{\vec{p}}^2 = (\mathbf{p} \cdot \mathbf{u})^2 + \mathbf{p} \cdot
+        \mathbf{p}$.
+
+        Moreover, given that $-\mathbf{p} \cdot \mathbf{u} = $
+
+    \item[2.6] \emph{Ascribe a function $T(Q)$ to describe the temperature at
+        event $Q$. To an observer traveling with 4-velocity $\mathbf{u}$, show
+        that he measures temperature change $\rd{T}{\tau} =
+        \expvalue{\mathbf{d}T, \mathbf{u}}$. Why is this reasonable?}
+
+    \item[2.7] \emph{Show the below Lorentz transformation corresponds to motion
+        with velocity $\beta \vec{n}$ and satisfies $\Lambda^T\eta \Lambda =
+        \eta$.}
+        \begin{align}
+            \Lambda^0_0 &= \gamma \equiv \frac{1}{\sqrt{1 - \beta^2}}\\
+            \Lambda^0_j &= \Lambda^j_0 = -\beta\gamma n^j\\
+            \Lambda^j_k &= \Lambda^k_j = (\gamma - 1)n^jn^k + \delta^{jk}
+        \end{align}
+\end{description}
+
+\section{Electromagnetic Field and Tensors}
+
+\begin{description}
+    \item[Lorentz Force Law] The Lorentz force law both defines fields and
+        predicts motions. It is written in geometric form
+        \begin{align}
+            \rd{p^\alpha}{\tau} &= eF^\alpha_\beta u^\beta
+        \end{align}
+        where $\mathbf{F}$ is the Faraday tensor satisfying
+        \begin{align}
+            \rd{\mathbf{p}}{\tau} &= e\mathbf{F}(\mathbf{u})\\
+            F^\alpha_\beta &= \begin{bmatrix}
+            0 & E_x & E_y & E_z\\
+            E_x & 0 & B_z & -B_y\\
+            E_y & -B_z & 0 & B_x\\
+            E_z & B_y & -B_x & 0
+            \end{bmatrix}
+        \end{align}
+
+    \item[Tensors] A tensor with rank $\binom{n}{m}$ takes $n$ 1-forms and $m$
+        vectors to a scalar. Components of a tensor e.g.\
+        $S^{\alpha\beta}_\gamma$ can be computed by inserting the basis objects
+        $S^{\alpha\beta}_\gamma = S^{\alpha\beta}_\gamma \sigma_\alpha
+        \rho_\beta v^\gamma$. These transform with Lorentz transformation too.
+
+        We can always raise/lower indicies w/ the metric, so we only discuss the
+        total rank of a tensor usually. In any case, a raised index is
+        contravariant and a lowered index is called covariant.
+
+    \item[Tensor Operations] In geometric notation, the gradient of a tensor
+        $\mathbf{S}(\mathbf{u}, \mathbf{v}, \mathbf{w})$ is
+        \begin{align}
+            \mathbf{\nabla}\mathbf{S} &= \partial_\xi \left(
+            S_{\alpha\beta\gamma} u^\alpha v^\beta w^\gamma \xi^\delta \right)
+            \nonumber\\
+            &= S_{\alpha\beta\gamma, \delta}u^\alpha v^\beta w^\gamma\xi^\delta
+        \end{align}
+
+        Contracting a tensor is to sum over one raised and one lowered index,
+        e.g. $M_{\mu\nu} = R_{\alpha \mu \nu}^\alpha$.
+
+        Divergence (on the first index of $\mathbf{S}$) is defined
+        \begin{align}
+            \mathbf{\nabla} \cdot \mathbf{S} &= \mathbf{\nabla} \mathbf{S}
+                (\mathbf{w}^\alpha, \mathbf{u}, \mathbf{v}, \mathbf{e}_\alpha)
+            S^{\alpha}_{\beta\gamma,\alpha}
+        \end{align}
+
+        Wedge product is antisymmetrized tensor product
+        \begin{align}
+            \mathbf{u} \wedge \mathbf{v} &= \mathbf{u} \otimes \mathbf{v} -
+                \mathbf{v} \otimes \mathbf{u}
+        \end{align}
+
+    \item[Maxwell's Equations] These become
+        \begin{align}
+            F_{\alpha\beta,\gamma} + F_{\beta\gamma, \alpha} +
+            F_{\gamma\alpha,\beta} &= 0 &
+            F^{\alpha\beta}_{,\beta} &= 4\pi J^\alpha
+        \end{align}
+\end{description}
+
+\subsection{Exercises}
+
+\begin{description}
+    \item[3.4] \emph{Formalize the tensor product $\mathbf{T} = \mathbf{u}
+        \otimes \mathbf{v}$ e.g.\ if $\mathbf{u}, \mathbf{v}$ are first-rank
+        tensors, then $T^{\alpha\beta} = u^\alpha v^\beta$.}
+
+    \item[3.11] \emph{Show that $A_{\mu\nu}S^{\mu\nu} = 0$, if $A,S$ are
+        antisymmetric and symmetric respectively. This in conjunction with the
+        result from the next problem shows that we only need the
+        symmetric/antisymmetric portions of a tensor when multiplying against an
+        antisymmetric/symmetric tensor.}
+
+    \item[3.12] \emph{Show that for an arbitrary tensor $V$, $V_{(\mu\nu\dots)}$
+        is symmetric, $V_{[\mu\nu\dots]}$ is antisymmetric, and that only second
+        rank tensor is fully described by its symmetric/antisymmetric parts.}
 \end{description}
 
 \end{document}
