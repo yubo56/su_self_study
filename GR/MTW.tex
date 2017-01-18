@@ -337,17 +337,30 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         $m^2 = -\mathbf{p}^2$.
 
         Again, $E^2 = m^2 + \abs{\vec{p}}^2$, so since
-        $E^2 = (\mathbf{p} \cdot \mathbf{u})^2$ and $m^2 = \mathbf{p} \cdot
+        $E^2 = (\mathbf{p} \cdot \mathbf{u})^2$ and $m^2 = -\mathbf{p} \cdot
         \mathbf{p}$, we find
         $\abs{\vec{p}}^2 = (\mathbf{p} \cdot \mathbf{u})^2 + \mathbf{p} \cdot
         \mathbf{p}$.
 
-        Moreover, given that $-\mathbf{p} \cdot \mathbf{u} = $
+        Earlier, we used that $\vec{p} = \gamma m \vec{v}$, and moreover we've
+        seen that $E = m\gamma$ so we have $E =
+        \frac{\abs{\vec{p}}}{\abs{\vec{v}}} = m\gamma$.
+
+        Not sure how to do the last one \frownie.
 
     \item[2.6] \emph{Ascribe a function $T(Q)$ to describe the temperature at
         event $Q$. To an observer traveling with 4-velocity $\mathbf{u}$, show
         that he measures temperature change $\rd{T}{\tau} =
         \expvalue{\mathbf{d}T, \mathbf{u}}$. Why is this reasonable?}
+
+        If the observer travels from event $P$ to event $P +
+        \mathbf{u}\Delta\tau$, then the temperature at the new event can be
+        computed as an expansion about the initial point, which to first order
+        is $\Delta T = \expvalue{\mathbf{d}T, \mathbf{u}\Delta \tau}$. Divide
+        both sides by $\Delta \tau$ to obtain the desired result. Note that we
+        want $\tau$ the proper time in the above relation because we are
+        expanding in events about the rest frame of the temperature function
+        $T$.
 
     \item[2.7] \emph{Show the below Lorentz transformation corresponds to motion
         with velocity $\beta \vec{n}$ and satisfies $\Lambda^T\eta \Lambda =
