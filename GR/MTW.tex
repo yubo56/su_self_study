@@ -86,7 +86,7 @@ height=2em]
         $\mathbf{u} = \rd{x^\alpha}{\tau}$ and yields
         \begin{align}
             \frac{\mathrm{D}^2\xi^\alpha}{\mathrm{d}^2\tau^2} +
-                R^{\alpha}_{\beta\gamma\delta}
+                {R^{\alpha}}_{\beta\gamma\delta}
                 \rd{x^\beta}{\tau}\xi^\gamma \rd{x^\delta}{\tau} &= 0
         \end{align}
         where $\mathbf{R}$ is the 4-component Reimann curvature tensor. We call
@@ -95,7 +95,7 @@ height=2em]
         These functions are sister functions of the Lorentz force equation in
         electromagnetism
         \begin{align*}
-            \rtd{x^\alpha}{\tau} - \frac{e}{m}F^\alpha_\beta \rd{x^\alpha}{\tau}
+            \rtd{x^\alpha}{\tau} - \frac{e}{m}{F^\alpha}_\beta \rd{x^\alpha}{\tau}
                 &= 0.
         \end{align*}
 
@@ -252,10 +252,10 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         \end{align}
 
     \item[Lorentz Transformations] Two types, rotations and boosts, generate a
-        tensor $\Lambda^\alpha_\beta$. Rotations look like
+        tensor ${\Lambda^\alpha}_\beta$. Rotations look like
         \begin{align}
             \Lambda &= \begin{bmatrix}
-            1 & 0 & 0 & 0
+            1 & 0 & 0 & 0\\
             0 & \cos\theta & \sin\theta & 0\\
             0 & -\sin\theta & \cos\theta & 0\\
             0 & 0 & 0 & 1
@@ -366,10 +366,78 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         with velocity $\beta \vec{n}$ and satisfies $\Lambda^T\eta \Lambda =
         \eta$.}
         \begin{align}
-            \Lambda^0_0 &= \gamma \equiv \frac{1}{\sqrt{1 - \beta^2}}\\
-            \Lambda^0_j &= \Lambda^j_0 = -\beta\gamma n^j\\
-            \Lambda^j_k &= \Lambda^k_j = (\gamma - 1)n^jn^k + \delta^{jk}
+            {\Lambda^0}_0 &= \gamma \equiv \frac{1}{\sqrt{1 - \beta^2}}\\
+            {\Lambda^0}_j &= {\Lambda^j}_0 = -\beta\gamma n^j\\
+            {\Lambda^j}_k &= {\Lambda^k}_j = (\gamma - 1)n^jn^k + \delta^{jk}
         \end{align}
+
+        We know that the above matrix is a Lorentz transformation if it
+        satisfies $\Lambda^T \eta \Lambda = \eta$. Most explicitly, recall that
+        ${\Lambda^\mu}_{\overline{\nu}}$ is the LT from unprimed vectors to
+        primed vectors $v_\mu {\Lambda^\mu}_{\overline{\nu}}$. The transpose is
+        swapping the order of the arguments ${\Lambda^\mu}_{\overline{\nu}}
+        = {(\Lambda^T)_{\overline{\nu}}}^\mu$. Thus, what we aspire to show is
+        \begin{align}
+            {(\Lambda^T)_{\bar{\nu}}}^\mu \eta_{\mu\rho}
+                {\Lambda^\rho}_{\bar{\sigma}} &=
+                \eta_{\bar{\nu}\bar{\sigma}}\\
+            \eta_{\mu\rho} {\Lambda^\mu}_{\bar{\nu}}
+                {\Lambda^\rho}_{\bar{\sigma}} &= \eta_{\bar{\nu}\bar{\sigma}}
+        \end{align}
+
+        Let's examine the following few cases
+        \begin{itemize}
+            \item $\bar{\nu} = \bar{\sigma} = 0$ ---
+                \begin{align*}
+                    \eta_{\mu\rho}{\Lambda^\mu}_0{\Lambda^\rho}_0 &=
+                        (-\gamma^2 + \beta^2\gamma^2n_jn^j) \\
+                        &= -1
+                \end{align*}
+            \item $\bar{\nu} = \bar{\sigma} \neq 0$ ---
+                \begin{align*}
+                    \eta_{\mu\rho}{\Lambda^\mu}_i{\Lambda^\rho}_i &=
+                        -\beta^2\gamma^2(n_i)^2 + \left[
+                            (\gamma-1)^2(n_i)^2n^jn_j + 2(\gamma - 1)(n_i)^2 + 1
+                        \right]\\
+                    &= (n_i)^2\left[ \gamma^2 - 2\gamma + 1 + 2\gamma - 2 -
+                        \beta^2\gamma^2  + 1\right] + 1\\
+                    &= 1
+                \end{align*}
+            \item $\bar{\nu} \neq \bar{\sigma}, \bar{\nu} = 0$ ---
+                \begin{align*}
+                    \eta_{\mu\rho}{\Lambda^\mu}_0{\Lambda^\rho}_i &=
+                        \beta\gamma^2 n^i - \beta\gamma(\gamma-1)n^in^jn_j -
+                        \beta \gamma n^j\\
+                        &= \beta\gamma(\gamma n^i - (\gamma-1)n^in^jn_j - n^j)\\
+                        &= 0
+                \end{align*}
+            \item $\bar{\nu} \neq \bar{\sigma}$, none are $0$ ---
+                \begin{align*}
+                    \eta_{\mu\rho}{\Lambda^\mu}_i{\Lambda^\rho}_j &=
+                        -\beta^2\gamma^2n^in^j + (\gamma - 1)^2n^in^jn^kn_k +
+                        2(\gamma - 1)n^in^j\\
+                        &= n^in^j\left[ -\beta^2\gamma^2 + \gamma^2 - 2\gamma +
+                            1 + 2\gamma - 2 \right]\\
+                        &= 0
+                \end{align*}
+        \end{itemize}
+
+        This verifies our claim that this tensor acts as a Lorentz
+        transformation. To verify that it is a boost of $\beta\hat{n}$, we could
+        simply rotate such that $\hat{n}$ lies along a coordinate axis. This
+        would be very easy if we had a simple form for the rotation matrix, but
+        I don't have one handy, so let's be more creative. Consider starting in
+        a reference frame moving with some $4$-velocity $\mathbf{v}$. The
+        components in this comoving frame of the $4$-velocity are simply $(-1,
+        \vec{0})$. If we boost with our provided Lorentz transformation, we
+        obtain
+        \begin{align}
+            \mathbf{v} &= \left( -\gamma, -\beta\gamma \hat{n} \right)
+        \end{align}
+        which, comparing with our earlier provided formula, corresponds to a
+        $3$-velocity of $-\beta \hat{n}$. Thus, the boost takes us into a frame
+        that is moving with $+\beta \hat{n}$ relative to the initial reference
+        frame.
 \end{description}
 
 \section{Electromagnetic Field and Tensors}
@@ -378,12 +446,12 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
     \item[Lorentz Force Law] The Lorentz force law both defines fields and
         predicts motions. It is written in geometric form
         \begin{align}
-            \rd{p^\alpha}{\tau} &= eF^\alpha_\beta u^\beta
+            \rd{p^\alpha}{\tau} &= e{F^\alpha}_\beta u^\beta
         \end{align}
         where $\mathbf{F}$ is the Faraday tensor satisfying
         \begin{align}
             \rd{\mathbf{p}}{\tau} &= e\mathbf{F}(\mathbf{u})\\
-            F^\alpha_\beta &= \begin{bmatrix}
+            {F^\alpha}_\beta &= \begin{bmatrix}
             0 & E_x & E_y & E_z\\
             E_x & 0 & B_z & -B_y\\
             E_y & -B_z & 0 & B_x\\
@@ -393,8 +461,8 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
 
     \item[Tensors] A tensor with rank $\binom{n}{m}$ takes $n$ 1-forms and $m$
         vectors to a scalar. Components of a tensor e.g.\
-        $S^{\alpha\beta}_\gamma$ can be computed by inserting the basis objects
-        $S^{\alpha\beta}_\gamma = S^{\alpha\beta}_\gamma \sigma_\alpha
+        ${S^{\alpha\beta}}_\gamma$ can be computed by inserting the basis objects
+        ${S^{\alpha\beta}}_\gamma = {S^{\alpha\beta}}_\gamma \sigma_\alpha
         \rho_\beta v^\gamma$. These transform with Lorentz transformation too.
 
         We can always raise/lower indicies w/ the metric, so we only discuss the
@@ -411,14 +479,16 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         \end{align}
 
         Contracting a tensor is to sum over one raised and one lowered index,
-        e.g. $M_{\mu\nu} = R_{\alpha \mu \nu}^\alpha$.
+        e.g. $M_{\mu\nu} = {{R_{\alpha \mu}}^\alpha}_{\nu}$.
 
         Divergence (on the first index of $\mathbf{S}$) is defined
         \begin{align}
             \mathbf{\nabla} \cdot \mathbf{S} &= \mathbf{\nabla} \mathbf{S}
                 (\mathbf{w}^\alpha, \mathbf{u}, \mathbf{v}, \mathbf{e}_\alpha)
-            S^{\alpha}_{\beta\gamma,\alpha}
+            {S^{\alpha}}_{\beta\gamma,\alpha}
         \end{align}
+
+        Transpose is interchanging the order of arguments.
 
         Wedge product is antisymmetrized tensor product
         \begin{align}
@@ -430,7 +500,7 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         \begin{align}
             F_{\alpha\beta,\gamma} + F_{\beta\gamma, \alpha} +
             F_{\gamma\alpha,\beta} &= 0 &
-            F^{\alpha\beta}_{,\beta} &= 4\pi J^\alpha
+            {F^{\alpha\beta}}_{,\beta} &= 4\pi J^\alpha
         \end{align}
 \end{description}
 
