@@ -440,7 +440,7 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         frame.
 \end{description}
 
-\section{Electromagnetic Field and Tensors}
+\section{Tensors, Electromagnetic Field and Stress-Energy}
 
 \begin{description}
     \item[Lorentz Force Law] The Lorentz force law both defines fields and
@@ -502,6 +502,36 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
             F_{\gamma\alpha,\beta} &= 0 &
             {F^{\alpha\beta}}_{,\beta} &= 4\pi J^\alpha
         \end{align}
+
+    \item[Stress-Energy Tensor] $\mathbf{T}$ is a symmetric, second rank tensor
+        whose components $T_{jk}$ is the $j$-component of force acting across a
+        unit surface area $\mathbf{e}_k$. Note that ${\mathbf{T}^\alpha}_\beta
+        u^\beta = -\rd{p^\alpha}{V}$ 4-momentum density, but also
+        $T_{\alpha\beta} u^\beta$ gives the component of the 4-momentum density
+        along the $\alpha$ direction.
+
+        It is conserved $\mathbf{\nabla} \cdot \mathbf{T} = 0$ (note that thanks
+        to symmetry we can take the divergence on either index).
+
+        One example of $\mathbf{T}$ is the following: An observer wants to know
+        at event $P_0$ how much 4-momentum a volume corresponding to 1-form
+        $\mathbf{\Sigma}$ contains. This is expressed $\mathbf{p} =
+        \mathbf{T}(\_, \mathbf{\Sigma})$, but the $1$-volume of the box is
+        simply $\mathbf{\Sigma} = -V \mathbf{u}$, so $\mathbf{p} = V
+        \mathbf{T}(\_, \mathbf{u})$.
+
+        Alternatively, in a perfect fluid/ideal gas, we know that the
+        space-space components of the tensor are $T_{ij} = p\delta_{ij}$, i.e.\
+        they are equal on the diagonal and vanish off it, so long as we are in
+        the rest frame of the fluid where all velocities are isotropically
+        distributed. The off diagonal terms vanish since we will never measure
+        net $x$ momenta when we are moving only in the $y$ direction if the
+        momenta are isotropic, and the on-diagonal terms must all be equal for
+        isotropy as well. Moreover, the $T_{0j}$ components are the densities of
+        the $j$ components of momentum, while $T_{00}$ is the mass-energy
+        density. Thus, $T_{00} = \rho, T_{ij} = p\delta_{ij}$ and all other
+        terms are zero. Note that $\rho$ is the rest-plus-kinetic energy.
+
 \end{description}
 
 \subsection{Exercises}
@@ -520,6 +550,97 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
     \item[3.12] \emph{Show that for an arbitrary tensor $V$, $V_{(\mu\nu\dots)}$
         is symmetric, $V_{[\mu\nu\dots]}$ is antisymmetric, and that only second
         rank tensor is fully described by its symmetric/antisymmetric parts.}
+
+    \item[3.14] Define the \emph{dual} of a tensor $J$ to be obtained by
+        contraction against the Levi-Civita tensor, e.g.\
+        ${\star J}_{\alpha\beta\gamma} =
+        {J^\mu}\varepsilon_{\mu\alpha\beta\gamma}$.
+        Show that $\star \star J = J$. Express the components of $\star J$
+        solely in terms of $J$. For simplicity, consider $J$ a first rank tensor
+        in a spaece of dimension $4$.
+\end{description}
+
+\section{Accelerated Observers}
+
+\begin{description}
+    \item[Overview] SR accomodates accelerated observers via local Lorentz
+        frames. It's impossible to tell whether you're accelerating or whether
+        you're in gravity, so it's possible to compute all gravity as if just
+        accelerating. The mathematical result is GR\@.
+
+    \item[Hyperbolic Motion] If we require $\mathbf{a} = \rd{\mathbf{u}}{t}$ to
+        satisfy $0 = \mathbf{a} \cdot \mathbf{u}$, then we can show that this
+        produces a trajectory satisfying $x^2 - t^2 = g^{-2}$, hyperbolic
+        motion (note that $a^\mu a_\mu = g^2$).
+
+    \item[Rotations in 4D] In 3D, rotation was defined about an angular velocity
+        vector $\omega_i$. In 4D, we instead rotate about a plane
+        $\Omega^{\mu\nu}$, such that
+        \begin{align}
+            \rd{v^\mu}{\tau} &= -\Omega^{\mu\nu}v_\nu
+        \end{align}
+
+        Compare to $\rd{v_i}{t} = \epsilon_{ijk} \omega_j v_k$.
+
+    \item[Coordinates in Accelerated Frames] Choose basis vectors
+        $\mathbf{e}_\alpha$ such that $\mathbf{e}_0 = \mathbf{u}$ the 4-velocity
+        of the frame, and $\mathbf{e}_1$ the acceleration. Thus, $\mathbf{e}_2,
+        \mathbf{e}_3$ must be unaffected by LT in the 1-direction. We lastly
+        require no rotation outside of the above two criteria.
+
+        We can verify that the choice $\mathbf{\Omega} = \mathbf{a} \wedge
+        \mathbf{u}, \Omega^{\mu\nu} = a^\mu u^\nu - a^\nu u^\mu$ is the rotation
+        that is enforced by our former criteria: any vector orthogonal to
+        $\mathbf{a}, \mathbf{u}$ doesn't get rotated $\Omega^{\mu\nu}w_\nu = 0$.
+
+        A vector that undergoes the given Lorentz transformation specified by
+        $\mathbf{\Omega}$ (i.e.\ $\rd{v^\mu}{\tau} = \Omega^{\mu\nu}v_\nu$) is
+        said to undergo \emph{Fermi-Walker transport} along the wordline of the
+        observer.
+
+        These coordinates approximate a Lorentz coordinate system out to
+        $g^{-1}$.
+
+\end{description}
+
+\subsection{Exercises}
+
+\begin{description}
+    \item[Self] Derive hyperbolic motion.
+
+    \item[6.1] Compute the proper time for an observer to travel distance $L$ at
+        acceleration $g$ for half, then $-g$ for the other half.
+
+    \item[6.6] Show that in the LLT coordinate system $\xi^\alpha$, the proper
+        time measured at coordinate $\xi^1$ is given $\rd{\tau}{\xi^0} =
+        1 + g\xi^1$.
+
+    \item[6.8] Consider an observer that allows his LLT to rotate, not
+        Fermi-Walker transport. Specifically, we rotate as
+        \begin{align}
+            \rd{\mathbf{e}_\alpha}{\tau} &= -\mathbf{\Omega} \cdot
+            \mathbf{e}_\alpha
+        \end{align}
+        where $\mathbf{\Omega} = \mathbf{a} \wedge \mathbf{u} +
+        u_\alpha \omega_\beta \mathbf{\varepsilon}^{\alpha \beta \mu \nu}$, the
+        second component being the spatial rotation, where $\mathbf{\omega}$ is
+        perpendicular to 4-velocity $\mathbf{u}$. Show that
+        \begin{itemize}
+            \item $\mathbf{e}_0 = \mathbf{u}$ is permitted by the above.
+
+            \item The second term, call it $\mathbf{\Omega}_{SR}$, obeys
+                \begin{align*}
+                    \mathbf{\Omega}_{SR} \cdot \mathbf{u} &= 0 &
+                    \mathbf{\Omega}_{SR} \cdot \mathbf{\omega} &= 0
+                \end{align*}
+
+            \item Compare the basis vectors transported via the above rules with
+                those obtained via Fermi-Walker transport. Show that the
+                space-like components are rotated by $\mathbf{\omega}$. Hint:
+                pick a moment where the tetrads coincide and show that the
+                change in their difference is rotating like $\vec{\omega} \cdot
+                \vec{e}_{j}$.
+        \end{itemize}
 \end{description}
 
 \end{document}
