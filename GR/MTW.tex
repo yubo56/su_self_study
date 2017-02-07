@@ -620,35 +620,50 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
     \item[3.14] \emph{Define the \emph{dual} of a tensor $J$ to be obtained by
         contraction against the Levi-Civita symbol, e.g.\
         ${\star J}_{\alpha\beta\gamma} =
-        {J^\mu}\varepsilon_{\mu\alpha\beta\gamma}$ in four dimensions.  Show
-        that $\star \star J \propto J$ if $J$ is rank $1$.}
+        {J^\mu}\varepsilon_{\mu\alpha\beta\gamma}$ in four dimensions. For an
+        arbitrary $m$-rank tensor, the definition goes $(\star J) = \frac{1}{N!}
+        J \varepsilon$. Show that $\star \star J = (-1)^N J$ for antisymmetric
+        $J$.}
 
         We leverage the following identity:
-        $\varepsilon_{\left\{ \alpha_i \right\}}
+        $\varepsilon^{\left\{ \alpha_i \right\}}
         \varepsilon_{\left\{ \beta_i \right\}} =
         \det\left( \delta_{\alpha_i\beta_j} \right)
         $ where the argument of the determinant is the $(i, j)$th index of a
         matrix and $\delta$ is the Kronecker delta.
 
-        Then, $\star \star J$ where $J$ is of rank $m$ in an $n$ dimensional
+        Then, $\star \star J$ where $J$ is of rank $m$ in an $N$ dimensional
         space is simply
         \begin{align*}
-            (\star \star J)^{\alpha} = J^{\beta}
-                \varepsilon_{\beta\dots \gamma_j}
-                \varepsilon^{\gamma_j\dots \alpha}
+            (\star \star J)^{\alpha_i} = \frac{1}{N!}J^{\beta_i}
+                \varepsilon_{\beta_i\dots \gamma_j}
+                \varepsilon^{\gamma_j\dots \alpha_i}
         \end{align*}
 
-        The second symbol can be cyclically permuted, then the rest of the
-        indicies cancel to $(d-1)!$ where $d$ is the dimensionality of the
-        space, and the whole contraction reduces to $(d-1)!
-        \delta_{\beta\alpha}$, and so we find that $\star \star \mathbf{J}
-        = \mathbf{J}$.
+        We cyclically permute the indicies on the second $\varepsilon$. This
+        incurs $N$ swaps and so a net sign of $(-1)^N$. There are $\frac{N!}{m!
+        }$ choices of these last $N-m$ indicies to sum over.
 
-        We note that this expression changes slightly if $\mathbf{J}$ is of rank
-        $2$ and wholly fails if the rank of $\mathbf{J}$ is $> d/2$, since its
-        dual cannot contain as much information as it, having fewer DOF\@. This
-        gives us the full expression for any $J$ with sufficiently low rank
-        however.
+        Of these last indicies, we note that $(\star \star J)^{\alpha_i} =
+        J^{\beta_i} \varepsilon_{\beta_i}\varepsilon^{\alpha_i}$. For each
+        ordering of $\beta_i$, they must all be distinct obviously if they are
+        to contribute to the sum, and if they are an even[odd] permutation of
+        the $\alpha_i$ then $J^{\beta_i} = \pm J^{\alpha_i}$, but the
+        $\varepsilon$ are same[different] signs too, so the two sides have the
+        same sign regardless of permutation. That's $m!$ orderings, so for each
+        set of indicies $\alpha_i$, we have $\frac{1}{N!}N!(-1)^NJ^{\alpha_i}$
+        on the right hand side, and the claim is proven.
+
+        We leveraged a simple lemma here, the identity initially stated, but
+        it's easy to show that the expression has the desired properties. The
+        two $\varepsilon$ symbols must be antisymmetric under exchange of two
+        indicies. If two indicies are exchanged, then either two rows or two
+        columns of the right hand side are exchanged, and by the property of
+        determinants a net sign flip is also incurred. Moreover, in the base
+        case $\left\{ \alpha_i \right\} \equiv \left\{ \beta_i \right\}$
+        element-by-element, then both sides are clearly unity. Thus, the right
+        hand side satisfies the desired properties.
+
 \end{description}
 
 \section{Accelerated Observers}
