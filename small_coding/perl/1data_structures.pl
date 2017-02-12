@@ -70,7 +70,7 @@ foreach my $subarr ( @{ $nested_refs } )
 }
 print "\n";
 
-nrint "Holiday Name: ",  $nested_hash{"Holiday Name"}, "\n";
+print "Holiday Name: ",  $nested_hash{"Holiday Name"}, "\n";
 print "Date: ",
     ${ $nested_hash{"Date"} }{"Month"}, "/",
     ${ $nested_hash{"Date"} }{"Day"}, "/",
