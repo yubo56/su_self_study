@@ -674,10 +674,11 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         you're in gravity, so it's possible to compute all gravity as if just
         accelerating. The mathematical result is GR\@.
 
-    \item[Hyperbolic Motion] If we require $\mathbf{a} = \rd{\mathbf{u}}{t}$ to
-        satisfy $0 = \mathbf{a} \cdot \mathbf{u}$, then we can show that this
-        produces a trajectory satisfying $x^2 - t^2 = g^{-2}$, hyperbolic
-        motion (note that $a^\mu a_\mu = g^2$).
+    \item[Hyperbolic Motion] If we require $\mathbf{a} = \rd{\mathbf{u}}{\tau}$ to
+        satisfy $0 = \mathbf{a} \cdot \mathbf{u}$ (necessitated if we require
+        $\mathbf{u}^2 = -1$ to not instantaneously change), then we can show
+        that this produces a trajectory satisfying $x^2 - t^2 = g^{-2}$,
+        hyperbolic motion (note that $a^\mu a_\mu = g^2$).
 
     \item[Rotations in 4D] In 3D, rotation was defined about an angular velocity
         vector $\omega_i$. In 4D, we instead rotate about a plane
@@ -712,16 +713,43 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
 \subsection{Exercises}
 
 \begin{description}
-    \item[Self] Derive hyperbolic motion.
+    \item[Self] \emph{Derive hyperbolic motion.}
 
-    \item[6.1] Compute the proper time for an observer to travel distance $L$ at
-        acceleration $g$ for half, then $-g$ for the other half.
+        The assumptions are: $\mathbf{a}^\mu\mathbf{a}_\mu = g^2$ constant
+        magnitude, $\mathbf{u}^\mu\mathbf{u}_\mu = -1$ unaccelerated, and
+        $\mathbf{a} \cdot \mathbf{u} = 0$ at all times. Go to the instaneous
+        rest frame of the motion at any time, then since $\mathbf{u} = (1, 0, 0,
+        0)$, we note $a_0 = 0$. Choose $\mathbf{a} \propto \mathbf{e}_1$ for
+        simplicity. Writing out these equations in time and 3-vector coordinates
+        gives
+        \begin{align*}
+            a_0u_0 &= a_1u_1\\
+            u_0^2 &= 1 + u_1^2\\
+            a_1^2 - a_0^2 &= g^2
+        \end{align*}
 
-    \item[6.6] Show that in the LLT coordinate system $\xi^\alpha$, the proper
-        time measured at coordinate $\xi^1$ is given $\rd{\tau}{\xi^0} =
-        1 + g\xi^1$.
+        Solving (with much difficulty wow I'm rusty) we obtain
+        \begin{align*}
+            a_1^2 - a_1^2\left( \frac{u_1}{u_0} \right)^2 &= g^2 &
+            a_0^2\left( \frac{u_0}{u_1} \right)^2 - a_0^2 &= g^2\\
+            a_1^2\left( \frac{1}{u_0^2} \right) &=&
+            a_1^2\left( \frac{1}{u_1^2} \right) &=\\
+            a_1 &= gu_0&
+            a_0 &= gu_1\\
+            \rd{u_1}{t} &= gu_0 &
+            \rd{u_0}{t} &= gu_1
+        \end{align*}
+        which exhibits solutions $u_1(t) = \sinh(gt), u_0(t) = \cosh(gt)$,
+        which exhibits the desired property $x_0^2 - x_1^2 = g^{-2}$.
 
-    \item[6.8] Consider an observer that allows his LLT to rotate, not
+    \item[6.1] \emph{Compute the proper time for an observer to travel distance
+        $L$ at acceleration $g$ for half, then $-g$ for the other half.}
+
+    \item[6.6] \emph{Show that in the LLT coordinate system $\xi^\alpha$, the
+        proper time measured at coordinate $\xi^1$ is given $\rd{\tau}{\xi^0} =
+        1 + g\xi^1$.}
+
+    \item[6.8] {\em Consider an observer that allows his LLT to rotate, not
         Fermi-Walker transport. Specifically, we rotate as
         \begin{align}
             \rd{\mathbf{e}_\alpha}{\tau} &= -\mathbf{\Omega} \cdot
@@ -730,7 +758,7 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         where $\mathbf{\Omega} = \mathbf{a} \wedge \mathbf{u} +
         u_\alpha \omega_\beta \mathbf{\varepsilon}^{\alpha \beta \mu \nu}$, the
         second component being the spatial rotation, where $\mathbf{\omega}$ is
-        perpendicular to 4-velocity $\mathbf{u}$. Show that
+        perpendicular to 4-velocity $\mathbf{u}$. Show that\/}
         \begin{itemize}
             \item $\mathbf{e}_0 = \mathbf{u}$ is permitted by the above.
 
