@@ -15,7 +15,7 @@
     \newcommand{\abs}[1]{\left|#1\right|}
     \newcommand{\pvec}[1]{\vec{#1}^{\,\prime}}
     \newcommand{\svec}[1]{\vec{#1}\;\!}
-    \newcommand{\tensor}[1]{\overleftrightarrow{#1}}
+    \newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
     \let\Re\undefined
     \let\Im\undefined
     \newcommand{\ang}[0]{\text{\AA}}
@@ -76,20 +76,20 @@ height=2em]
         \end{align}
         where $R$ is the \emph{Gaussian Curvature} of the surface.
 
-        Generalizing to multiple dimensions, the separation $\mathbf{\xi}$ is a
-        vector, and we describe $\frac{\mathrm{D}^2\mathbf{\xi}}{\mathrm{d}^2s}$
+        Generalizing to multiple dimensions, the separation $\bm{\xi}$ is a
+        vector, and we describe $\frac{\mathrm{D}^2\bm{\xi}}{\mathrm{d}^2s}$
         with a capital $\mathrm{D}$ since the coordinates of the derivative
-        $\rtd{\mathbf{\xi}}{s}$ is subject to the whims of the coordinate lines,
+        $\rtd{\bm{\xi}}{s}$ is subject to the whims of the coordinate lines,
         which should not affect the separation between these two geodesics that
         live beyond coordinates. The curvature is instead described by the
         Reiman curvature tensor, which takes as arguments the 4-velocity
-        $\mathbf{u} = \rd{x^\alpha}{\tau}$ and yields
+        $\bm{u} = \rd{x^\alpha}{\tau}$ and yields
         \begin{align}
             \frac{\mathrm{D}^2\xi^\alpha}{\mathrm{d}^2\tau^2} +
                 {R^{\alpha}}_{\beta\gamma\delta}
                 \rd{x^\beta}{\tau}\xi^\gamma \rd{x^\delta}{\tau} &= 0
         \end{align}
-        where $\mathbf{R}$ is the 4-component Reimann curvature tensor. We call
+        where $\bm{R}$ is the 4-component Reimann curvature tensor. We call
         this the \emph{equation of geodesic deviation}.
 
         These functions are sister functions of the Lorentz force equation in
@@ -99,11 +99,11 @@ height=2em]
                 &= 0.
         \end{align*}
 
-    \item $\mathbf{R}$ is a fickle object, subject to perturbation e.g.\ by
+    \item $\bm{R}$ is a fickle object, subject to perturbation e.g.\ by
         gravitational waves. A certain piece of the tensor is generated only
-        by the local mass distribution though, $\mathbf{G}$ the \emph{Einstein
+        by the local mass distribution though, $\bm{G}$ the \emph{Einstein
         curvature tensor}, incidently proportional to the \emph{stress-energy
-        tensor} as $\mathbf{G} = 8\pi \mathbf{T}$. Its interpretation is a local
+        tensor} as $\bm{G} = 8\pi \bm{T}$. Its interpretation is a local
         average curvature.
 \end{itemize}
 
@@ -201,45 +201,45 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
     \item[Vector] The vector joining $A,B$ as $\rd{}{\lambda}P(\lambda)$ where
         $P(\lambda)$ is the straight line joining $A,B$.
 
-    \item[Metric tensor] $G(\mathbf{u}, \mathbf{v}) = \mathbf{u} \cdot
-        \mathbf{v}$.
+    \item[Metric tensor] $G(\bm{u}, \bm{v}) = \bm{u} \cdot
+        \bm{v}$.
 
     \item[Differential forms] Consider the propagation of a plane wave with
         wavevector $\vec{k}$. There are surfaces of codimension $1$ that have
-        equal phase. Define $\mathbf{\tilde{k}}$ such that a vector $\vec{v}$
-        incurs phase difference $\expvalue{\mathbf{\tilde{k}}, \vec{v}}$.
+        equal phase. Define $\bm{\tilde{k}}$ such that a vector $\vec{v}$
+        incurs phase difference $\expvalue{\bm{\tilde{k}}, \vec{v}}$.
 
         This is an example of a 1-form, a differential form that takes a single
-        vector and returns a scalar, often also denoted by $\mathbf{\sigma}$
-        boldface greek letters. We call $\expvalue{\mathbf{\sigma}, \vec{v}}$
-        the contraction of $\mathbf{\sigma}$ with $\mathbf{\vec{v}}$.
+        vector and returns a scalar, often also denoted by $\bm{\sigma}$
+        boldface greek letters. We call $\expvalue{\bm{\sigma}, \vec{v}}$
+        the contraction of $\bm{\sigma}$ with $\bm{\vec{v}}$.
 
-        Note that there is a one-to-one correspondence $\mathbf{\tilde{p}}$ and
-        $\mathbf{p}$, i.e.\ $\expvalue{\mathbf{\tilde{p}}, \mathbf{u}}$ is the
-        same as $\mathbf{p} \cdot \mathbf{u}$, and so we sometimes omit the
+        Note that there is a one-to-one correspondence $\bm{\tilde{p}}$ and
+        $\bm{p}$, i.e.\ $\expvalue{\bm{\tilde{p}}, \bm{u}}$ is the
+        same as $\bm{p} \cdot \bm{u}$, and so we sometimes omit the
         tilde.
 
         More generally, a 1-form is a local approximation the same way a vector
         is a local derivative, i.e.\ if we want the phase of a point $P$ close
         to $P_0$, we have
         \begin{align}
-            \phi(P) = \phi(P_0) + \expvalue{\mathbf{\tilde{k}}, P - P_0} + \dots
+            \phi(P) = \phi(P_0) + \expvalue{\bm{\tilde{k}}, P - P_0} + \dots
         \end{align}
 
     \item[Gradient as a 1-form] The gradient is a 1-form, not a vector, since it
         is the first-order approximation
         \begin{align}
-            f(P) = f(P_0) + \expvalue{\mathbf{d}f, P - P_0} +\dots
+            f(P) = f(P_0) + \expvalue{\bm{d}f, P - P_0} +\dots
         \end{align}
 
-    \item[Coordinates] Choose an orthonormal basis $\mathbf{e}_\alpha$ for
-        vectors, then there is also a basis $\mathbf{w}^\alpha =
-        \mathbf{d}x^\alpha$ for 1-forms, such that
+    \item[Coordinates] Choose an orthonormal basis $\bm{e}_\alpha$ for
+        vectors, then there is also a basis $\bm{w}^\alpha =
+        \bm{d}x^\alpha$ for 1-forms, such that
         \begin{align}
-            \expvalue{\mathbf{w}^\alpha, \mathbf{e}_\beta} &=
+            \expvalue{\bm{w}^\alpha, \bm{e}_\beta} &=
                 \delta^\alpha_\beta\\
-            \expvalue{v^\alpha \mathbf{w}^\alpha, \sigma_\beta \mathbf{e}_\beta}
-                &= \expvalue{\mathbf{\sigma}, \mathbf{v}} = \sigma_\alpha
+            \expvalue{v^\alpha \bm{w}^\alpha, \sigma_\beta \bm{e}_\beta}
+                &= \expvalue{\bm{\sigma}, \bm{v}} = \sigma_\alpha
                 v^\alpha
         \end{align}
 
@@ -284,40 +284,40 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         \begin{align*}
             u_\alpha &= \eta_{\alpha\beta}u^\beta\\
             u^\alpha &= \eta^{\alpha\beta}u_\beta\\
-            \mathbf{u} \cdot \mathbf{v} &= u^\alpha v^\beta \eta_{\alpha\beta}
+            \bm{u} \cdot \bm{v} &= u^\alpha v^\beta \eta_{\alpha\beta}
                 = u^\alpha v_\alpha
                 = u_\alpha v_\beta \eta^{\alpha\beta}
         \end{align*}
 
         This is trivial,
         \begin{align}
-            \mathbf{u} \cdot \mathbf{v} &= u_\alpha v_\beta \eta^{\alpha\beta}
+            \bm{u} \cdot \bm{v} &= u_\alpha v_\beta \eta^{\alpha\beta}
                 \nonumber\\
-            &= \expvalue{\mathbf{\tilde{u}}, \mathbf{v}} = u^\alpha v_\beta
+            &= \expvalue{\bm{\tilde{u}}, \bm{v}} = u^\alpha v_\beta
                 \nonumber\\
-            &= \expvalue{\mathbf{u}, \mathbf{\tilde{v}}} = u^\alpha v^\beta
+            &= \expvalue{\bm{u}, \bm{\tilde{v}}} = u^\alpha v^\beta
                 \nonumber\\
             u_\alpha \eta^{\alpha\beta} &= u^\alpha\\
             v_\beta \eta^{\alpha\beta} &= v^\beta
         \end{align}
 
     \item[2.5] \emph{Verify the following coordinate-free relations a particle
-        of mass $m$ and 4-momentum $\mathbf{p}$ measured by an observer with
-        4-velocity $\mathbf{u}$:}
+        of mass $m$ and 4-momentum $\bm{p}$ measured by an observer with
+        4-velocity $\bm{u}$:}
         \begin{align*}
-            \mathbf{u}^2 &= -1\\
-            E &= -\mathbf{p} \cdot \mathbf{u}\\
-            m^2 &= -\mathbf{p}^2\\
-            \abs{\vec{p}} &= \sqrt{(\mathbf{p} \cdot \mathbf{u})^2 +
-                (\mathbf{p} \cdot \mathbf{p})}\\
+            \bm{u}^2 &= -1\\
+            E &= -\bm{p} \cdot \bm{u}\\
+            m^2 &= -\bm{p}^2\\
+            \abs{\vec{p}} &= \sqrt{(\bm{p} \cdot \bm{u})^2 +
+                (\bm{p} \cdot \bm{p})}\\
             \abs{\vec{v}} &= \frac{\abs{\vec{p}}}{E}\\
-            \mathbf{v} &= \frac{\mathbf{p + (\mathbf{p} \cdot
-                \mathbf{u})\mathbf{u}}}{-\mathbf{p} \cdot \mathbf{u}}
+            \bm{v} &= \frac{\bm{p + (\bm{p} \cdot
+                \bm{u})\bm{u}}}{-\bm{p} \cdot \bm{u}}
         \end{align*}
 
         We must go into an arbitrary Lorentz frame for this:
         \begin{align}
-            \mathbf{u}^2 &= -\frac{1}{1 - v^2} + \sum\limits_{i}^{}
+            \bm{u}^2 &= -\frac{1}{1 - v^2} + \sum\limits_{i}^{}
                 \frac{v_i^2}{1 - v^2} \nonumber\\
             &= -1
         \end{align}
@@ -325,22 +325,22 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         We know that $E^2 = m^2 + \abs{\vec{p}}^2$, where $\vec{p} = \gamma m
         \vec{v}$, and so
         \begin{align}
-            -\mathbf{p} \cdot \mathbf{u} &= -m\mathbf{v} \cdot \mathbf{u}
+            -\bm{p} \cdot \bm{u} &= -m\bm{v} \cdot \bm{u}
                 \nonumber\\
             &= m\frac{1}{\sqrt{1 - v^2}} \nonumber\\
             m^2 + \abs{\vec{p}}^2 &= m^2\frac{1}{1-v^2} \nonumber\\
-            E^2 &= (\mathbf{p} \cdot \mathbf{u})^2
+            E^2 &= (\bm{p} \cdot \bm{u})^2
         \end{align}
         and the sign is chosen by defining $E$ as positive.
 
-        But then, knowing the definition $\mathbf{p} = m\mathbf{u}$, this yields
-        $m^2 = -\mathbf{p}^2$.
+        But then, knowing the definition $\bm{p} = m\bm{u}$, this yields
+        $m^2 = -\bm{p}^2$.
 
         Again, $E^2 = m^2 + \abs{\vec{p}}^2$, so since
-        $E^2 = (\mathbf{p} \cdot \mathbf{u})^2$ and $m^2 = -\mathbf{p} \cdot
-        \mathbf{p}$, we find
-        $\abs{\vec{p}}^2 = (\mathbf{p} \cdot \mathbf{u})^2 + \mathbf{p} \cdot
-        \mathbf{p}$.
+        $E^2 = (\bm{p} \cdot \bm{u})^2$ and $m^2 = -\bm{p} \cdot
+        \bm{p}$, we find
+        $\abs{\vec{p}}^2 = (\bm{p} \cdot \bm{u})^2 + \bm{p} \cdot
+        \bm{p}$.
 
         Earlier, we used that $\vec{p} = \gamma m \vec{v}$, and moreover we've
         seen that $E = m\gamma$ so we have $E =
@@ -349,14 +349,14 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         Not sure how to do the last one \frownie.
 
     \item[2.6] \emph{Ascribe a function $T(Q)$ to describe the temperature at
-        event $Q$. To an observer traveling with 4-velocity $\mathbf{u}$, show
+        event $Q$. To an observer traveling with 4-velocity $\bm{u}$, show
         that he measures temperature change $\rd{T}{\tau} =
-        \expvalue{\mathbf{d}T, \mathbf{u}}$. Why is this reasonable?}
+        \expvalue{\bm{d}T, \bm{u}}$. Why is this reasonable?}
 
         If the observer travels from event $P$ to event $P +
-        \mathbf{u}\Delta\tau$, then the temperature at the new event can be
+        \bm{u}\Delta\tau$, then the temperature at the new event can be
         computed as an expansion about the initial point, which to first order
-        is $\Delta T = \expvalue{\mathbf{d}T, \mathbf{u}\Delta \tau}$. Divide
+        is $\Delta T = \expvalue{\bm{d}T, \bm{u}\Delta \tau}$. Divide
         both sides by $\Delta \tau$ to obtain the desired result. Note that we
         want $\tau$ the proper time in the above relation because we are
         expanding in events about the rest frame of the temperature function
@@ -427,12 +427,12 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         simply rotate such that $\hat{n}$ lies along a coordinate axis. This
         would be very easy if we had a simple form for the rotation matrix, but
         I don't have one handy, so let's be more creative. Consider starting in
-        a reference frame moving with some $4$-velocity $\mathbf{v}$. The
+        a reference frame moving with some $4$-velocity $\bm{v}$. The
         components in this comoving frame of the $4$-velocity are simply $(-1,
         \vec{0})$. If we boost with our provided Lorentz transformation, we
         obtain
         \begin{align}
-            \mathbf{v} &= \left( -\gamma, -\beta\gamma \hat{n} \right)
+            \bm{v} &= \left( -\gamma, -\beta\gamma \hat{n} \right)
         \end{align}
         which, comparing with our earlier provided formula, corresponds to a
         $3$-velocity of $-\beta \hat{n}$. Thus, the boost takes us into a frame
@@ -448,9 +448,9 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         \begin{align}
             \rd{p^\alpha}{\tau} &= e{F^\alpha}_\beta u^\beta
         \end{align}
-        where $\mathbf{F}$ is the Faraday tensor satisfying
+        where $\bm{F}$ is the Faraday tensor satisfying
         \begin{align}
-            \rd{\mathbf{p}}{\tau} &= e\mathbf{F}(\mathbf{u})\\
+            \rd{\bm{p}}{\tau} &= e\bm{F}(\bm{u})\\
             {F^\alpha}_\beta &= \begin{bmatrix}
             0 & E_x & E_y & E_z\\
             E_x & 0 & B_z & -B_y\\
@@ -470,9 +470,9 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         contravariant and a lowered index is called covariant.
 
     \item[Tensor Operations] In geometric notation, the gradient of a tensor
-        $\mathbf{S}(\mathbf{u}, \mathbf{v}, \mathbf{w})$ is
+        $\bm{S}(\bm{u}, \bm{v}, \bm{w})$ is
         \begin{align}
-            \mathbf{\nabla}\mathbf{S} &= \partial_\xi \left(
+            \bm{\nabla}\bm{S} &= \partial_\xi \left(
             S_{\alpha\beta\gamma} u^\alpha v^\beta w^\gamma \xi^\delta \right)
             \nonumber\\
             &= S_{\alpha\beta\gamma, \delta}u^\alpha v^\beta w^\gamma\xi^\delta
@@ -481,10 +481,10 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         Contracting a tensor is to sum over one raised and one lowered index,
         e.g. $M_{\mu\nu} = {{R_{\alpha \mu}}^\alpha}_{\nu}$.
 
-        Divergence (on the first index of $\mathbf{S}$) is defined
+        Divergence (on the first index of $\bm{S}$) is defined
         \begin{align}
-            \mathbf{\nabla} \cdot \mathbf{S} &= \mathbf{\nabla} \mathbf{S}
-                (\mathbf{w}^\alpha, \mathbf{u}, \mathbf{v}, \mathbf{e}_\alpha)
+            \bm{\nabla} \cdot \bm{S} &= \bm{\nabla} \bm{S}
+                (\bm{w}^\alpha, \bm{u}, \bm{v}, \bm{e}_\alpha)
             {S^{\alpha}}_{\beta\gamma,\alpha}
         \end{align}
 
@@ -492,8 +492,8 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
 
         Wedge product is antisymmetrized tensor product
         \begin{align}
-            \mathbf{u} \wedge \mathbf{v} &= \mathbf{u} \otimes \mathbf{v} -
-                \mathbf{v} \otimes \mathbf{u}
+            \bm{u} \wedge \bm{v} &= \bm{u} \otimes \bm{v} -
+                \bm{v} \otimes \bm{u}
         \end{align}
 
     \item[Maxwell's Equations] These become
@@ -503,22 +503,22 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
             {F^{\alpha\beta}}_{,\beta} &= 4\pi J^\alpha
         \end{align}
 
-    \item[Stress-Energy Tensor] $\mathbf{T}$ is a symmetric, second rank tensor
+    \item[Stress-Energy Tensor] $\bm{T}$ is a symmetric, second rank tensor
         whose components $T_{jk}$ is the $j$-component of force acting across a
-        unit surface area $\mathbf{e}_k$. Note that ${\mathbf{T}^\alpha}_\beta
+        unit surface area $\bm{e}_k$. Note that ${\bm{T}^\alpha}_\beta
         u^\beta = -\rd{p^\alpha}{V}$ 4-momentum density, but also
         $T_{\alpha\beta} u^\beta$ gives the component of the 4-momentum density
         along the $\alpha$ direction.
 
-        It is conserved $\mathbf{\nabla} \cdot \mathbf{T} = 0$ (note that thanks
+        It is conserved $\bm{\nabla} \cdot \bm{T} = 0$ (note that thanks
         to symmetry we can take the divergence on either index).
 
-        One example of $\mathbf{T}$ is the following: An observer wants to know
+        One example of $\bm{T}$ is the following: An observer wants to know
         at event $P_0$ how much 4-momentum a volume corresponding to 1-form
-        $\mathbf{\Sigma}$ contains. This is expressed $\mathbf{p} =
-        \mathbf{T}(\_, \mathbf{\Sigma})$, but the $1$-volume of the box is
-        simply $\mathbf{\Sigma} = -V \mathbf{u}$, so $\mathbf{p} = V
-        \mathbf{T}(\_, \mathbf{u})$.
+        $\bm{\Sigma}$ contains. This is expressed $\bm{p} =
+        \bm{T}(\_, \bm{\Sigma})$, but the $1$-volume of the box is
+        simply $\bm{\Sigma} = -V \bm{u}$, so $\bm{p} = V
+        \bm{T}(\_, \bm{u})$.
 
         Alternatively, in a perfect fluid/ideal gas, we know that the
         space-space components of the tensor are $T_{ij} = p\delta_{ij}$, i.e.\
@@ -537,18 +537,18 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
 \subsection{Exercises}
 
 \begin{description}
-    \item[3.4] \emph{Formalize the tensor product $\mathbf{T} = \mathbf{u}
-        \otimes \mathbf{v}$ e.g.\ if $\mathbf{u}, \mathbf{v}$ are first-rank
+    \item[3.4] \emph{Formalize the tensor product $\bm{T} = \bm{u}
+        \otimes \bm{v}$ e.g.\ if $\bm{u}, \bm{v}$ are first-rank
         tensors, then $T^{\alpha\beta} = u^\alpha v^\beta$.}
 
-        Let $\mathbf{T} = \bigotimes_i \mathbf{u}_i$ where $\left\{ \mathbf{u}_i
-        \right\}$ is a collection of tensors of rank $n_i$. Then $\mathbf{T}$ is
+        Let $\bm{T} = \bigotimes_i \bm{u}_i$ where $\left\{ \bm{u}_i
+        \right\}$ is a collection of tensors of rank $n_i$. Then $\bm{T}$ is
         a tensor of rank $N = \sum\limits_{i}^{}n_i$ whose indicies are simply
-        the concatenation of the $\mathbf{u}_i$ indicies. Thus, in the above
-        $\mathbf{T} = \mathbf{u} \otimes \mathbf{v}$, then the first index of
-        $\mathbf{T}$ is the index of $\mathbf{u}$ and the second $\mathbf{v}$.
+        the concatenation of the $\bm{u}_i$ indicies. Thus, in the above
+        $\bm{T} = \bm{u} \otimes \bm{v}$, then the first index of
+        $\bm{T}$ is the index of $\bm{u}$ and the second $\bm{v}$.
 
-    \item[3.10] \emph{Show that any second rank tensor $\mathbf{T}$ can be
+    \item[3.10] \emph{Show that any second rank tensor $\bm{T}$ can be
         uniquely decomposed into symmetric and antisymmetric components
         $T^{\mu\nu} = A^{\mu\nu} + S^{\mu\nu}$.}
 
@@ -674,14 +674,14 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         you're in gravity, so it's possible to compute all gravity as if just
         accelerating. The mathematical result is GR\@.
 
-    \item[Hyperbolic Motion] If we require $\mathbf{a} = \rd{\mathbf{u}}{\tau}$ to
-        satisfy $0 = \mathbf{a} \cdot \mathbf{u}$ (necessitated if we require
-        $\mathbf{u}^2 = -1$ to not instantaneously change), then we can show
+    \item[Hyperbolic Motion] If we require $\bm{a} = \rd{\bm{u}}{\tau}$ to
+        satisfy $0 = \bm{a} \cdot \bm{u}$ (necessitated if we require
+        $\bm{u}^2 = -1$ to not instantaneously change), then we can show
         that this produces a trajectory satisfying $x^2 - t^2 = g^{-2}$,
         hyperbolic motion (note that $a^\mu a_\mu = g^2$).
 
     \item[Rotations in 4D] In 3D, rotation was defined about an angular velocity
-        vector $\omega_i$. In 4D, we instead rotate about a plane
+        vector $\omega_i$. In 4D, we instead rotate in a plane
         $\Omega^{\mu\nu}$, such that
         \begin{align}
             \rd{v^\mu}{\tau} &= -\Omega^{\mu\nu}v_\nu
@@ -690,18 +690,18 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         Compare to $\rd{v_i}{t} = \epsilon_{ijk} \omega_j v_k$.
 
     \item[Coordinates in Accelerated Frames] Choose basis vectors
-        $\mathbf{e}_\alpha$ such that $\mathbf{e}_0 = \mathbf{u}$ the 4-velocity
-        of the frame, and $\mathbf{e}_1$ the acceleration. Thus, $\mathbf{e}_2,
-        \mathbf{e}_3$ must be unaffected by LT in the 1-direction. We lastly
+        $\bm{e}_\alpha$ such that $\bm{e}_0 = \bm{u}$ the 4-velocity
+        of the frame, and $\bm{e}_1$ the acceleration. Thus, $\bm{e}_2,
+        \bm{e}_3$ must be unaffected by LT in the 1-direction. We lastly
         require no rotation outside of the above two criteria.
 
-        We can verify that the choice $\mathbf{\Omega} = \mathbf{a} \wedge
-        \mathbf{u}, \Omega^{\mu\nu} = a^\mu u^\nu - a^\nu u^\mu$ is the rotation
+        We can verify that the choice $\bm{\Omega} = \bm{a} \wedge
+        \bm{u}, \Omega^{\mu\nu} = a^\mu u^\nu - a^\nu u^\mu$ is the rotation
         that is enforced by our former criteria: any vector orthogonal to
-        $\mathbf{a}, \mathbf{u}$ doesn't get rotated $\Omega^{\mu\nu}w_\nu = 0$.
+        $\bm{a}, \bm{u}$ doesn't get rotated $\Omega^{\mu\nu}w_\nu = 0$.
 
         A vector that undergoes the given Lorentz transformation specified by
-        $\mathbf{\Omega}$ (i.e.\ $\rd{v^\mu}{\tau} = \Omega^{\mu\nu}v_\nu$) is
+        $\bm{\Omega}$ (i.e.\ $\rd{v^\mu}{\tau} = \Omega^{\mu\nu}v_\nu$) is
         said to undergo \emph{Fermi-Walker transport} along the wordline of the
         observer.
 
@@ -715,11 +715,11 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
 \begin{description}
     \item[Self] \emph{Derive hyperbolic motion.}
 
-        The assumptions are: $\mathbf{a}^\mu\mathbf{a}_\mu = g^2$ constant
-        magnitude, $\mathbf{u}^\mu\mathbf{u}_\mu = -1$ unaccelerated, and
-        $\mathbf{a} \cdot \mathbf{u} = 0$ at all times. Go to the instaneous
-        rest frame of the motion at any time, then since $\mathbf{u} = (1, 0, 0,
-        0)$, we note $a_0 = 0$. Choose $\mathbf{a} \propto \mathbf{e}_1$ for
+        The assumptions are: $\bm{a}^\mu\bm{a}_\mu = g^2$ constant
+        magnitude, $\bm{u}^\mu\bm{u}_\mu = -1$ unaccelerated, and
+        $\bm{a} \cdot \bm{u} = 0$ at all times. Go to the instaneous
+        rest frame of the motion at any time, then since $\bm{u} = (1, 0, 0,
+        0)$, we note $a_0 = 0$. Choose $\bm{a} \propto \bm{e}_1$ for
         simplicity. Writing out these equations in time and 3-vector coordinates
         gives
         \begin{align*}
@@ -736,44 +736,88 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
             a_1^2\left( \frac{1}{u_1^2} \right) &=\\
             a_1 &= gu_0&
             a_0 &= gu_1\\
-            \rd{u_1}{t} &= gu_0 &
-            \rd{u_0}{t} &= gu_1
+            \rd{u_1}{\tau} &= gu_0 &
+            \rd{u_0}{\tau} &= gu_1
         \end{align*}
-        which exhibits solutions $u_1(t) = \sinh(gt), u_0(t) = \cosh(gt)$,
-        which exhibits the desired property $x_0^2 - x_1^2 = g^{-2}$.
+        which exhibits solutions $u_1(\tau) = \sinh(g\tau), u_0(\tau) =
+        \cosh(g\tau)$, which can  exhibit the desired property $x_0^2 - x_1^2 =
+        g^{-2}$ with appropriate choice of initial conditions.
 
-    \item[6.1] \emph{Compute the proper time for an observer to travel distance
-        $L$ at acceleration $g$ for half, then $-g$ for the other half.}
+    \item[6.6] \emph{Show that in an LLT coordinate system, the proper time
+        measured at a coordinate $(\xi^1, \xi^2, \xi^3)$ differs from its
+        coordinate time $\rd{\tau}{\xi^0} = 1 + g\xi^1$.}
 
-    \item[6.6] \emph{Show that in the LLT coordinate system $\xi^\alpha$, the
-        proper time measured at coordinate $\xi^1$ is given $\rd{\tau}{\xi^0} =
-        1 + g\xi^1$.}
+        Thinking of the proper time ``at'' a coordinate to be the proper time
+        measured by a co-moving observer at that coordinate, we see that $\tau$
+        plays the role of $\xi^0$ in the frame of reference of the observer
+        co-moving with the reference frame of the origin, and $\xi^0$ the
+        coordinate time is simply $\tau$, the time of the LLT which is
+        non-accelerating.. Moreover, $\xi^1(\tau=0) = 0$ which explains the
+        $+1$, and we trivially note from our earlier solved trajectories that
+        \begin{align*}
+            \rd{\xi^0}{\tau} = \cosh(g\tau) &= 1 + g\frac{\cosh g\tau - 1}{g}
+        \end{align*}
 
     \item[6.8] {\em Consider an observer that allows his LLT to rotate, not
         Fermi-Walker transport. Specifically, we rotate as
         \begin{align}
-            \rd{\mathbf{e}_\alpha}{\tau} &= -\mathbf{\Omega} \cdot
-            \mathbf{e}_\alpha
+            \rd{\bm{e}_\alpha}{\tau} &= -\bm{\Omega} \cdot
+            \bm{e}_\alpha
         \end{align}
-        where $\mathbf{\Omega} = \mathbf{a} \wedge \mathbf{u} +
-        u_\alpha \omega_\beta \mathbf{\varepsilon}^{\alpha \beta \mu \nu}$, the
-        second component being the spatial rotation, where $\mathbf{\omega}$ is
-        perpendicular to 4-velocity $\mathbf{u}$. Show that\/}
+        where $\bm{\Omega} = \bm{a} \wedge \bm{u} +
+        u_\alpha \omega_\beta \bm{\varepsilon}^{\alpha \beta \mu \nu}$, the
+        second component being the spatial rotation, where $\bm{\omega}$ is
+        perpendicular to 4-velocity $\bm{u}$. Show that\/}
         \begin{itemize}
-            \item $\mathbf{e}_0 = \mathbf{u}$ is permitted by the above.
+            \item $\bm{e}_0 = \bm{u}$ is permitted by the above.
 
-            \item The second term, call it $\mathbf{\Omega}_{SR}$, obeys
+                By permitted, we mean that $\rd{\bm{e}_0}{\tau} =
+                \bm{a}$, i.e.\ the time coordinate is not rotated any more
+                than by the 4-acceleration $\bm{a}$. We note that
+                $(\bm{a} \wedge \bm{u}) \cdot \bm{u} = \bm{u}
+                (\bm{a} \cdot \bm{u}) - \bm{a}(\bm{u} \cdot
+                \bm{u}) = \bm{a}$. Moreover, if $\bm{e}_0 =
+                \bm{u}$ then $\bm{u}$ only has nonzero component in a
+                single index $\alpha = 0$, and so contracting against the
+                Levi-Civita symbol automatically implies either we're summing
+                for a set of indicies where $u^\mu = 0$ or the two $u$ share the
+                same index $\mu = 0$, both cases which result in the second term
+                having zero contribution. We thus obtain
                 \begin{align*}
-                    \mathbf{\Omega}_{SR} \cdot \mathbf{u} &= 0 &
-                    \mathbf{\Omega}_{SR} \cdot \mathbf{\omega} &= 0
+                    \rd{\bm{e}_0}{\tau} &= \bm{a}
                 \end{align*}
+                as is required.
+
+            \item The second term, call it $\bm{\Omega}_{SR}$, obeys
+                \begin{align*}
+                    \bm{\Omega}_{SR} \cdot \bm{u} &= 0 &
+                    \bm{\Omega}_{SR} \cdot \bm{\omega} &= 0
+                \end{align*}
+
+                We showed the first of the two relations, and the second is
+                equally obvious since contracting the same vector twice against
+                the Levi-Civita symbol always yields zero, since for every
+                contribution $u^\alpha u^\beta$ we also have a term $-u^\beta
+                u^\alpha$ thanks to full antisymmetry.
+
+                This implies $\bm{\Omega}_{SR}$ is orthogonal to both
+                $\bm{u}, \bm{\omega}$.
 
             \item Compare the basis vectors transported via the above rules with
                 those obtained via Fermi-Walker transport. Show that the
-                space-like components are rotated by $\mathbf{\omega}$. Hint:
+                space-like components are rotated by $\bm{\omega}$. Hint:
                 pick a moment where the tetrads coincide and show that the
                 change in their difference is rotating like $\vec{\omega} \cdot
                 \vec{e}_{j}$.
+
+                We've chosen $\bm{e}_0 = \bm{u}$, and so $\bm{\omega}$ must have
+                only space-like components. Then, since $\bm{\Omega}_{SR} =
+                u_\alpha \omega_\beta \bm{\varepsilon}^{\alpha \beta \mu \nu}$,
+                and $\bm{u}$ only has nonzero $\alpha = 0$ component, we find
+                that $\bm{\Omega}_{SR} = \omega_i \epsilon^{ijk}$ where $i,j,k
+                \in [1,3]$. Thus, it is clear that the effect of
+                $\bm{\Omega}_{SR}$ is to rotate by $\vec{\omega}$ in space-like
+                coordinates.
         \end{itemize}
 \end{description}
 
