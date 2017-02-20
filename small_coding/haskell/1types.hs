@@ -18,9 +18,9 @@ collatz val = fst (collInt ("", val))
 
 -- recursive types
 data Tree a = Leaf a | Branch (Tree a) (Tree a)
-minTree :: (Tree a, a -> a -> a) -> a
-minTree (Leaf x, cmp) = x
-minTree (Branch x y, cmp) = cmp (minTree (x, cmp)) (minTree (y, cmp))
+minTree :: Tree a -> (a -> a -> a) -> a
+minTree (Leaf x) cmp = x
+minTree (Branch x y) cmp = cmp (minTree x cmp) (minTree y cmp)
 
 intTree = Branch
     (Leaf 3)
@@ -31,4 +31,4 @@ intTree = Branch
         (Branch
             (Leaf 2)
             (Leaf 3)))
--- main = print (minTree (intTree, min))
+-- main = print (minTree intTree min)

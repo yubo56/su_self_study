@@ -1,16 +1,20 @@
 CC = ghc
+CCFLAGS = -Wall
 
-1: 1*.bin
+2: 2algs.bin
 	./$<
 
-0: 0*.bin
+1: 1types.bin
+	./$<
+
+0: 0hello_world.bin
 	./$<
 
 %.bin: %.o
-	ghc -o $@ $<
+	$(CC) $(CCFLAGS) -o $@ $<
 
 %.o: %.hs
-	ghc -c $<
+	$(CC) $(CCFLAGS) -c $<
 
 clean:
 	rm -f *.hi *.o *.bin
