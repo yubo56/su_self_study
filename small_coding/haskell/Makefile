@@ -1,14 +1,16 @@
 CC = ghc
 
-SRCS=$(wildcard *.hs)
-BINS=$(SRCS:%.hs=%.bin)
+1: 1*.bin
+	./$<
 
-all: 0
+0: 0*.bin
+	./$<
 
-.PHONY: 0
-0: 0hello_world.hs
-	ghc $< -o $(<:.hs=.bin)
-	./$(<:.hs=.bin)
+%.bin: %.o
+	ghc -o $@ $<
+
+%.o: %.hs
+	ghc -c $<
 
 clean:
 	rm -f *.hi *.o *.bin
