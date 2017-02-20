@@ -11,7 +11,7 @@ all: 0
 	./$(<:.hs=.bin)
 
 clean:
-	rm -f *.hi *.o $(BINS)
+	rm -f *.hi *.o *.bin
 
 .PHONY: all clean
 
