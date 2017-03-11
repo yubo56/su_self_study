@@ -1,6 +1,12 @@
 CC = ghc
 CCFLAGS = -Wall
 
+4: 4structures_take2.bin
+	./$<
+
+3: 3structures.bin
+	./$<
+
 2: 2algs.bin
 	./$<
 
