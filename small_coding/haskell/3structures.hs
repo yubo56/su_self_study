@@ -5,16 +5,16 @@ pops [] = error "Popping empty Stack"
 pops (xh:xs) = (xh, xs)
 
 pushs :: Integer -> Stack -> Stack
-pushs xh xs = (xh:xs)
+pushs xh xs = xh:xs
 
 _prints :: Stack -> String
 _prints [x] = show x
 _prints x = do
     let (xh, xs) = pops x
-    (show xh) ++ ", " ++ _prints xs
+    show xh ++ ", " ++ _prints xs
 
 prints :: Stack -> String
-prints x = "Stack: [" ++ (_prints x) ++ "]"
+prints x = "Stack: [" ++ _prints x ++ "]"
 
 type Queue = (Stack, Stack)
 
@@ -22,7 +22,7 @@ shiftq :: Queue -> Queue
 shiftq (x, []) = (x, [])
 shiftq (l, r) = do
     let (rh, rs) = pops r
-    shiftq ((pushs rh l), rs)
+    shiftq (pushs rh l, rs)
 
 popq :: Queue -> (Integer, Queue)
 popq ([], []) = error "Popping empty Queue"
@@ -32,15 +32,15 @@ popq (l, r) = do
     (lh, (ls, r))
 
 pushq :: Integer -> Queue -> Queue
-pushq val (l, r) = (l, (pushs val r))
+pushq val (l, r) = (l, pushs val r)
 
 _printq :: Queue -> String
 _printq ([], [x]) = show x
-_printq ([], (xh:xs)) = (_printq ([], xs)) ++ ", " ++ (show xh)
-_printq (x, y) = (_prints x) ++ ", " ++ (_printq ([], y))
+_printq ([], xh:xs) = _printq ([], xs) ++ ", " ++ show xh
+_printq (x, y) = _prints x ++ ", " ++ _printq ([], y)
 
 printq :: Queue -> String
-printq q = "Queue: [" ++ (_printq q) ++ "]"
+printq q = "Queue: [" ++ _printq q ++ "]"
 
 main :: IO()
 main = do
