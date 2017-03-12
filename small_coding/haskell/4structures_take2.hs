@@ -64,8 +64,37 @@ pushq :: a -> Queue a -> Queue a
 pushq val (Queue l r) = (Queue l (pushs val r))
 
 --
--- Priority Queue (TODO)
+-- Priority Queue
 --
+
+int_cmp :: Integer -> Integer -> Bool
+int_cmp a b = a > b
+
+data PQueue cmp a =
+    PQueue cmp a (PQueue cmp a) (PQueue cmp a) |
+    Leaf a |
+    EmptyQ
+
+peek_pq :: PQueue cmp a -> a
+peek_pq (EmptyQ) = error "Peeking empty Priority Queue"
+peek_pq (Leaf x) = x
+peek_pq (PQueue _ x _ _) = x
+
+size_pq :: PQueue cmp a -> Integer
+size_pq (EmptyQ) = 0
+size_pq (Leaf _) = 1
+size_pq (PQueue _ _ l r) = size_pq(l) + size_pq(r)
+
+_pop_last :: PQueue cmp a -> (a, PQueue cmp a)
+_pop_last (EmptyQ) = error "_pop_last called on empty Priority Queue"
+_pop_last (Leaf x) = (x, EmptyQ)
+_pop_last (PQueue cmp a l r)
+    | (size_pq l) > (size_pq r)     = do
+        let (x, new_l) = _pop_last l
+        (x, (PQueue cmp a new_l r))
+    | (size_pq l) == (size_pq r)     = do
+        let (x, new_r) = _pop_last r
+        (x, (PQueue cmp a l new_r))
 
 main :: IO()
 main = do
@@ -78,3 +107,5 @@ main = do
     print (int_printq q)
     print (int_printq (snd (popq q)))
     print (int_printq (pushq 7 q))
+
+    print (fst (_pop_last (Leaf 5)) :: Integer)
