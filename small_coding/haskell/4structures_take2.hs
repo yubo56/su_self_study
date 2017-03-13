@@ -15,8 +15,8 @@ _prints f (Stack h s) = f h ++ _printt f s where
 prints :: (a -> String) -> Stack a -> String
 prints f s = "Stack: [" ++ _prints f s ++ "]"
 
--- wraps prints for Integer stacks
-int_prints :: Stack Integer -> String
+-- wraps prints for Int stacks
+intPrints :: Stack Int -> String
 intPrints = prints show
 
 pushs :: a -> Stack a -> Stack a
@@ -48,8 +48,8 @@ printq f q = "Queue: [" ++ _printq f q ++ "]" where
         ", " ++
         _printq f' (Queue Empty r)
 
--- wraps printq for Integer queues
-intPrintq :: Queue Integer -> String
+-- wraps printq for Int queues
+intPrintq :: Queue Int -> String
 intPrintq = printq show
 
 popq :: Queue a -> (a, Queue a)
@@ -66,54 +66,141 @@ pushq val (Queue l r) = Queue l (pushs val r)
 -- Priority Queue
 --
 
-intCmp :: Integer -> Integer -> Bool
+intCmp :: Int -> Int -> Bool
 intCmp a b = a > b
 
-data PQueue cmp a =
-    PQueue cmp a (PQueue cmp a) (PQueue cmp a) |
+data PQueue a =
+    PQueue a (PQueue a) (PQueue a) |
     Leaf a |
-    EmptyQ
+    EmptyPQ
 
-peekPq :: PQueue cmp a -> a
-peekPq EmptyQ = error "Peeking empty Priority Queue"
-peekPq (Leaf x) = x
-peekPq (PQueue _ x _ _) = x
+_getRoot :: PQueue a -> a
+_getRoot EmptyPQ = error "No root for empty Priority Queue"
+_getRoot (Leaf x) = x
+_getRoot (PQueue x _ _) = x
 
-sizePq :: PQueue cmp a -> Integer
-sizePq EmptyQ = 0
-sizePq (Leaf _) = 1
-sizePq (PQueue _ _ l r) = sizePq l + sizePq r
+-- counts number of complete levels, rounded down
+_occupancy :: PQueue a -> Double
+_occupancy EmptyPQ = 0
+_occupancy (Leaf _) = 1
+_occupancy (PQueue _ l r) = 1 + (_occupancy l + _occupancy r) / 2
 
-printPq :: (a -> String) -> PQueue cmp a -> String
-printPq _ EmptyQ = "Priority Queue: (Empty)"
-printPq f pq = "Priority Queue: " ++ _print_pq f pq where
-    _print_pq _ EmptyQ = ""
-    _print_pq f' (Leaf val) = f' val
-    _print_pq f' (PQueue _ _ l r) = "(" ++ _print_pq f' l ++ ", " ++ _print_pq f' r ++ ")"
+-- whether next available slot is left or not
+_nextPushLeft :: PQueue a -> Bool
+_nextPushLeft EmptyPQ = error "_nextPushLeft called on empty Priority Queue"
+_nextPushLeft (Leaf _) = error "_nextPushLeft called on Leaf"
+_nextPushLeft (PQueue _ l r)
+    | _occupancy l == _occupancy r = True
+    | fromInteger (round (_occupancy l)) == _occupancy l = False
+    | otherwise = True
 
-_popLast :: PQueue cmp a -> (a, PQueue cmp a)
-_popLast EmptyQ = error "_popLast called on empty Priority Queue"
-_popLast (Leaf x) = (x, EmptyQ)
-_popLast (PQueue cmp a l r)
-    | sizePq l > sizePq r = do
-        let (x, new_l) = _popLast l
-        (x, PQueue cmp a new_l r)
-    | sizePq l == sizePq r = do
-        let (x, new_r) = _popLast r
-        (x, PQueue cmp a l new_r)
-    | otherwise =
-        error "Corrupted Priority Queue!"
+-- whether last used slot is left or not
+_nextPopLeft :: PQueue a -> Bool
+_nextPopLeft EmptyPQ = error "_nextPopLeft called on empty Priority Queue"
+_nextPopLeft (Leaf _) = error "_nextPopLeft called on Leaf"
+_nextPopLeft (PQueue _ l r)
+    | _occupancy l == _occupancy r = False
+    | fromInteger (round (_occupancy r)) == _occupancy r = True
+    | otherwise = False
+
+_popLast :: PQueue a -> (a, PQueue a)
+_popLast EmptyPQ = error "_popLast called on empty Priority Queue"
+_popLast (Leaf x) = (x, EmptyPQ)
+_popLast (PQueue x (Leaf y) EmptyPQ) = (y, Leaf x)
+_popLast pq@(PQueue x l r)
+    | _nextPopLeft pq = do
+        let (y, new_l) = _popLast l
+        (y, PQueue x new_l r)
+    | otherwise = do
+        let (y, new_r) = _popLast r
+        (y, PQueue x l new_r)
+
+_swapRoot :: a -> PQueue a -> (a, PQueue a)
+_swapRoot v EmptyPQ = (v, EmptyPQ) -- cannot swap into an empty PQ, edge case
+_swapRoot v (Leaf x) = (x, Leaf v)
+_swapRoot v (PQueue x l r) = (x, PQueue v l r)
+
+-- will only recurse into a child if its root has been modified
+_reheap :: (a -> a -> Bool) -> PQueue a -> PQueue a
+_reheap _ EmptyPQ = EmptyPQ
+_reheap _ (Leaf x) = Leaf x
+_reheap cmp pq@(PQueue x l EmptyPQ) -- l must be a Leaf
+    | cmp x (_getRoot l) = pq
+    | otherwise = do
+        let (x', l') = _swapRoot x l
+        PQueue x' l' EmptyPQ
+_reheap cmp pq@(PQueue x l r) -- both children are guaranteed non-empty
+    | cmp x (_getRoot l) && cmp x (_getRoot r) = pq
+    | cmp (_getRoot r) (_getRoot l) = do
+        let (x', r') = _swapRoot x r
+        PQueue x' l (_reheap cmp r')
+    | otherwise = do
+        let (x', l') = _swapRoot x l
+        PQueue x' (_reheap cmp l') r
+
+-- pushPQ is responsible for reheaping as it pops out of its stack since
+-- _reheap assumes both children are already heaps, which isn't the case
+-- immediately after pushing a new element
+--
+-- Note that each application of _reheap descends at most one level since
+-- everything beneath it already satisfies heap properties, so we are
+-- guaranteed only O(log n) calls to _reheap for PQ of size n
+pushPQ :: (a -> a -> Bool) -> a -> PQueue a -> PQueue a
+pushPQ _ v EmptyPQ = Leaf v
+pushPQ cmp v (Leaf x) = _reheap cmp (PQueue x (Leaf v) EmptyPQ)
+pushPQ cmp v pq@(PQueue x l r)
+    | _nextPushLeft pq = _reheap cmp (PQueue x (pushPQ cmp v l) r)
+    | otherwise = _reheap cmp (PQueue x l (pushPQ cmp v r))
+
+popPQ :: (a -> a -> Bool) -> PQueue a -> (a, PQueue a)
+popPQ cmp pq = do
+    let (newRoot, pq') = _popLast pq
+    let (root, pq'') = _swapRoot newRoot pq'
+    (root, _reheap cmp pq'')
+
+printPQ :: (a -> String) -> PQueue a -> String
+printPQ _ EmptyPQ = "Priority Queue: (Empty)"
+printPQ f pq = "Priority Queue: (" ++ _print_pq f pq ++ ")" where
+    _print_pq _ EmptyPQ = ""
+    _print_pq f' (Leaf x) = f' x
+    _print_pq f' (PQueue x l EmptyPQ) = f x ++ ": (" ++ _print_pq f' l ++ ")"
+    _print_pq f' (PQueue  x l r) = f x ++ ": (" ++ _print_pq f' l ++ ", " ++ _print_pq f' r ++ ")"
+
+printOrderedPQ :: (a -> String) -> (a -> a -> Bool) -> PQueue a -> String
+printOrderedPQ _ _ EmptyPQ = ""
+printOrderedPQ toStr _ (Leaf x) = toStr x
+printOrderedPQ toStr cmp pq = do
+    let (root, pq') = popPQ cmp pq
+    toStr root ++ ", " ++ printOrderedPQ toStr cmp pq'
+
+intPushPQ :: Int -> PQueue Int -> PQueue Int
+intPushPQ = pushPQ intCmp
+intPopPQ :: PQueue Int -> (Int, PQueue Int)
+intPopPQ = popPQ intCmp
+intPrintPQ :: PQueue Int -> String
+intPrintPQ = printPQ show
+intPopAllPQ :: PQueue Int -> String
+intPopAllPQ = printOrderedPQ show intCmp
 
 main :: IO()
 main = do
-    let x = pushs 1 (pushs 2 (pushs 3 Empty))
-    print (int_prints x)
-    print (int_prints (snd (pops x)))
-    print (int_prints (pushs 4 x))
+    let s = pushs 1 (pushs 2 (pushs 3 Empty))
+    print (intPrints s)
+    print (intPrints (snd (pops s)))
+    print (intPrints (pushs 4 s))
 
-    let q = Queue x x
-    print (int_printq q)
-    print (int_printq (snd (popq q)))
-    print (int_printq (pushq 7 q))
+    let q = Queue s s
+    print (intPrintq q)
+    print (intPrintq (snd (popq q)))
+    print (intPrintq (pushq 7 q))
 
-    print (fst (_popLast (Leaf 5)) :: Integer)
+    print (fst (intPopPQ (intPushPQ 5 EmptyPQ)))
+    print (intPrintPQ (snd (intPopPQ (intPushPQ 5 EmptyPQ))))
+
+    let quasiRandom :: [Int]
+        quasiRandom = [round (1000 * sin x) | x <- [0..100] :: [Double]]
+    -- print ("Not really random numbers: " ++ show quasiRandom)
+
+    let pq = foldr intPushPQ EmptyPQ quasiRandom
+    -- print (intPrintPQ pq)
+    print (intPopAllPQ pq)
