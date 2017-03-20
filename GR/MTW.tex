@@ -889,6 +889,8 @@ i.e.\ events are points, [tangent] vectors connect points, and the metric
         \end{itemize}
 \end{description}
 
+\chapter{Curving Spacetime}
+
 \section{Mathematics of GR}
 
 Below follows a brief overview of the formalism:
@@ -897,13 +899,20 @@ Below follows a brief overview of the formalism:
     \item[Tensor Algebra with curved spacetime, the metric] Instead of
         $\eta_{\alpha\beta}$ purely diagonal, we have
         $g_{\alpha\beta} = \bm{e}_\alpha \cdot \bm{e}_\beta$, satisfying
-        $g_{\alpha\beta}g^{\beta\gamma} = {\delta_{\beta}}^\gamma$
+        $g_{\alpha\beta}g^{\beta\gamma} = {\delta_{\beta}}^\gamma$.
+
+        Moreover, instead of ${\Lambda^{\alpha'}}_\beta$ Lorentz transformation
+        matrix, we have an arbitrary ${L^{\alpha'}}_\beta$.
+
+        Finally, the usual Levi-Civita symbol is scaled by a factor of
+        $(-g)^{1/2}$ where $g \equiv \det g_{\alpha\beta}$.
 
     \item[Vectors in Curved Geometry] Vectors are directional derivatives
-        $\bm{u} \equiv \partial_{\bm{u}}$. Makes more sense in the context of
-        ``tangent spaces'', where we look at the flat tangent space instead of
-        the full curved spacetime, where ``distance between points'' is
-        ill-defined.
+        $\bm{u} \equiv \partial_{\bm{u}}$. Recall that these satisfy
+        $\partial_{\bm{u}} f = \expvalue{\bm{d}f, \bm{u}}$. Makes more sense in
+        the context of ``tangent spaces'', where we look at the flat tangent
+        space instead of the full curved spacetime, where ``distance between
+        points'' is ill-defined.
 
     \item[Basis Vector Commutation Coefficients] Consider $\bm{u}, \bm{v}$
         vectors/directional derivatives as operators. Define their
@@ -943,7 +952,7 @@ Below follows a brief overview of the formalism:
         $-{\Gamma^{\alpha}}_{\beta\gamma} = \expvalue{\bm{\nabla}_{\gamma}
         \bm{w}^\alpha, \bm{e}_\beta}$. Then the components of the gradient are
         \begin{align}
-            {T^{\beta}}^\beta_{\alpha;\gamma} &=
+            {T^{\beta}}_{\alpha;\gamma} &=
                 {T^\beta}_{\alpha,\gamma} +
                 {\Gamma^\beta}_{\mu\gamma}{T^{\mu}}_\alpha -
                 {\Gamma^\mu}_{\alpha\gamma}{T^{\beta}}_\mu\\
@@ -951,6 +960,8 @@ Below follows a brief overview of the formalism:
                 \left( {T^\beta}_{\alpha;\gamma}u^\gamma \right)
                 \bm{e}_\beta \otimes \bm{w}^\alpha
         \end{align}
+
+        Note that these vanish at the origin of any LLF\@.
 
         Define also $\frac{\mathrm{D}{T^\beta}_\alpha}{\mathrm{d}\lambda} =
         {T^\beta}_{\alpha;\gamma}u^\gamma$ shorthand.
@@ -1029,5 +1040,156 @@ Below follows a brief overview of the formalism:
         \end{align*}
 \end{description}
 
-\end{document}
+\subsection{Exercises}
 
+\begin{description}
+    \item[8.1] \emph{Note: I am only picking one of the problems. Prove that the
+        corresponding one form to a directional derivative $\partial_{\bm{e}^q}$
+        or vector $\bm{e}^q$ for $\bm{e}^q$ basis vector along the $q$
+        coordinate is $\bm{d}q$.}
+
+        $\partial_{\bm{u}}$ encodes ``take the gradient and project along
+        $\bm{u}$''. To show that these two are duals, it suffices to show
+        $\partial_{\bm{e}^q}f = \expvalue{\bm{d}f, \bm{e}^q}$ is equal to
+        $\bm{d}f \cdot \bm{d}q$. But $\bm{d}q$ is clearly $1$ along the $q$
+        componment and $0$ everywhere else, so it's clear that both expressions
+        simply pick out the $q$ component of $\bm{d}f$.
+
+    \item[8.2] \emph{Compute the components of the commutator $\left[
+        \partial_{\bm{u}}, \partial_{\bm{v}} \right]$ in a coordinate basis.}
+
+        Let's try acting on a single arbitrary coordinate $q^\alpha$ such that
+        $\bm{d}q^\alpha \propto \bm{e}^\alpha$ (e.g.\ one dimension):
+        \begin{align*}
+            \partial_{\bm{u}}\partial_{\bm{v}}q^\alpha -
+                \partial_{\bm{v}}\partial_{\bm{u}}q^\alpha &=
+            \partial_{\bm{u}}\expvalue{\bm{d}q^\alpha, \bm{v}} -
+                \partial_{\bm{v}}\expvalue{\bm{d}q^\alpha, \bm{u}}\\
+            &= \partial_{\bm{u}}v^\alpha -
+                \partial_{\bm{v}}u^\alpha\\
+            &= \expvalue{\bm{d}v^\alpha, \bm{u}} -
+                \expvalue{\bm{d}u^\alpha, \bm{v}}\\
+            &= u^\beta {v^\alpha}_{,\beta} -
+                v^\beta {u^\alpha}_{,\beta}
+        \end{align*}
+        where we have used the coordinate basis assumption to expand the
+        gradient. Then, if we consider arbitrary dimensions, we simply must expand
+        $\bm{d} = \sum_\alpha \bm{e}_\alpha$. Substituting this in above gives
+        us the desired
+        \begin{align}
+            \left[ \partial_{\bm{u}}, \partial_{\bm{v}} \right]
+            = \partial_{\bm{u}}\partial_{\bm{v}} -
+                \partial_{\bm{v}}\partial_{\bm{u}}
+            &= \left(u^\beta {v^\alpha}_{,\beta} -
+                v^\beta {u^\alpha}_{,\beta}\right)\bm{e}_\alpha
+                \label{8.commutator}
+        \end{align}
+
+        Recall that the commutation coefficients for any basis are defined
+        $\left[ \bm{e}_\beta, \bm{e}_\gamma \right] =
+        {c_{\beta\gamma}}^\alpha \bm{e}_\alpha$. For any coordinate basis, the
+        basis vectors are orthonormal so ${u^\alpha}_{,\beta} =
+        {\delta^\alpha}_\beta$ and \autoref{8.commutator} vanishes.
+
+    \item[8.3] \emph{Compute the Levi-Civita symbol in nonorthonormal bases.}
+
+        We follow the hints. First, we enforce Lorentz invariance in an LLF in
+        the hatted coordinate system.
+        \begin{align*}
+            \epsilon_{\alpha\beta\gamma\delta} =
+                {L^{\hat{\mu}}}_\alpha
+                {L^{\hat{\nu}}}_\beta
+                {L^{\hat{\lambda}}}_\gamma
+                {L^{\hat{\rho}}}_\delta
+                \epsilon_{\hat{\mu}\hat{\nu}\hat{\lambda}\hat{\rho}}
+        \end{align*}
+
+        We leverage the matrix identity $\det \bm{A} = \frac{1}{n!}
+        \varepsilon_{\left\{ \dots i_n \right\}}
+        \varepsilon_{\left\{ \dots j_n \right\}}
+        \left\{ \dots a_{i_n, j_n} \right\}$ by first multiplying both
+        sides by $\varepsilon^{\alpha\beta\gamma\delta}$, giving us
+        \begin{align*}
+            \varepsilon^{\alpha\beta\gamma\delta}
+                \varepsilon_{\alpha\beta\gamma\delta}
+            &=
+                {L^{\hat{\mu}}}_\alpha
+                {L^{\hat{\nu}}}_\beta
+                {L^{\hat{\lambda}}}_\gamma
+                {L^{\hat{\rho}}}_\delta
+                \varepsilon^{\alpha\beta\gamma\delta}
+                \epsilon_{\hat{\mu}\hat{\nu}\hat{\lambda}\hat{\rho}}\\
+            &= n! \det {L^{\hat{\nu}}}_{\gamma}
+        \end{align*}
+
+        There are $n!$ permutations of $\alpha\beta\gamma\delta$, so we see that
+        $\varepsilon_{\alpha\beta\gamma\delta} = \det {L^{\hat{\nu}}}_{\gamma}
+        \varepsilon_{\hat{\mu}\hat{\nu}\hat{\lambda}\hat{\rho}}$ satisfies the
+        above relations.
+
+        But then, $g_{\alpha\beta} = \bm{e}_\alpha \otimes \bm{e}_\beta$, while
+        $\bm{e}_{\hat{\mu}} = \bm{e}_\alpha {L^\alpha}_{\hat{\mu}}$, and
+        so let's consider
+        \begin{align*}
+            \det g &= \frac{1}{n!}\varepsilon^{\left\{ i_n \right\}}
+                \varepsilon^{\left\{ j_n \right\}}
+                \left\{ \dots g_{i_nj_n} \right\}
+        \end{align*}
+
+        We know that all non-zero contributions to the sum must have distinct
+        $i_n, j_n$, so we see that for each component, there will be two factors
+        of ${L^\alpha}_{\hat{\nu}}$. We see from the previous exercise that each
+        factor imposes a global $\det {L^\alpha}_{\hat{\nu}}$ factor, so we find
+        that
+        \begin{align*}
+            \det g &= \left( \det {L^\alpha}_{\hat{\nu}} \right)^2 \det
+                \hat{g}\\
+            &= -\left( \det {L^\alpha}_{\hat{\nu}} \right)^2
+        \end{align*}
+
+        To recover the expression in the book, recall that $
+        {L^\alpha}_{\hat{\nu}} = \left( {L^{\hat{\nu}}}_\alpha \right)^{-1}$,
+        which yields
+        \begin{align*}
+            \det g \left( \det {L^{\hat{\nu}}}_\alpha \right)^2 &= -1
+        \end{align*}
+
+        Combining these two results, we derive
+        \begin{align*}
+            \varepsilon_{\alpha\beta\gamma\delta} &=
+                \det {L^{\hat{\nu}}}_{\gamma}
+                \varepsilon_{\hat{\mu}\hat{\nu}\hat{\lambda}\hat{\rho}}\\
+                &= \sqrt{-g}
+                \varepsilon_{\hat{\mu}\hat{\nu}\hat{\lambda}\hat{\rho}}\\
+        \end{align*}
+
+    \item[16.3] \emph{Demonstrate that covariant derivatives do not commute by
+        demonstrating the below:}
+        \begin{align*}
+            {B^\mu}_{;\alpha\beta} &= {B^\mu}_{;\beta\alpha} +
+                {R^\mu}_{\nu\beta\alpha} B^\nu\\
+            {S^{\mu\nu}}_{;\alpha\beta} &= {S^{\mu\nu}}_{;\beta\alpha} +
+                {R^\mu}_{\rho\beta\alpha}S^{\rho\nu} +
+                {R^\nu}_{\rho\beta\alpha}S^{\mu\rho}\\
+            {B^{\mu;\alpha}}_\mu &= {{B^\mu}_{;\mu}}^\alpha +
+                {R^\alpha}_\mu B^\mu
+        \end{align*}
+\end{description}
+
+\section{General Relativity}
+
+\begin{description}
+    \item[Equivalence Principle] Dynamics in all LLFs is equivalent to SR\@. In
+        practice, this usually entails replacing commas (partial derivative)
+        with semicolons (covariant derivatives), with some subtlety in
+        non-commuting covariant derivatives (see ex.\ 16.3 previous).
+
+    \item[Ideal Measurements] Define ideal rods and clocks to measure
+        $\mathrm{d}s = (g_{\alpha\beta}\mathrm{d}x^\alpha
+        \mathrm{d}x^\beta)^{1/2}$ and
+        $\mathrm{d}\tau = (-g_{\alpha\beta}\mathrm{d}x^\alpha
+        \mathrm{d}x^\beta)^{1/2}$ respectively. These can be constructed from
+        geodesic worldlines.
+\end{description}
+
+\end{document}
