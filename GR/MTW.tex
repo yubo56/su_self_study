@@ -1017,13 +1017,14 @@ Below follows a brief overview of the formalism:
         \end{align}
 
         We can compute in coordinate basis then
-        \begin{align*}
+        \begin{align}
             {R^\alpha}_{\beta\gamma\delta} &=
                 \pd{{\Gamma^\alpha}_{\beta\delta}}{x^\gamma} -
                 \pd{{\Gamma^\alpha}_{\beta\gamma}}{x^\delta} +
                 {\Gamma^\alpha}_{\mu\gamma} {\Gamma^\mu}_{\beta\delta} -
                 {\Gamma^\alpha}_{\mu\delta} {\Gamma^\mu}_{\beta\gamma}
-        \end{align*}
+                \label{8.Reimann}
+        \end{align}
 
     \item[Other curvature tensors] We can form the Ricci, scalar and Einstein
         curvature tensors respectively:
@@ -1089,7 +1090,7 @@ Below follows a brief overview of the formalism:
         $\left[ \bm{e}_\beta, \bm{e}_\gamma \right] =
         {c_{\beta\gamma}}^\alpha \bm{e}_\alpha$. For any coordinate basis, the
         basis vectors are orthonormal so ${u^\alpha}_{,\beta} =
-        {\delta^\alpha}_\beta$ and \autoref{8.commutator} vanishes.
+        {\delta^\alpha}_\beta$ and~\eqref{8.commutator} vanishes.
 
     \item[8.3] \emph{Compute the Levi-Civita symbol in nonorthonormal bases.}
 
@@ -1174,6 +1175,80 @@ Below follows a brief overview of the formalism:
             {B^{\mu;\alpha}}_\mu &= {{B^\mu}_{;\mu}}^\alpha +
                 {R^\alpha}_\mu B^\mu
         \end{align*}
+
+        Recall
+        \begin{align*}
+            {T^{\beta}}_{\alpha;\gamma} &=
+                {T^\beta}_{\alpha,\gamma} +
+                {\Gamma^\beta}_{\mu\gamma}{T^{\mu}}_\alpha -
+                {\Gamma^\mu}_{\alpha\gamma}{T^{\beta}}_\mu\\
+        \end{align*}
+
+        Let's simply evaluate the second expression, since it is a strict
+        generalization of the second. Then
+        \begin{align*}
+            {S^{\mu\nu}}_{;\alpha\beta} {}=& \left(
+                {S^{\mu\nu}}_{,\alpha} +
+                {\Gamma^\mu}_{\sigma\alpha}S^{\sigma\nu} +
+                {\Gamma^\nu}_{\rho\alpha}S^{\mu\rho}
+            \right)_{;\beta}\\
+            {}=& {S^{\mu\nu}}_{,\alpha\beta} +
+            {\Gamma^\mu}_{\sigma\alpha}\left(
+                {S^{\sigma\nu}}_{,\beta} +
+                {\Gamma^\sigma}_{\gamma\beta}S^{\gamma\nu} +
+                {\Gamma^\nu}_{\delta\beta}S^{\sigma\delta} +
+            \right) +
+            {\Gamma^\nu}_{\rho\alpha}\left(
+                {S^{\mu\rho}}_{,\beta} +
+                {\Gamma^\mu}_{\gamma\beta}S^{\gamma\rho} +
+                {\Gamma^\rho}_{\delta\beta}S^{\mu\delta}
+            \right)\\
+            &+ {\Gamma^\mu}_{\sigma\alpha;\beta}S^{\sigma\nu} +
+                {\Gamma^\nu}_{\rho\alpha;\beta}S^{\mu\rho}
+        \end{align*}
+
+        Going to the LLF, all connection coefficients vanish (but not their
+        derivatives) and so we are left with only
+        \begin{align*}
+            {S^{\mu\nu}}_{;\alpha\beta} {}=& {S^{\mu\nu}}_{,\alpha\beta} +
+                {\Gamma^\mu}_{\sigma\alpha,\beta}S^{\sigma\nu} +
+                {\Gamma^\nu}_{\rho\alpha,\beta}S^{\mu\rho}
+        \end{align*}
+
+        Similarly, we could have arrived at
+        \begin{align*}
+            {S^{\mu\nu}}_{;\beta\alpha} {}=& {S^{\mu\nu}}_{,\alpha\beta} +
+                {\Gamma^\mu}_{\sigma\beta,\alpha}S^{\sigma\nu} +
+                {\Gamma^\nu}_{\rho\beta,\alpha}S^{\mu\rho}
+        \end{align*}
+
+        Recall Reimann coordinate components~\eqref{8.Reimann}, of which we
+        only have the derivative components
+        \begin{align*}
+            {R^\alpha}_{\beta\gamma\delta} =
+                {\Gamma^\alpha}_{\beta\delta,\gamma} -
+                {\Gamma^\alpha}_{\beta\gamma,\delta}
+        \end{align*}
+        and it is obvious that
+        \begin{align*}
+            {S^{\mu\nu}}_{;\alpha\beta} - {S^{\mu\nu}}_{;\beta\alpha} &=
+                {R^\mu}_{\sigma\beta\alpha}S^{\sigma\nu} +
+                {R^\nu}_{\rho\beta\alpha}S^{\mu\rho}
+        \end{align*}
+
+        For the third expression, we note that we are allowed to lower
+        even covariant derivatives with $g_{\alpha\beta}$ since the
+        partial derivative is just a regular component and the ``$\Gamma T$''
+        terms we just lower the $T$. Thus, we contract
+        \begin{align*}
+            {B^\mu}_{;\alpha\mu} &= {B^\mu}_{;\mu\alpha} +
+                {R^\mu}_{\nu\mu\alpha} B^\nu\\
+                &= {B^\mu}_{;\mu\alpha} +
+                R_{\nu\alpha} B^\nu\\
+            {B^{\mu;\alpha}}_\mu &= {{B^\mu}_{;\mu}}^\alpha +
+                {R^\alpha}_\nu B^\nu
+        \end{align*}
+        where we lastly use that $R_{\nu\alpha} = R_{\alpha\nu}$.
 \end{description}
 
 \section{General Relativity}
@@ -1190,6 +1265,115 @@ Below follows a brief overview of the formalism:
         $\mathrm{d}\tau = (-g_{\alpha\beta}\mathrm{d}x^\alpha
         \mathrm{d}x^\beta)^{1/2}$ respectively. These can be constructed from
         geodesic worldlines.
+
+    \item[Stress-Energy to Einstein Curvature] We postulate mass-energy sources
+        gravity. Recall that an observer with 4-velocity $\bm{u}$ measures
+        mass-energy density $\rho = \bm{u} \cdot \bm{T} \cdot \bm{u}$ with
+        $\bm{T}$ the stress-energy tensor a symmetric tensor satisfying
+        $\bm{\nabla} \cdot \bm{T} = 0$. Thus, $\bm{T}$ must be the
+        frame-independent object that sources gravity.
+
+        There must then be some tensor $\bm{G} \propto \bm{T}$ that describes
+        spatial curvature. We know that it must be constructed from no more than
+        the Reimann curvature tensor and the metric, must $\bm{\nabla} \cdot
+        \bm{G} = 0$.  This must be proportional to the Einstein curvature tensor
+        (proved in an exercise), and requiring agreement with $R_{00} =
+        {R^\alpha}_{0\alpha 0} = 4\pi\rho$ yields proportionality constant
+        $\bm{G} = 8\pi \bm{T}$.
+\end{description}
+
+\subsection{Exercises}
+
+\begin{description}
+    \item[17.1] \emph{Prove uniqueness of the Einstein tensor following steps in
+        the book.}
+
+        First, we aim to compute the most general second-rank symmetric tensor
+        constructable from the Reimann curvature tensor and the metric. We know
+        that the metric is symmetric, the Ricci curvature tensor is symmetric,
+        so we already know of three possible terms
+        \begin{align*}
+            \bm{G} = aR_{\alpha\beta} + bRg_{\alpha\beta} + \Lambda
+                g_{\alpha\beta}
+        \end{align*}
+
+        Since the only procedure to lower rank in a tensor is contraction, we
+        can either contract ${R^\alpha}_{\beta\gamma\delta}$ once or twice,
+        producing either the first or second term above. Thus, no other
+        second-rank tensors can be constructed.
+
+        Taking the divergence of the above, we first note that in any LLF that
+        $g_{\alpha\beta,\gamma} = 0$ by definition, and so the divergence of
+        $g_{\alpha\beta}$ must itself vanish as well. As for the rest of the
+        equation, we have
+        \begin{align}
+            \bm{\nabla} \cdot \bm{G} &= a{R_{\alpha\beta}}^{,\alpha} +
+                bR^{,\alpha} g_{\alpha\beta}\nonumber\\
+                &= a{R_{\alpha\beta}}^{,\alpha} +
+                b{R_{\beta\beta}}^{,\alpha}\label{16.intermediate}
+        \end{align}
+
+        But by the Bianchi identity for the Reimann curvature tensor, we know
+        that
+        ${R^\alpha}_{\beta\gamma\delta;\mu} +
+        {R^\alpha}_{\beta\delta\mu;\gamma} +
+        {R^\alpha}_{\beta\mu\gamma;\delta}= 0$. Contracting $\alpha$ and
+        $\gamma$ and going to an LLF, we obtain
+        \begin{align*}
+            R_{\beta\delta,\mu} + {R^\alpha}_{\beta\delta\mu,\alpha} -
+            R_{\beta\mu,\delta} = 0
+        \end{align*}
+        where for the last term we recall
+        ${R^\alpha}_{\beta\mu\gamma} = - {R^\alpha}_{\beta\gamma\mu}$. But then
+        we can swap the first two indicies of the second term above and contract
+        $\beta\delta$ as follows
+        \begin{align*}
+            R_{\beta\delta,\mu} - {R^\beta}_{\alpha\delta\mu,\alpha} -
+            R_{\beta\mu,\delta} &= 0\\
+            R_{\beta\beta,\mu} - R_{\alpha\mu,\alpha} -
+            R_{\beta\mu,\beta} &=\\
+            R_{\beta\beta,\mu} - 2R_{\alpha\mu,\alpha} &=
+        \end{align*}
+
+        Comparing to~\eqref{16.intermediate}, we find that $b = -a/2$ is
+        necessary and sufficient to make the equation vanish.
+
+        We also require $\bm{G}$ vanish in flat spacetime. Since
+        ${R^\alpha}_{\beta\gamma\delta} = 0$ in flat spacetime, and
+        $g_{\alpha\beta} = \eta_{\alpha\beta}$, the only way we can have
+        vanishing $\bm{G}$ is for $\Lambda = 0$, thus producing
+        \begin{align*}
+            \bm{G} &= a\left( R_{\alpha\beta} - \frac{1}{2}Rg_{\alpha\beta} \right)
+        \end{align*}
+        where the constant of proportionality is determined by requiring
+        agreement with Newton's law of gravitation.
+
+        Finally, to determine this constant of proportionality, we recall the
+        equation of geodesic deviation
+        \begin{align*}
+            \frac{\mathrm{D}^2\xi^\alpha}{\mathrm{d}^2\tau^2} +
+                {R^{\alpha}}_{\beta\gamma\delta}
+                u^\beta\xi^\gamma u^\delta &= 0
+        \end{align*}
+        in which for the Newtonian regime we approximate $\bm{u} \approx
+        \bm{e}^0$. Thus, we arrive at
+        \begin{align*}
+            \frac{\mathrm{D}^2\xi^\alpha}{\mathrm{d}^2\tau^2} +
+                {R^{\alpha}}_{0\gamma 0}
+                \xi^\gamma &= 0
+        \end{align*}
+
+        Moreover, if we consider the EOM inside a ball of constant density
+        $\rho$, we might recall that the EOM are of form
+        $\ddot{q} + \frac{4\pi\rho}{3}q = 0$. Comparing with our above
+        expression, we find that ${R^\alpha}_{0\gamma 0} =
+        \frac{4\pi\rho}{3}{\delta^\alpha}_\gamma, \alpha, \gamma \neq 0$,
+        and so the Ricci curvature tensor has component $R_{00} = 4\pi \rho$.
+
+        At the same time, tracing over $\bm{G}$ we obtain
+        \begin{align*}
+            \Tr \bm{G} &= a
+        \end{align*}
 \end{description}
 
 \end{document}
