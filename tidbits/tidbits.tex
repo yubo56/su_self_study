@@ -1231,4 +1231,251 @@ exhausted. This produced an integrated donations over time of
 
 What shape should we expect if we assume some simple models for how
 contributions to the hole are expected to increase?
+
+TODO
+
+\chapter{04/28/17---Bridges,  Chains and others}
+
+\section{Bridges and Dem Chainz}
+
+Inspired by a visit to the Golden Gate bridge. I will first rehash a problem we
+solved in a previous tidbits doc, then work on a new one.
+
+\subsection{Shape}
+
+Easy problem. What is the shape of a light chain holding up a horizontal bridge,
+e.g.\ a suspension bridge? How about the shape of a chain freely suspended?
+
+Consider first the former problem first, a light chain holding up a horizontal
+bridge, as depicted magnificently in \autoref{fig:light_bridge}.
+\begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}[scale=0.3]
+        \fill[black] (-10,1) -- (10,1) -- (10,-1) -- (-10,-1) -- (-10,1);
+        \draw[domain=-10:10] plot(\x, {\x*\x/12 + 2});
+        \draw[dotted, thick, domain=-14:-10] plot(\x, {(\x + 20)*(\x + 20)/12 + 2});
+        \draw[dotted, thick, domain=10:14] plot(\x, {(\x - 20)*(\x - 20)/12 + 2});
+        \draw[thick] (-10, 100 / 12 + 2) -- (-10, 1);
+        \draw[thick] (-6, 36 / 12 + 2) -- (-6, 1);
+        \draw[thick] (-2, 4 / 12 + 2) -- (-2, 1);
+        \draw[thick] (2, 4 / 12 + 2) -- (2, 1);
+        \draw[thick] (6, 36 / 12 + 2) -- (6, 1);
+        \draw[thick] (10, 100 / 12 + 2) -- (10, 1);
+    \end{tikzpicture}
+    \caption{Picture of light chain holding up bridge.\label{fig:light_bridge}}
+\end{figure}
+
+Call the linear density of the bridge $\rho$. Let's compute $\vec{T}(x)$
+the tension in the rope as a function of $x$, where $x \in [-L/2,L/2]$, $L$ the
+distance between the supports. Because the setup is vertically symmetric, it
+must satisfy $T_x(x) = -T_x(-x)$ i.e.\ it is odd, and $T_y(x) = T_y(-x)$ is
+even.
+
+At any point $x$, we know that $T_y(x + \mathrm{d}x) - T_y(x) = \rho \sgn(x)
+(\mathrm{d}x)g$ the difference in $y$ components must support the differential
+weight (where $\sgn(x)$ is the sign of $x$), or
+\begin{align*}
+    \rd{T_y}{x} &= \sgn(x)\rho g\\
+    T_y(x) &= \rho g \abs{x}
+\end{align*}
+
+But then consider that $\vec{T}$ must lie along the chain, so $\frac{T_y}{T_x} =
+\rd{y}{x}$. We note that $T_x$ must be constant almost everywhere, else the
+chain would accelerate, but we note that it must point left on the left side and
+right on the right side! We note that $T_x \propto \sgn(x)$ is thus what we are
+looking for, and we obtain simply
+\begin{align}
+    \rd{y}{x} &= \frac{\rho g x}{\abs{T_x}} \nonumber\\
+    y(x) &= \frac{\rho g}{2\abs{T_x}}x^2\label{eq:bridge_curve}
+\end{align}
+where we've chosen the constant of integration such that $y(0) = 0$. What
+exactly is $T_x$ then? We see that it's the shape parameter; the looser the
+chain is horizontally, the lower it drops, so given one we can compute the
+other, but indeed a family of solutions exists for any $\rho, L$ determined by
+their shape and tension.
+
+\hrulefill
+
+How about for a freely hanging chain, as in \autoref{fig:free_chain}?
+\begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}[scale=0.3]
+        \draw[domain=-10:10] plot(\x, {\x*\x/12 + 2});
+        \draw[dotted, thick, domain=-14:-10] plot(\x, {(\x + 20)*(\x + 20)/12 + 2});
+        \draw[dotted, thick, domain=10:14] plot(\x, {(\x - 20)*(\x - 20)/12 + 2});
+        \draw[ultra thick] (-10, 100 / 12 + 2) -- (-10, 1);
+        \draw[ultra thick] (10, 100 / 12 + 2) -- (10, 1);
+    \end{tikzpicture}
+    \caption{Picture of free hanging chain.\label{fig:free_chain}}
+\end{figure}
+
+We have mostly the same math as before, except
+\begin{align*}
+    \rd{T_y}{x} &= \sgn(x) \rho g \sqrt{1 + \left( \rd{y}{x} \right)^2} &
+    \frac{T_y}{T_x} &= \rd{y}{x}
+\end{align*}
+where the extra term comes in since $\mathrm{d}m = \rho (\mathrm{d}s) = \rho
+\sqrt{\mathrm{d}x^2 + \mathrm{d}y^2}$ with $\mathrm{d}s$ the length of chain
+which is also the \emph{arclength} now. We observe that
+\begin{align*}
+    \rd{T_y}{x} &= \rd{}{x}\left( T_x\rd{y}{x} \right) \\
+    &= \abs{T_x}\sgn(x) \rtd{y}{x}
+\end{align*}
+and combining this with the above we obtain
+\begin{align}
+    \sgn(x) \rho g \sqrt{1 + \left( \rd{y}{x} \right)^2}
+        &= \abs{T_x}\sgn(x)\rtd{y}{x}\nonumber\\
+    \rtd{y}{x} &= \frac{\rho g}{\abs{T_x}}
+        \sqrt{1 + \left( \rd{y}{x} \right)^2}\nonumber\\
+    y(x) &= \frac{\abs{T_x}}{\rho g} \cosh
+        \left( \frac{\rho g x}{\abs{T_x}} \right) + y_0\nonumber\\
+    y(x) &= \frac{\abs{T_x}}{\rho g} \left(
+        \cosh\left( \frac{\rho g x}{\abs{T_x}} \right)
+        - 1\right) \label{eq:chain_curve}
+\end{align}
+and we see again $\abs{T_x}$ plays the role of a shape parameter and we've
+chosen the solution such that $y(0) = 0$.
+
+\textbf{Note:} We were a bit haphazard in asserting that $T_x(x) =
+\abs{T_x}\sgn(x)$. It of course made sense, since at each point the $x$ tension
+should be equal on both sides, meaning $\rd{T_x(x)}{x} = 0$, but we also knew
+that $T_x(x)$ is odd. This is furthermore justifiable since it satisfies
+$\vec{T}(0) = 0$, intuitive since the tension pulls in $\pm \hat{x}$ on either
+side of $x=0$ which cancel, so any tension ``at'' $x = 0$ would produce an
+acceleration. So it seems a justifiable conclusion.
+
+\subsection{Force to Pull}
+
+Let's hang these bridges and chains between two towers separated by a distance
+$L$ such that the distance from the bottom of the chain to the top of the towers
+is $h$. What is the tension in the chain? From this, we can compute what the
+minimum force is to change $h$.
+
+This is a simple exercise. $h$ is directly related to $T_x$, and from the shape
+of the parabola we can get the ratio of $\frac{T_y}{T_x}$ and from this get
+$\abs{\vec{T}}(h)$. So in the parabolic solution
+\begin{align}
+    h &= y\left( \pm \frac{L}{2} \right) = \frac{\rho g L^2}{8\abs{T_x}}
+        \nonumber\\
+    \abs{T_x} &= \frac{\rho g L^2}{8h}\nonumber\\
+    \frac{T_y}{T_x} &= \rd{y}{x}\Bigg|_{x=L/2} = \frac{\rho g L}{2\abs{T_x}} =
+        \frac{4h}{L}\nonumber\\
+    \abs{\vec{T}} &= \sqrt{T_x^2 + T_y^2}\nonumber\\
+    &= \abs{T_x}\sqrt{1 + \left(\rd{y}{x}\right)^2}\nonumber\\
+    &= \frac{\rho g L^2}{8h}\sqrt{1 + \frac{16h^2}{L^2}}
+\end{align}
+and in the hyperbolic
+\begin{align}
+    h &= y\left( \pm \frac{L}{2} \right) = \frac{\abs{T_x}}{\rho g} \left(
+        \cosh\left( \frac{\rho g L}{2\abs{T_x}} \right)
+        - 1\right)
+        \nonumber\\
+    \frac{T_y}{T_x} &= \rd{y}{x}\Bigg|_{x=L/2} = \sinh \left(
+        \frac{\rho g L}{2 \abs{T_x}}
+    \right)\nonumber\\
+    \abs{\vec{T}} &= \sqrt{T_x^2 + T_y^2}\nonumber\\
+    &= \abs{T_x} \cosh \left( \frac{\rho g L}{2 \abs{T_x}} \right) \nonumber\\
+    &= \rho g h + \abs{T_x}
+\end{align}
+and since we can't analytically solve for a relation between $\abs{T_x}, h$
+we are probably stuck here. We can both in a couple limits though:
+\begin{itemize}
+    \item High $h$---For large $h$ in the parabolic case, the square root is
+        roughly $\frac{4h}{L}$ and we obtain the trivial $\abs{\vec{T}} =
+        \frac{\rho g L}{2}$ which is totally as expected: $\abs{T_x}$ vanishes
+        as we grow higher, so we just need to support the weight of the bridge.
+
+        For the hyperbolic case, large $h$ equates equates to large argument to
+        the $\cosh$ which is for small $\abs{T_x}$ as in the parabolic case.
+        This is again a dead end to evaluate analytically: the $\cosh$ goes to
+        an exponential but then we're stuck. Instead, we see that $\abs{\vec{T}}
+        \approx \rho g h$, which for large $h$ is roughly half the weight of the
+        chain (since $h \gg L$, the length of the chain is approximately $2h$).
+
+    \item Small $h$---For small $h$ in the parabolic solution, we have $T
+        \propto h^{-1}$ so as we further shrink $h$, $T$ grows with its inverse.
+
+        To get small $h$ for the hyperbolic case, we expect we need large
+        $\abs{T_x}$, and indeed that lets us approximate
+        \begin{align*}
+            h
+                &= \frac{\abs{T_x}}{\rho g}
+                    \left(
+                        \cosh\left( \frac{\rho g L}{2\abs{T_x}} \right) - 1
+                    \right)\\
+                &\approx \frac{\abs{T_x}}{\rho g}
+                    \frac{\rho^2 g^2 L^2}{8 \abs{T_x}^2}
+                    = \frac{\rho g L^2}{8\abs{T_x}}
+        \end{align*}
+        and we see that we recover the same limit as the parabolic solution,
+        since at that point the chain's length is roughly $L$ as well and we
+        have the same mass being suspended in both configurations.
+\end{itemize}
+
+To summarize, in the low $h$ case, both exhibit $\abs{\vec{T}} \propto h^{-1}$
+behavior, but in the high $h$ case, the suspension bridge yields constant
+tension while the chain yields $\abs{\vec{T}} \propto h$.
+
+\section{Misc}
+
+\subsection{Sum of Digits vs Base}
+
+For large numbers, determine the dependence of the sum of the digits of the
+number in some base $b$ as a function of $b$. When does the approximation break
+down?
+
+Let's just throw the simplest approximation we can at the problem first. For a
+sufficiently large number, the distribution of one of its non-leading digits is
+approximately uniform. Thus, in base $b$, the average digit is
+$\frac{0 + 1 + \cdots + (b-1)}{b} = \frac{b - 1}{2}$. For any number $N$, the
+number of digits is $\log_b N$, so we conclude that the sum of digits of $N$ in
+base $b$ is approximately $S_b(N) = \frac{b - 1}{2}\log_b N$.
+
+This seems to make sense: to build $S_b(N)$, we start with $S_b(0) = 0$, then we
+can build $S_b(N)$ as
+\begin{align*}
+    S_b(b^i \leq N < b^{i+1}) = 1 + S_b(0 \leq N < b^i)
+\end{align*}
+
+Thus, $S_b(N)$ lies in the range  $\left[1, (b - 1)k\right]$ when $N$ is in the
+range $[b^k, b^{k + 1} - 1]$ where $k$ is the number of digits in $N$ expressed
+in base $b$, otherwise written $\lfloor \log_b N\rfloor$. What is the
+distribtion of $S_b(N)$ in this range? That's simply the number of ways we can
+pick $k$ numbers from $[0, b - 1]$ and sum them to $S_b(N)$.
+
+We know that a single uniform distribution over $[0, b - 1]$ has mean $\frac{b -
+1}{2}$ and variance $\frac{b^2 - 1}{12}$\footnote
+{\url{https://en.wikipedia.org/wiki/Discrete_uniform_distribution}}, so
+the sum of $k$ such variables has variance $\frac{k(b^2 - 1)}{12}$ since
+variance is a linear operator. Thus, we obtain that the sum of digits of a
+number $N$ in base $b$ has distribution
+\begin{align}
+    S_b(N)
+        &= \frac{b - 1}{2}\log_b N \pm \sqrt{\frac{\log_b N (b^2 - 1)}{12}}\\
+        &\approx
+            \frac{b - 1}{2}\log_b N \left(1 \pm \sqrt{\frac{1}{3\log_b N}}
+            \right)
+\end{align}
+
+Intuitively, this approximation fails when $\log_b N \sim b$, i.e.\ the number
+of digits is of the same order as the number of possible digits, at which point
+we can't assume each digit is uniformly distributed over $[0, b - 1]$ and
+instead have to account for a greater concentration towards lower digits e.g.\
+Benford's law.
+
+% TODO distribution of sum of uniformly distributed random variables, continuous
+% and discrete
+
+\subsection{Approximations to Birthday Problem}
+
+Do smart things and get a back-of-the-envelope usable solution to the birthday
+problem (draw with replacement from a set of size $N$, how many do you draw
+before you expect a duplicate?).
+
+\subsection{Markov Chains}
+
+Motivated by stock prices. Consider if for every price $P_1$ there is a
+time-independent probability $\mathcal{P}(P_2, P_1)$ of transitioning to $P_2$
+from $P_1$. Compute the PSD of the random trajectories this produces.
+
 \end{document}
