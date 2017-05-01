@@ -1468,9 +1468,73 @@ Benford's law.
 
 \subsection{Approximations to Birthday Problem}
 
-Do smart things and get a back-of-the-envelope usable solution to the birthday
+See what we can get for a back-of-the-envelope usable solution to the birthday
 problem (draw with replacement from a set of size $N$, how many do you draw
 before you expect a duplicate?).
+
+If we draw $k$ elements with replacement from a set of size $N$, the probability
+that we do not get any duplicates is $\frac{N!}{N^k(N - k)!}$. Throwing
+Stirling's approximation at the two factorials, we obtain
+\begin{align}
+    P
+        &\approx \sqrt{\frac{N}{N-k}}\left( \frac{N}{e} \right)^N
+            \left( \frac{e}{N - k} \right)^{N - k} \frac{1}{N^k} \nonumber\\
+        &= \left( \frac{N}{N - k} \right)^{N - k + 1/2}\frac{1}{e^k}
+            \nonumber\\
+        &= \left( 1 + \frac{k}{N - k} \right)^{N - k + 1/2}\frac{1}{e^k}
+            \nonumber
+\end{align}
+
+We recall that $\left( 1 + \frac{k}{n} \right)^n$ as $n \to \infty$ is $e^k$,
+but that would imply that $P > 1$. Instead, we have to recall that we canot take
+the $N \to \infty$ limit since we're leaving out terms that themselves depend on
+$N$.
+
+Instead, let's find the first order correction to the log formula:
+\begin{align}
+    \log \left( 1 + \frac{k}{n} \right)^{n}
+        \nonumber
+        &= n\log \left( 1 + \frac{k}{n} \right)\\
+        \nonumber
+        &\approx n \left( \frac{k}{n} - \frac{k^2}{2n^2} + \mathcal{O}
+            \left( \left(\frac{k}{n}\right)^3 \right)
+        \right)\\
+        \nonumber
+        &= k - \frac{k^2}{2n}\\
+    \left( 1 + \frac{k}{n} \right)^n &\approx \exp \left[
+        k - \frac{k^2}{2n}\label{eq:e_approx}
+    \right]
+\end{align}
+and so
+\begin{align}
+    P
+        &= e^{-\frac{k^2}{2(N - k)}}\sqrt{1 + \frac{k}{N - k}}
+\end{align}
+
+How well does this do? We can compare the shape this curve produces with the
+original $P = \frac{N!}{N^k(N-k)!}$, and we obtain
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{birthdays_approx.png}
+    \caption{Plot of Exact and Approximate solutions for 365-day Birthday
+        Problem\label{fig:birthdays}}
+\end{figure}
+
+So we see that at least in the regime $k \ll N$, we do reasonably well. We
+recall that in~\eqref{eq:e_approx}, we only grabbed the first order term in
+$\frac{k}{N}$; we can grab a few higher order terms and see what happens in
+\autoref{fig:birthdays_higher_order}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{birthdays_approxorder_3.png}
+    \caption{Plot of Exact and Approximate Solutions with higher order terms in
+        logarithm expansion\label{fig:birthdays_higher_order}}
+\end{figure}
+
+Not so great! But this is because we note that our expansion is in order
+$\frac{k}{N - k}$, so it's expected that as this approaches unity our expansion
+falls apart, which happens when $k = N/2$. A quick exercise replacing the Taylor
+expansion with the full exponent recovers the exactly correct curve.
 
 \subsection{Markov Chains}
 
