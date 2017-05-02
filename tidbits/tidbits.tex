@@ -27,6 +27,7 @@
     \newcommand{\ang}[0]{\text{\AA}}
     \newcommand{\mum}[0]{\upmu \mathrm{m}}
     \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Res}{Res}
     \DeclareMathOperator{\Im}{Im}
     \DeclareMathOperator{\Log}{Log}
     \DeclareMathOperator{\Arg}{Arg}
@@ -1541,5 +1542,62 @@ expansion with the full exponent recovers the exactly correct curve.
 Motivated by stock prices. Consider if for every price $P_1$ there is a
 time-independent probability $\mathcal{P}(P_2, P_1)$ of transitioning to $P_2$
 from $P_1$. Compute the PSD of the random trajectories this produces.
+
+\chapter{05/02/17---L'H\^opital's Rule and Complex Analysis}
+
+This ought to be a short chapter. Had a sudden shower thought to prove
+L'H\^opital's rule using complex analysis, let's just carry it out.
+
+Consider if some function $f(x) = \frac{g(x)}{h(x)}$ such that $g(a) = h(a) =
+0$. Then the well-known solution to evaluating $f(a)$ is to differentiate both
+numerator and denominator until at least one is non-vanishing, then evaluate,
+this is \emph{L'H\^opital's Rule}.
+
+Let's try instead to compute the residue of $\frac{f(x)}{x - a}$ at $x = a$.
+Now, if $f(x)$ is not singular, then this function has a simple pole at $x = a$
+and the residue is simply $f(a)$. Let this be our motivating factor.
+
+Let there be some $h'(x)$ such that $h(x) = (x-a)^nh'(x)$ and $h'(x)$ is
+analytic at $a$. Then we know that the residue of $f(x)$ is given
+\begin{align}
+    \Res(f, a)
+        &= \lim_{x \to a}\frac{1}{n!}
+            \frac{\mathrm{d}^n}{\mathrm{d}x^n}
+            (x - a)^{n+1} f(x)\\
+        &= \lim_{x \to a}\frac{1}{n!}
+            \frac{\mathrm{d}^n}{\mathrm{d}x^n}
+            \frac{g(x)}{h'(x)} \nonumber
+\end{align}
+
+There are then two cases when $f(a)$ is analytic:
+\begin{itemize}
+    \item $g^{(n)} \neq 0$, but all lower-order derivatives vanish. Some trivial
+        reapplication of the quotient rule to compute the derivatives shows that
+        then
+        \begin{align*}
+            \frac{\mathrm{d}^n}{\mathrm{d}x^n} \frac{g(x)}{h'(x)}
+                &= \frac{g^{(n)}(x)(h'(x))^{2^n - 1}}{(h'(x))^{2^n}}\\
+                &= \frac{g^{(n)}(x)}{h'(x)}
+        \end{align*}
+        but then $h^{(n)}(x = a) = n! h'(x=a)$, and so we find the above result
+        agrees with L'H\^opital's Rule.
+
+    \item $g^{(n)} = 0$ and all lower-order derivatives also vanish. Since we
+        only differentiate $g(x)$ a maximum of $n$ times, all terms vanish and
+        $\Res(f, a) = f(a) = 0$ as also expected.
+\end{itemize}
+
+What about when $f(a)$ is singular? Then this means that for some $k < n$,
+$f'(x) = f(x)(x - a)^k$ is analytic at $x = a$, and $f'(x)$ must then
+also be equal to
+\begin{align*}
+    f'(x) &= \frac{(x - a)^kg(x)}{(x - a)^nh'(x)}
+\end{align*}
+and so if we apply L'H\^opital's Rule, we will obtain a diverging result after
+only $k$ iterations.
+
+The above proof could be tightened but I'm not going to bother, it seems the
+equivalence is pretty clear. How about for $f(x) = \frac{g(x)}{h(x)}$ where
+$g(x), h(x)$ are both divergent at $x = a$?
 
 \end{document}
