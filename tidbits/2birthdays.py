@@ -30,7 +30,10 @@ def genplot(n, FN='birthdays_approx', order=1):
     """
     generate plot for a given value of N
     """
-    k_vals = range(0, int(n / 3) if order > 1 else n, 10)
+    if order <= 1:
+        k_vals = range(0, n, 10)
+    else:
+        k_vals = range(int(n/10))
     p_exact = []
     p_approx = [list() for _ in range(order)]
     styles = ['g--', 'r--', 'c--', 'm--']
