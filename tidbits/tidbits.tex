@@ -1542,4 +1542,87 @@ Motivated by stock prices. Consider if for every price $P_1$ there is a
 time-independent probability $\mathcal{P}(P_2, P_1)$ of transitioning to $P_2$
 from $P_1$. Compute the PSD of the random trajectories this produces.
 
+\chapter{05/28/17---Parabolas}
+
+We're hiking the Grand Canyon, and halfway down we rediscover signal that we
+did not have at the top. I joke ``clearly it is because the Grand Canyon
+approximates a parabolic dish reflector, and since we are now closer to the
+focus of the parabola we will have better signal than up top.'' To follow up on
+this, we first demonstrate that the parabola has the unique property that all
+plane waves of incidence perpendicular to the axis of symmetry of the parabola
+reflect off the surface to a particular point, called the \emph{focus}.
+
+We then consider the more interesting problem: if we project the reflections of
+incoming rays onto the axis of symmetry, they form a perfect delta function at
+the focus if the surface is a perfect parabola. If we want the distribution to
+be normally distributed and centered on the focus of the parabola, what
+uncertainty tolerances do we have on height measurements of the parabola? More
+generally, how do various sources of error (error in parabola parameter, error
+in height measurements) propagate to uncertainties in focusing ability?
+
+\section{Parabola Properties}
+
+We wish to find a 1D surface in $\mathbb{R}^2$ that has the following property:
+for any ray traveling in the $-\hat{y}$ direction, if the ray reflects according
+to the Law of Reflection (symmetric about the normal to the surface at the point
+of incidence) then it must go through the \emph{focus}.
+
+Call the \emph{focus} $(0, a)$. Consider also a surface $y(x)$. Then the ray
+from the focus to the surface has slope $b(x) = \frac{y - a}{x}$. Thus, we wish
+to find $\rd{y}{x}$ such that the normal $-\rd{x}{y}$ \emph{bisects} the angle
+formed by $b(x)$ and $\hat{y}$. This implies that the tangent must bisect
+$\hat{x}$ and the slope formed by $-\frac{1}{b(x)}$, the normal to $b(x)$.
+Calling the angle formed by $\frac{x}{a - y}$ and $\hat{x}$ $2\theta$, then this
+implies that
+\begin{align*}
+    \tan 2\theta &= \frac{x}{a - y} = \frac{2\frac{x}{2a}}{1 - y/a}
+\end{align*}
+
+Recall double angle identity $\tan 2\theta = \frac{2\tan \theta}{1 -
+\tan^2\theta}$. Making an inspired guess, assume $\left( \frac{x}{2a}
+\right)^2 = \frac{y}{a}$, in which case $\tan\theta = \rd{y}{x} = \frac{x}{2a}$,
+while additionally $y'(x) = \rd{}{x}\left( \frac{x^2}{4a} \right) =
+\frac{x}{2a}$. Wow!
+
+\section{Uncertainties}
+
+It is clear that if the uncertainties are in the parameter $a = a(x)$, then the
+distribution of rays along the axis of symmetry will simply be the PDF of $a$
+over all $x$, or more quantitatively, calling $L(y)$ the luminosity (density of
+rays) incident at $(0, y)$, we have
+\begin{align*}
+    L(y) &= \int\limits_{-\infty}^{\infty}\delta(y - a(x))\;\mathrm{d}x
+\end{align*}
+and so if there are random variations in $a$, we can obtain $L(y)$ as well.
+
+What about if the uncertainty is in $y(x)$ though? It seems perhaps sensible to
+propagate the uncertainty to $\rd{y}{x}$ and translate that into an uncertainty
+on $a(x)$. For example, if $y(x) = y_0(x) + N_{0, \sigma}$ where $N$ is a random
+variable with zero mean and $\sigma$ variance, then we know that
+\begin{align*}
+    \rd{y}{x}
+        &= \rd{y_0}{x} + N_{0, \sigma\sqrt{2}}\\
+        &= \frac{x}{2a} + N_{0, \sigma\sqrt{2}}\\
+        &= \frac{x}{2a} \pm \sigma \sqrt{2}
+\end{align*}
+
+We aspire instead to express this uncertainty as one in $a$, so we instead write
+$a = a_0 + N_{0, \sigma_a}$. We can rewrite
+\begin{align*}
+    \frac{x}{2(a_0 + N_{0, \sigma_a})}
+        &= \frac{x}{2a_0} \pm \frac{x \sigma_a}{2 a_0^2}
+\end{align*}
+and matching terms we find $\sigma = \frac{x\sigma_a}{2a_0^2 \sqrt{2}}$.
+
+However, we must consider one more thing: this corresponds to a global
+uncertainty on $a$ by $\sigma_a$, and it assumes that the point at some $x$
+value has position given by $y(x) = \frac{x^2}{4 (a_0 + \sigma_a)}$ rather than
+position $\frac{x^2}{4 a_0}$. This can be remedied: for any given parameter $a =
+a_0 \pm N_{0, \sigma_a}$, the position of the focus $(0, y_a)$ is given by
+\begin{align*}
+    y_a
+        &= a + \left(\frac{x^2}{4a_0} - \frac{x^2}{4 a}\right)\\
+        &= a_0 + N_{0, \sigma_a} + \frac{x^2}{4a_0^2}N_{0, \sigma_a}
+\end{align*}
+
 \end{document}
