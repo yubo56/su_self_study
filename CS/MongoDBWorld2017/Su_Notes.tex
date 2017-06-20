@@ -275,4 +275,195 @@ height=2em]
     \end{itemize}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Index Usage for Nested Logical Queries}
+    \framesubtitle{%
+        06/20/17 1440--1520:
+        Tess Avitabile, Software engineer, MongoDB
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Query system overview:
+                    \begin{itemize}
+                        \item Input: JSON
+                        \item Parse into tree
+                        \item Generate plan (which indicies for which leaves of
+                            the tree)
+                        \item Plan selection: try all of the plans for a trial
+                            period, see which one was fastest (Note: plan
+                            caching)
+                        \item Execution \& return
+                    \end{itemize}
+                \item \texttt{OR}s inside of \texttt{AND}s is a pain for plan
+                    generation.
+                    \begin{itemize}
+                        \item \texttt{AND} is considered indexed when one child
+                            has index.
+                        \item \texttt{OR} is considered indexed when all
+                            children have indicies.
+                        \item \texttt{OR}s have to dedupe by hashing to merge
+                            the two results.
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Problem: no tight index bounds on these queries
+                    \begin{itemize}
+                        \item \emph{Tight} index bounds are when all documens in
+                            index bounds match the query.
+                        \item (As opposed to when a parent node imposes a
+                            filter, \texttt{FETCH})
+                    \end{itemize}
+                \item Bounds are not tight b/c two branches of children cannot
+                    talk to each other! e.g.\ the \texttt{OR} will not be tight
+                    since the \texttt{AND} above will have to further fetch
+                    against its other child.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Index Usage for Nested Logical Queries (cont)}
+    \framesubtitle{%
+        06/20/17 1440--1520:
+        Tess Avitabile, Software engineer, MongoDB
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Solution: Disjunctive Normal Form?
+                    \begin{itemize}
+                        \item \texttt{AND} with \texttt{OR} child solved!
+                        \item Exponentially many plans though, index choices at
+                            each child.
+                    \end{itemize}
+                \item Solution: OR-pushdowns! Predicates pulled up to the
+                    \texttt{AND} parent and pushed down into any \texttt{OR}
+                    children if they can tighten index bounds.
+                    \begin{itemize}
+                        \item Note that this is not imposed as an extra
+                            \texttt{AND} condition, just metadata for the
+                            recursive query planner to plan against.
+                    \end{itemize}
+                \item Paper: Query Optimization by Predicate Move-Around
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}[!h]
+                \centering
+                \begin{tikzpicture}
+                    \node[circ, radius=0.2] (and) at (0, 0) {\texttt{AND}};
+                    \node[circ, radius=0.2] (f1) at (-1, -1) {f1};
+                    \node[circ, radius=0.2] (or) at (1, -1) {\texttt{OR}};
+                    \node[circ, radius=0.2] (f2) at (0, -2) {f2};
+                    \node[circ, radius=0.2] (f3) at (2, -2) {f2'};
+                    \draw[->] (and)--(or);
+                    \draw[->] (and)--(f1);
+                    \draw[->] (or)--(f2);
+                    \draw[->] (or)--(f3);
+                \end{tikzpicture}
+                \caption{\texttt{AND} with \texttt{OR} child. Consider if index
+                is \texttt{\{f1, f2\}}? \texttt{\{f2, f1\}}?\label{fig:and_or}}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Multi-Master architectures in MongoDB}
+    \framesubtitle{%
+        06/20/17 1530--1610:
+        Pavel Duchovny, TSE, MongoDB
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Key to geograhpic colocation.
+                \item Zone sharding + replica sets
+                    \begin{itemize}
+                        \item Zone sharding: shards per region.
+                        \item Replica sets are \texttt{mongod} processes that
+                            share the same data.
+                    \end{itemize}
+                \item Configuration is:
+                    \begin{itemize}
+                        \item One primary in each region, each a separate zone
+                            shard.
+                        \item One secondary in its own region (prio 3), two in
+                            another (prio 2), and two more in a third (prio 1,
+                            0) for symmetry across all regions, hidden
+                            secondary.
+                        \item Spread across multiple regions, odd number of
+                            voting members, primary DC members should have
+                            higher priorities.
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Can specify region on read/write.
+                \item Upshot is that can do multi-region writes while
+                    guaranteeing local availability on read.
+                \item Configurable to write to secondary especially if primary
+                    lives in a different region.
+                \item Can configure with \texttt{MAX\_STALENESS} parameter for
+                    when a cluster can be read from.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Globally Distributed RESTful Object Storage}
+    \framesubtitle{%
+        06/20/17 1620--1700:
+        Julio Viera, Backend VP, Fuze
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Built an object store for internal communications, chat +
+                    attachment retention, Mongo backbone.
+                \item RESTful so easy to expose HTTP link as a db.
+                \item Nested schema corresponding to URL:\@
+                    {\small\texttt{/users/:id/chat/convs/X/messages/Y}}
+                \item Storage (chat), collection (convs), sub-collection
+                    (messages), documentIds
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Pubsub (user is online) can be done by consuming the oplog
+                    on the db primary.
+                \item To shard and hide it to the user, just need some lookups
+                    userId $\to$ sharding keys.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Evening Keynotes}
+    \framesubtitle{06/20/17 1715--1845}
+
+    \begin{itemize}
+        \item Saska Mojsilovic, IBM
+            \begin{itemize}
+                \item Need for more data in health for precision health
+                    service distribution.
+                \item All sorts of orgs estimating and predicting from
+                    sparse data.
+            \end{itemize}
+        \item Claudio Gosiker (Florida Blue) \& Alan Chhabra (MongoDB)
+            \begin{itemize}
+                \item Use data for healthcare outreach, personalizable
+                    views for customer reps.
+            \end{itemize}
+        \item Matt Parker, Stand-up Mathematician!
+    \end{itemize}
+\end{frame}
+
 \end{document}
