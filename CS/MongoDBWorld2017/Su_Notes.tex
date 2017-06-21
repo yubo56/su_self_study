@@ -552,7 +552,10 @@ height=2em]
                         \item \texttt{mongomirror} for full ZDT:\@ Initial sync,
                             streams oplog, point to new instance \emph{before}
                             fully synced, continues syncing.
-                        \item Full ZDT but momentary inconsistency.
+                        \item Full ZDT but momentary inconsistency ($<$ 1s).
+                        \item In case of rolling ZDT deploys when re-pointing,
+                            inconsistency is most noticable; graceful
+                            degredation!
                     \end{itemize}
                 \item Epilogue
                     \begin{itemize}
