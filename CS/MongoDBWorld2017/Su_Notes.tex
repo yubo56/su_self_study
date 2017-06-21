@@ -549,7 +549,10 @@ height=2em]
                 \item Transition
                     \begin{itemize}
                         \item UI Live Migrator ($<$1m downtime for oplog)
-                        \item \texttt{mongomirror} for full ZDT:\@ Initial sync,
+                        \item \href
+                            {https://docs.atlas.mongodb.com/reference/mongomirror/}
+                            {\texttt{mongomirror}}
+                            for full ZDT:\@ Initial sync,
                             streams oplog, point to new instance \emph{before}
                             fully synced, continues syncing.
                         \item Full ZDT but momentary inconsistency ($<$ 1s).
