@@ -571,4 +571,55 @@ height=2em]
     \end{columns}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Design Patterns Resilient to Infrastructure Failure}
+    \framesubtitle{%
+        06/20/17 1140--1220:
+        Feng Qu, Senior MTS, eBay
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Availability $=\frac{MTTF}{MTTF + MTTR}$, mean time to
+                    failure/recovery.
+                % \item 8 fallacies of Distributed Computing:
+                %     \begin{itemize}
+                %         \item Network is reliable
+                %         \item Zero latency
+                %         \item Bandwidth is infinite
+                %         \item Network is secure
+                %         \item Topology does not change
+                %         \item Only one admin
+                %         \item Transport is free
+                %         \item Network is homogeneous
+                %     \end{itemize}
+                \item High write (?) 3+2+2, 2 slaves each except maybe 2
+                    arbiters (only used for quorum voting).
+                    \begin{itemize}
+                        \item 2 slaves on master so if one slave fails, master
+                            still has a slave
+                        \item Master fail $\to$ slave
+                        \item Primary datacenter fail $\to$ re-elect in second
+                            datacenter
+                    \end{itemize}
+                \item High read goes to 3+3+3
+                \item Shard for overall read/write scaling.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item For latency, {\tiny \texttt{readPreference=nearest}} or
+                    {\tiny \texttt{readPreference=secondaryPreferred}}.
+                \item WriteConcern \texttt{majority}.
+                \item Tagged reads: read only from nodes that made it into the
+                    write majority, get updated data w/o paying remote read
+                    penalty.
+                \item tl;dr many patterns given different read/write patterns
+                    latency vs.\ throughput questions.
+                \item Mongo supports causal consistency.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
 \end{document}
