@@ -509,7 +509,60 @@ height=2em]
             \end{itemize}
         \end{column}
     \end{columns}
+\end{frame}
 
+\begin{frame}
+    \frametitle{Migrating from EC2 to Atlas}
+    \framesubtitle{%
+        06/20/17 1050--1130:
+        Jesse Dearing, SRE, InVision
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Mongo at InVision
+                    \begin{itemize}
+                        \item 28 replica sets 4 env
+                        \item 2000 rps, 600 wps
+                        \item Chef to manage EC2, Mongo
+                    \end{itemize}
+                \item Old stack:
+                    \begin{itemize}
+                        \item EC2 instance, deploy, manually configure/shard
+                        \item Manual: backups, monitoring, alerting, security, updates
+                    \end{itemize}
+                \item Atlas:
+                    \begin{itemize}
+                        \item All above, REST API, dashboards
+                    \end{itemize}
+                \item Transition Preparation
+                    \begin{itemize}
+                        \item SSL (Atlas mandatory)
+                        \item AWS VPC Peering
+                        \item VPN + security setup, Amazon DNS
+                        \item MongoDB 3.x + WiredTiger
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Transition
+                    \begin{itemize}
+                        \item UI Live Migrator ($<$1m downtime for oplog)
+                        \item \texttt{mongomirror} for full ZDT:\@ Initial sync,
+                            streams oplog, point to new instance \emph{before}
+                            fully synced, continues syncing.
+                        \item Full ZDT but momentary inconsistency.
+                    \end{itemize}
+                \item Epilogue
+                    \begin{itemize}
+                        \item Alerts, new playbooks, backup restores.
+                        \item Automatic provisioning for new services that need
+                            MongoDB.%
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \end{document}
