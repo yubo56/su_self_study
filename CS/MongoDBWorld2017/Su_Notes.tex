@@ -60,7 +60,7 @@ height=2em]
 
 \begin{frame}
     \frametitle{Morning Keynotes}
-    \framesubtitle{06/20/17 0900--1030}
+    \framesubtitle{06/21/17 0900--1030}
 
     \begin{itemize}
         \item Tom Schenk, Chief data officer, Chicago. \emph{WindyGrid}.
@@ -514,7 +514,7 @@ height=2em]
 \begin{frame}
     \frametitle{Migrating from EC2 to Atlas}
     \framesubtitle{%
-        06/20/17 1050--1130:
+        06/21/17 1050--1130:
         Jesse Dearing, SRE, InVision
     }
     \begin{columns}
@@ -574,7 +574,7 @@ height=2em]
 \begin{frame}
     \frametitle{Design Patterns Resilient to Infrastructure Failure}
     \framesubtitle{%
-        06/20/17 1140--1220:
+        06/21/17 1140--1220:
         Feng Qu, Senior MTS, eBay
     }
     \begin{columns}
@@ -625,7 +625,7 @@ height=2em]
 \begin{frame}
     \frametitle{Write and Read Concern}
     \framesubtitle{%
-        06/20/17 1400--1440:
+        06/21/17 1400--1440:
         Alex Komyagin, Senior Consulting Engineer, MongoDB
     }
     \begin{columns}
@@ -675,7 +675,7 @@ height=2em]
 \begin{frame}
     \frametitle{Write and Read Concern}
     \framesubtitle{%
-        06/20/17 1400--1440:
+        06/21/17 1400--1440:
         Alex Komyagin, Senior Consulting Engineer, MongoDB
     }
     \begin{itemize}
@@ -689,5 +689,140 @@ height=2em]
         \item Retryable writes can handle write concern timeout.
     \end{itemize}
 \end{frame}
+
+\begin{frame}
+    \frametitle{Common Cluster Configuration Pitfalls}
+    \framesubtitle{%
+        06/21/17 1450--1530:
+        Alex Komyagin, Technical Services Engineer, MongoDB
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Replication improves availability.
+                \item Arbiters vote but store no data.
+                \item Consider a consumer that needs high availability,
+                    inexpensive ``report generation.''
+                    \begin{itemize}
+                        \item Say one data center has primary + arbiter, another
+                            has secondary,
+                        \item If first data center crashes, the secondary only
+                            has 1/3 votes, cannot become new primary!
+                        \item This is so if there is an LB, the secondary (which
+                            only sees itself) can never see the primary +
+                            arbiter, so the secondary cannot promote itself to
+                            primary just b/c primary + arbiter down, cannot
+                            differentiate between down vs.\ LB.%
+                    \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Propositions continued:
+                    \begin{itemize}
+                        \item Put the arbiter in a separate instance?
+                        \item If the primary goes down, then cannot writeConcern
+                            majority!
+                    \end{itemize}
+                \item Solution: 1 primary 2 secondaries.
+                \item Suppose the primary has super high priority.
+                    \begin{itemize}
+                        \item Recall that Mongo is eventually consistent, so
+                            secondaries can lag badly if under provisioned.
+                        \item If primary goes down, comes back up as a
+                            secondary, rollsback, \frownie.
+                        \item Solution: Equally provision secondaries!
+                    \end{itemize}
+                \item All writes go to primary.
+                \item Can configure secondary reads, but Mongo is eventually
+                    consistent so dangerous.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Cluster Configuration Pitfalls}
+    \framesubtitle{%
+        06/21/17 1450--1530:
+        Alex Komyagin, Technical Services Engineer, MongoDB
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Sharding: replica set no bandwidth.
+                    \begin{itemize}
+                        \item For scalability.
+                        \item Divides \emph{collection} across replica sets.
+                        \item \textbf{Send shard key with query, else queries all
+                            shards!}
+                        \item Sharding works by chunking the shard key.
+                        \item If a chunk grows to over 20\% of max size,
+                            \texttt{mongos} tries to split the chunk. If a key
+                            range cannot be split, it ``lacks cardinality.''
+                        \item Chunk splitting is slow. Primaries know what data
+                            ranges they own but secondaries do not, so during
+                            copying of splitting can have duplicate docs.
+                    \end{itemize}
+                \item Chunk balancer only balances based on number of shards, not
+                    chunk size!
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Be sure write concern can be fulfilled if one node
+                    crashes.
+                \item No arbiters.
+                \item Design replica sets for availability, then add.
+                \item Shard key selection! Should have a wide range of different
+                    values but recall must be included in query!
+                \item Secondary reads are discouraged, especially on sharded.
+                \item Best practices for zone sharding (tag shards with zones)
+                    are similar.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{MongoDB Performance in Theory and Practice}
+    \framesubtitle{%
+        06/21/17 1540--1620:
+        Baron Schwartz, Founder/CEO, VividCortex
+    }
+
+    \begin{itemize}
+        \item Performance is either user latency or resource
+            consumption.
+        \item Residence time for a request = queue + service time.
+        \item Profiling is key! Identify obviously bad queries by
+            sorting by time.
+        \item Another trick is to sort by frequency, repetitive calls
+            are also awful.
+        \item Do not use MongoDB's slow query log!
+        \item \texttt{db.serverStatus(), currentOp()} have lots of
+            useful info and are built in, but should not poll these.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Powerful Analysis with the Aggregation Pipeline}
+    \framesubtitle{%
+        06/21/17 1630--1710:
+        Asya Kamsky, Lead PM, MongoDB
+    }
+
+    \begin{itemize}
+        \item tl;dr can do data analysis in-db, faster!
+        \item Use \texttt{\{explain:true\}} to get an explain of the plan that
+            Mongo is using to evaluate the aggregate, since Mongo does a lot of
+            fancy push-arounds.
+        \item \texttt{\$let} seems to be good for readability.
+        \item \texttt{\$map, \$reduce, \$filter} for arrays!
+        \item Refactor into helper functions that reduce stages of the aggregate
+            pipeline.
+    \end{itemize}
+\end{frame}
+
 
 \end{document}
