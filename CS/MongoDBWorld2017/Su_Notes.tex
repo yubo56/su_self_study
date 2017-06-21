@@ -622,4 +622,72 @@ height=2em]
     \end{columns}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Write and Read Concern}
+    \framesubtitle{%
+        06/20/17 1400--1440:
+        Alex Komyagin, Senior Consulting Engineer, MongoDB
+    }
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item How Mongo writes (3-replica)
+                    \begin{itemize}
+                        \item App sends doc to primary, primary writes to
+                            in-memory structures and oplog, sends ack back to
+                            app.
+                        \item In no particular order: journal, replicated to
+                            secondaries, then eventually ($\sim$ seconds) data
+                            files.
+                    \end{itemize}
+                \item How writes disappear
+                    \begin{itemize}
+                        \item What if primary fails right before replication +
+                            data files?
+                        \item One secondary is promoted, primary reboots.
+                        \item Once primary reboots as secondary, produces
+                            rollback containing in-transit write \texttt{bson}.
+                        \item App cannot find in-transit write!
+                    \end{itemize}
+                \item Many people disable rollback \frownie\frownie\frownie
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item RCA:\@ Ack before replicated.
+                \item Solution: writeConcern, \# replicas or \texttt{majority}.
+                \item Rec: majority for important writes, else $2$ (lower
+                    latency, but at least one other server knows).
+                \item Dirty reads: detect when read is of unstable state. Modes:
+                    \begin{itemize}
+                        \item Local
+                        \item Majority
+                        \item Linearizable (blocks until last write is
+                            replicated)
+                    \end{itemize}
+                \item Linearizable can block e.g.\ example above, when master
+                    goes down, since the write never gets replicated.
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Write and Read Concern}
+    \framesubtitle{%
+        06/20/17 1400--1440:
+        Alex Komyagin, Senior Consulting Engineer, MongoDB
+    }
+    \begin{itemize}
+        \item Majority vs.\ Linearizable
+            \begin{itemize}
+                \item Majority returns the majority that a particular
+                    node knows about.
+                \item Linearizable guarantees recency, but can only work
+                    on primary, very slow.
+            \end{itemize}
+        \item Retryable writes can handle write concern timeout.
+    \end{itemize}
+\end{frame}
+
 \end{document}
