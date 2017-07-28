@@ -1,0 +1,186 @@
+    \documentclass[10pt, twocolumn, landscape]{article}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
+    % chancery
+    \usepackage[margin=1in]{geometry}
+    \newcommand{\scinot}[2]{#1\times10^{#2}}
+    \newcommand{\bra}[1]{\left<#1\right|}
+    \newcommand{\ket}[1]{\left|#1\right>}
+    \newcommand{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+    \newcommand{\abs}[1]{\left|#1\right|}
+    \newcommand{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand{\svec}[1]{\vec{#1}\;\!}
+    \newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+    \let\Re\undefined
+    \let\Im\undefined
+    \newcommand{\ang}[0]{\text{\AA}}
+    \newcommand{\mum}[0]{\upmu \mathrm{m}}
+    \DeclareMathOperator{\Res}{Res}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \DeclareMathOperator{\diag}{diag}
+    \newcommand{\expvalue}[1]{\left<#1\right>}
+    \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
+    \usepackage[font=scriptsize]{subcaption}
+    \everymath{\displaystyle}
+    \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
+
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
+
+\begin{document}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\rhead{Yubo Su}
+\cfoot{\thepage/\pageref{LastPage}}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+\begin{itemize}
+    \item Learn a language by answering the following questions:
+        \begin{itemize}
+            \item What is the typing model? Static dynamic, strong weak?
+            \item What is the programming model? OOP, functionall, procedural,
+                hybrid of which?
+            \item How will you interact? Compiled, interpreted, VMs?
+            \item Design constructs/core data structures? Pattern matching,
+                collections, unification?
+            \item Core features that make it unique?
+        \end{itemize}
+
+    \item The languages:
+        \begin{itemize}
+            \item Ruby---OOP representative.
+            \item Io---concurrency constructs w/ simplicity, uniformity and
+                minimality of syntax.
+            \item Prolog---Parent to Erlang? Old. Nothing else mentioned.
+            \item Scala---Functional + OOP to Java.
+            \item Erlang---Functional w/ concurrency, distribution + fault
+                tolerance \emph{right}. BAse of CouchDB.\@
+            \item Clojure---On JVM, same concurrency as versioned dbs. Lisp
+                dialect
+            \item Haskell---Pure functional, archetypal typing model.
+        \end{itemize}
+
+    \item Glossary (to be all on the same page):
+        \begin{description}
+            \item[Interpreted] Executed by an interpreter rather than a
+                compiler.
+            \item[Strongly Typed] Errors when types collide.
+            \item[Dynamically Typed] Types bound at runtime rather than compile
+                time. Generally means types inside functions are only checked on
+                execution.
+            \item[Duck Typing] If an object has a function then that function is
+                invokable without type checking for the parent.
+            \item[Object Oriented] Encapsulation (data + behavior together),
+                inheiritance and polymorphism.
+        \end{description}
+\end{itemize}
+
+\section{Ruby}
+
+\begin{itemize}
+    \item Optimized w/ syntactic sugar, programmer efficiency.
+    \item Interpreted, OOP, dynamically typed, strongly typed, duck
+        typed scripting language.
+    \item Every piece of code returns, even if only \texttt{nil}.
+        \begin{itemize}
+            \item Functions return the value of the last expression.
+        \end{itemize}
+    \item Purely OOP, e.g.\ \texttt{4.class = Fixnum} and has methods viewable
+        by \texttt{4.methods}.
+    \item \texttt{if}, \texttt{unless}, \texttt{while}, \texttt{until} can be
+        used either inline or in block form.
+    \item \texttt{nil}, \texttt{false} are only falsey values, \texttt{0} is
+        true!
+    \item Each object natively understands equality.
+    \item \emph{Symbols} are prefixed with \texttt{:identifier}. Identical
+        symbols point to the same physical object, unlike identical objects, can
+        tell by checking their \texttt{:identifier.object\_id}.
+    \item Arrays are Ruby's primary ordered collection (Ruby 1.9 has ordered
+        hashes).
+        \begin{itemize}
+            \item Out of bounds yields \texttt{nil}.
+            \item Negative counts backwards.
+            \item \texttt{arr[0..1]} returns a slice, since \texttt{0..1} is a
+                \texttt{Range}.
+            \item \texttt{[]} is a function on \texttt{Array}.
+            \item No need to be homogeneous types.
+            \item Implement queue, LL, stack, se etc.\@
+        \end{itemize}
+    \item Hashes are labeled collections, key-value pairs.
+    \item \emph{Code blocks}
+        \begin{itemize}
+            \item Code blocks are unnamed functions, between braces or
+                \texttt{do/end}, former when single line, latter when multiple
+                lines.
+            \item Can be passed as function argument, prototype says
+                \texttt{\&block} and can invoke with \texttt{block.call}.
+            \item \texttt{yield} calls whatever block is passed to the function.
+            \item Can be used for delaying execution and conditional execution
+                as well.
+        \end{itemize}
+    \item OOP
+        \begin{itemize}
+            \item \texttt{initialize} constructor
+            \item Class names are camel cased, instance variables and method
+                names are snake cased, constants all caps.
+            \item Instance variables are prepended with a single \texttt{\@},
+                class variables with two \texttt{\@\@}.
+            \item \texttt{modules} to solve multiple inheritance, collection of
+                functions and constants, \texttt{include}ed by \texttt{class}es.
+            \item \texttt{modules} can call functions it does not define but
+                expect \texttt{include}-ees to define, duck typing! Implicit
+                ``abstract functions'' from Java.
+        \end{itemize}
+    \item \emph{Metaprogramming} is writing programs that write programs.
+    \item \emph{Open Classes} allow us to modify existing classes in-line, even
+        built-ins like \texttt{NilClass}.
+        \begin{itemize}
+            \item A fun use case is to override the
+                \texttt{self.method\_missing} function, which is called whenever
+                an attribute is not found. Then, a class called \texttt{Roman}
+                can have attributes like \texttt{Roman.XII} and use
+                \texttt{method\_missing} to compute the value! Wow! \smiley.
+        \end{itemize}
+    \item \texttt{Modules} are extremely adept at metaprogramming, since a
+        modulee's \texttt{included} method is called whenever it is included, so
+        it can metaprogram on inclusion.
+    \item Core strengths
+        \begin{itemize}
+            \item Duck typed with OOP is out-of-the-box polymorphism.
+            \item Fast for scripting, well-supported for various extensions.
+            \item Rails!! Fast time to market.
+        \end{itemize}
+    \item Weaknesses
+        \begin{itemize}
+            \item Performance: getting much faster, but still slow.
+                Metaprogramming makes any compilation nigh impossible. Also
+                against the core design philosophy of programmer's experience vs
+                performance.
+            \item Concurrency is hard with OOP.\@
+            \item No type safety.
+        \end{itemize}
+\end{itemize}
+
+\end{document}
+
