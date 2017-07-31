@@ -95,6 +95,8 @@ height=2em]
                 inheiritance and polymorphism.
             \item[Prototype Language] Every object is a clone of another, a
                 style of OOP.\@
+            \item[Declarative Language] ``Throw facts and inferences at the
+                language and it will reason for you.''
         \end{description}
 \end{itemize}
 
@@ -188,7 +190,7 @@ height=2em]
 
 \begin{itemize}
     \item Prototype language like Lua and Javascript, no distinction between
-        objects and classes.
+        objects and classes, developed in 2002.
     \item Everything is a message that returnss another receiver. Program by
         chaining messages, e.g.\ \texttt{"Hello World" print}. Message passing
         is a strong concurrency model.
@@ -267,6 +269,24 @@ Object ancestors := method(
     )
 )
 \end{lstlisting}
+
+\section{Prolog}
+
+\begin{itemize}
+    \item Declarative, from 1972.
+    \item Three building blocks
+        \begin{description}
+            \item[Facts] Assertions about the world.
+            \item[Rules] Inferences about facts in the described world.
+            \item[Query] A question about the described world.
+        \end{description}
+    \item Facts and rules go into a \emph{knowledge base}, the Prolog compiler
+        serializes facts and rules to be query efficient.
+    \item First letter capitalization says whether an identifier is an
+        \emph{atom}, fixed value like a Ruby symbol and capitalized, or
+        \emph{variable} whose values can change and are lower cased or start
+        with underscore.
+\end{itemize}
 
 \end{document}
 
