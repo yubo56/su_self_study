@@ -1,4 +1,4 @@
-    \documentclass[10pt, twocolumn, landscape]{article}
+    \documentclass[10pt]{article}
     \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
     hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings}
     % chancery
@@ -89,6 +89,9 @@ height=2em]
             \item[Dynamically Typed] Types bound at runtime rather than compile
                 time. Generally means types inside functions are only checked on
                 execution.
+            \item[Statically Typed] Infer polymorphism by relation to other
+                types rather than just ``is this function defined'', checked at
+                compile time.
             \item[Duck Typing] If an object has a function then that function is
                 invokable without type checking for the parent.
             \item[Object Oriented] Encapsulation (data + behavior together),
@@ -97,6 +100,14 @@ height=2em]
                 style of OOP.\@
             \item[Declarative Language] ``Throw facts and inferences at the
                 language and it will reason for you.''
+            \item[Purely Functional] A function invoked with the same inputs
+                always produces the same output. \emph{Alias: stateless}.
+            \item[Higher-order Functions] Functions that map functions to
+                functions.
+            \item[Threads vs.\ Processes] Both have their own execution path but
+                threads share resources in exchange for being more lightweight.
+            \item[Atoms] Symbols that represent singular values, like entries in
+                an enumerated type.
         \end{description}
 \end{itemize}
 
@@ -106,28 +117,28 @@ height=2em]
     \item Optimized w/ syntactic sugar, programmer efficiency.
     \item Interpreted, OOP, dynamically typed, strongly typed, duck
         typed scripting language.
-    \item Every piece of code returns, even if only \texttt{nil}.
+    \item Every piece of code returns, even if only \lstinline{nil}.
         \begin{itemize}
             \item Functions return the value of the last expression.
         \end{itemize}
-    \item Purely OOP, e.g.\ \texttt{4.class = Fixnum} and has methods viewable
-        by \texttt{4.methods}.
-    \item \texttt{if}, \texttt{unless}, \texttt{while}, \texttt{until} can be
+    \item Purely OOP, e.g.\ \lstinline{4.class = Fixnum} and has methods viewable
+        by \lstinline{4.methods}.
+    \item \lstinline{if}, \lstinline{unless}, \lstinline{while}, \lstinline{until} can be
         used either inline or in block form.
-    \item \texttt{nil}, \texttt{false} are only falsey values, \texttt{0} is
+    \item \lstinline{nil}, \lstinline{false} are only falsey values, \lstinline{0} is
         true!
     \item Each object natively understands equality.
-    \item \emph{Symbols} are prefixed with \texttt{:identifier}. Identical
+    \item \emph{Symbols} are prefixed with \lstinline{:identifier}. Identical
         symbols point to the same physical object, unlike identical objects, can
-        tell by checking their \texttt{:identifier.object\_id}.
+        tell by checking their \lstinline{:identifier.object\_id}.
     \item Arrays are Ruby's primary ordered collection (Ruby 1.9 has ordered
         hashes).
         \begin{itemize}
-            \item Out of bounds yields \texttt{nil}.
+            \item Out of bounds yields \lstinline{nil}.
             \item Negative counts backwards.
-            \item \texttt{arr[0..1]} returns a slice, since \texttt{0..1} is a
-                \texttt{Range}.
-            \item \texttt{[]} is a function on \texttt{Array}.
+            \item \lstinline{arr[0..1]} returns a slice, since \lstinline{0..1} is a
+                \lstinline{Range}.
+            \item \lstinline{[]} is a function on \lstinline{Array}.
             \item No need to be homogeneous types.
             \item Implement queue, LL, stack, se etc.\@
         \end{itemize}
@@ -135,39 +146,39 @@ height=2em]
     \item \emph{Code blocks}
         \begin{itemize}
             \item Code blocks are unnamed functions, between braces or
-                \texttt{do/end}, former when single line, latter when multiple
+                \lstinline{do/end}, former when single line, latter when multiple
                 lines.
             \item Can be passed as function argument, prototype says
-                \texttt{\&block} and can invoke with \texttt{block.call}.
-            \item \texttt{yield} calls whatever block is passed to the function.
+                \lstinline{\&block} and can invoke with \lstinline{block.call}.
+            \item \lstinline{yield} calls whatever block is passed to the function.
             \item Can be used for delaying execution and conditional execution
                 as well.
         \end{itemize}
     \item OOP
         \begin{itemize}
-            \item \texttt{initialize} constructor
+            \item \lstinline{initialize} constructor
             \item Class names are camel cased, instance variables and method
                 names are snake cased, constants all caps.
-            \item Instance variables are prepended with a single \texttt{\@},
-                class variables with two \texttt{\@\@}.
-            \item \texttt{modules} to solve multiple inheritance, collection of
-                functions and constants, \texttt{include}ed by \texttt{class}es.
-            \item \texttt{modules} can call functions it does not define but
-                expect \texttt{include}-ees to define, duck typing! Implicit
+            \item Instance variables are prepended with a single \lstinline{\@},
+                class variables with two \lstinline{\@\@}.
+            \item \lstinline{modules} to solve multiple inheritance, collection of
+                functions and constants, \lstinline{include}ed by \lstinline{class}es.
+            \item \lstinline{modules} can call functions it does not define but
+                expect \lstinline{include}-ees to define, duck typing! Implicit
                 ``abstract functions'' from Java.
         \end{itemize}
     \item \emph{Metaprogramming} is writing programs that write programs.
     \item \emph{Open Classes} allow us to modify existing classes in-line, even
-        built-ins like \texttt{NilClass}.
+        built-ins like \lstinline{NilClass}.
         \begin{itemize}
             \item A fun use case is to override the
-                \texttt{self.method\_missing} function, which is called whenever
-                an attribute is not found. Then, a class called \texttt{Roman}
-                can have attributes like \texttt{Roman.XII} and use
-                \texttt{method\_missing} to compute the value! Wow! \smiley.
+                \lstinline{self.method\_missing} function, which is called whenever
+                an attribute is not found. Then, a class called \lstinline{Roman}
+                can have attributes like \lstinline{Roman.XII} and use
+                \lstinline{method\_missing} to compute the value! Wow! \smiley.
         \end{itemize}
-    \item \texttt{Modules} are extremely adept at metaprogramming, since a
-        modulee's \texttt{included} method is called whenever it is included, so
+    \item \lstinline{Modules} are extremely adept at metaprogramming, since a
+        modulee's \lstinline{included} method is called whenever it is included, so
         it can metaprogram on inclusion.
     \item Core strengths
         \begin{itemize}
@@ -192,54 +203,54 @@ height=2em]
     \item Prototype language like Lua and Javascript, no distinction between
         objects and classes, developed in 2002.
     \item Everything is a message that returnss another receiver. Program by
-        chaining messages, e.g.\ \texttt{"Hello World" print}. Message passing
+        chaining messages, e.g.\ \lstinline{"Hello World" print}. Message passing
         is a strong concurrency model.
     \item Objects and classes are the same, create new objects by cloning
-        existing ones e.g.\ \texttt{Vehicle} \texttt{:= Object clone}.
+        existing ones e.g.\ \lstinline{Vehicle} \lstinline{:= Object clone}.
         \begin{itemize}
-            \item Inheritance is equivalent to sending the \texttt{clone}
+            \item Inheritance is equivalent to sending the \lstinline{clone}
                 message to a parent prototype.
         \end{itemize}
     \item Objects have ``slots'', and a collection of slots is like a hash.
-        Objects are basically collections of slots. Can \texttt{Object
-        slotNames} to get list of slots.
+        Objects are basically collections of slots. Can
+        \lstinline{Object slotNames} to get list of slots.
     \item When a slot is not found on an object, it is forwarded up to parent
         prototypes or until not found.
-    \item Lowercase clones do not override parent's \texttt{type} slot.
-    \item \emph{Methods} are objects with \texttt{type} \texttt{Block}. Can be
+    \item Lowercase clones do not override parent's \lstinline{type} slot.
+    \item \emph{Methods} are objects with \lstinline{type} \lstinline{Block}. Can be
         attached to object slots, are invoked when the slot is invoked.
-    \item \texttt{Lobby} is an object with a slot for each name in the global
+    \item \lstinline{Lobby} is an object with a slot for each name in the global
         namespace.
-    \item Lists \texttt{list()} are the prototype for all ordered collections,
-        and Maps \texttt{map()} are the prototype for all key value stores.
-    \item \texttt{true, false, nil} are \emph{singletons}, i.e.\ their
-        \texttt{clone} returns themselves rather than a clone of them! Lots of
+    \item Lists \lstinline{list()} are the prototype for all ordered collections,
+        and Maps \lstinline{map()} are the prototype for all key value stores.
+    \item \lstinline{true, false, nil} are \emph{singletons}, i.e.\ their
+        \lstinline{clone} returns themselves rather than a clone of them! Lots of
         cool tricks by overriding core functionality like this.
     \item Can see list of operators directly with precedence by
-        \texttt{OperatorTable} and create new operators. Use case: short JSON
-        $\to$ \texttt{Map} parser.
-    \item Message reflection is possible with the \texttt{call} operator inside
-        method bodies, e.g.\ \texttt{call message arguments}.
+        \lstinline{OperatorTable} and create new operators. Use case: short JSON
+        $\to$ \lstinline{Map} parser.
+    \item Message reflection is possible with the \lstinline{call} operator inside
+        method bodies, e.g.\ \lstinline{call message arguments}.
         \begin{itemize}
             \item The reason message reflection works is because the full
                 message context (sender, target, message) are all pushed onto
                 the execution stack.
             \item In Io, messages passed as arguments to a method are only
                 pushed onto the stack and \emph{not evaluated}.
-            \item This means that a receiver can call \texttt{call sender *} and
+            \item This means that a receiver can call \lstinline{call sender *} and
                 hit an arbitrary sender slot.
         \end{itemize}
-    \item Can override \texttt{forward} message slot same way as
-        \texttt{method\_missing} before.
+    \item Can override \lstinline{forward} message slot same way as
+        \lstinline{method\_missing} before.
     \item Concurrency
         \begin{itemize}
             \item \emph{Coroutines} are functions w/ multiple entry/exits. Firing a
-                message with \texttt{\@} returns a future, with two
-                \texttt{\@\@} returns \texttt{nil} and kicks off a new thread.
-            \item \texttt{yield} yields control inside a coroutine.
+                message with \lstinline{\@} returns a future, with two
+                \lstinline{\@\@} returns \lstinline{nil} and kicks off a new thread.
+            \item \lstinline{yield} yields control inside a coroutine.
             \item \emph{Actors} place incoming messages on a queue and dequeue
                 with coroutines. An object becomes an actor when sent an
-                asynchronous (\texttt{\@, \@\@}) message.
+                asynchronous (\lstinline{\@, \@\@}) message.
             \item \emph{Futures} return immediately, but when accessed block
                 until the asynchronous result is returned.
         \end{itemize}
@@ -257,7 +268,7 @@ height=2em]
 \end{itemize}
 
 Illustrative example of reflection, to print slots of ancestors of any object
-that clones \texttt{Object}:
+that clones \lstinline{Object}:
 \begin{lstlisting}
 Object ancestors := method(
     prototype := self proto
@@ -274,18 +285,403 @@ Object ancestors := method(
 
 \begin{itemize}
     \item Declarative, from 1972.
-    \item Three building blocks
-        \begin{description}
-            \item[Facts] Assertions about the world.
-            \item[Rules] Inferences about facts in the described world.
-            \item[Query] A question about the described world.
-        \end{description}
-    \item Facts and rules go into a \emph{knowledge base}, the Prolog compiler
-        serializes facts and rules to be query efficient.
     \item First letter capitalization says whether an identifier is an
-        \emph{atom}, fixed value like a Ruby symbol and capitalized, or
-        \emph{variable} whose values can change and are lower cased or start
+        \emph{atom}, fixed value like a Ruby symbol and lower cased, or
+        \emph{variable} whose values can change and are upper cased or start
         with underscore.
+    \item Three building blocks, facts, rules and queries. Facts and rules go
+        into a \emph{knowledge base}, the Prolog compiler serializes facts and
+        rules to be query efficient.
+        \begin{description}
+            \item[Facts] \lstinline{likes(person, object)} declares a fact.
+            \item[Rules] \lstinline{friend(X,Y):-\+(X=Y), likes(X,Z),likes(Y,Z)}
+                is an example of a rule.
+                \begin{itemize}
+                    \item \lstinline{:-} is a \emph{subgoal}. Rules can declare
+                        multiple subgoals, only one of which needs be fulfilled.
+                    \item \lstinline{\+} logical negation, $X \neq Y$.
+                    \item \lstinline{friend(X,Y)} means $X \neq Y$ but both $X,
+                        Y$ like $Z$!
+                \end{itemize}
+            \item[Queries] Run queries after loading a knowledge base, e.g.\
+                \lstinline{likes(person, java)}. Same syntax!
+        \end{description}
+    \item Can specify \emph{variables} in query to query for \emph{all possible
+        values} rather than just \lstinline{yes/no} above, e.g.\
+        \lstinline{likes(Who, java)}.
+        \begin{itemize}
+            \item Seems like responses are pagined, with \lstinline{;} to
+                advance and \lstinline{a} to get all of them.
+        \end{itemize}
+    \item Core ideas of logic engine:
+        \begin{itemize}
+            \item Unification assigns two structures to be identical,
+                \lstinline{X = animal}.
+            \item Prolog takes a query and unifies any variables in the query
+                with any variables in the corresponding rule definition. The
+                right hand side of the rule then becomes a list of
+                \emph{goals} which are DFS'd.
+        \end{itemize}
+    \item Recursive rules are powerful but should tail recurse, recursive
+        subgoal should be last.
+    \item Prolog also has lists \lstinline{[]} and tuples \lstinline{()} which
+        unify element by element. Lists can be deconstructed with
+        \lstinline{[Head|Tail]}.
+    \item Can unify with \lstinline{_} wildcard, discards.
+    \item Use \lstinline{Variable is Expression} to unify \lstinline{Variable}
+        against \lstinline{Expression}, e.g.
+        \lstinline{Count is TailCount + 1}.
+    \item Amazing to code up solutions to classic puzzles, many minds were
+        boggled reading through the book exmaples.
+\end{itemize}
+
+\section{Scala}
+
+\begin{itemize}
+    \item Unifies OOP and functional. Statically typed, not purely functional.
+        Compiled, the interpreter is actually a compiler + executor all in one.
+        XML is a first-class programming construct!
+    \item Key differences from Java:
+        \begin{description}
+            \item[Type Inference] Statically typed but can infer types.
+            \item[Immutable Variables] Taking \lstinline{final} to the next
+                level.
+            \item[Functional Programming] lol.
+            \item[Higher-level Abstractions] e.g.\ actors in concurrency.
+        \end{description}
+    \item Type inference e.g.\ \lstinline{4 + "abc" = "4abc"}, though
+        \lstinline{val a: Int = 1} can declare explicitly.
+    \item \lstinline{val} is immutable, \lstinline{var} is not to declare.
+    \item Supports first-class \lstinline{Ranges} (\lstinline{0 until 10}) and
+        \lstinline{Tuples} (fixed length, can do multivalue assignments).
+    \item OOP features look mostly like Java with some small syntactic sugar
+        (seems the \lstinline{varName: Type} annotation is the more popular one
+        now, as Scala uses it too).
+    \item \lstinline{object} defines singleton classes, vs \lstinline{class} for
+        instance templates. An \lstinline{object}'s functions are like
+        \lstinline{static} functions in vanilla Java, and since you can name an
+        \lstinline{object} and \lstinline{class} the same name, the
+        \emph{companion object} approach lets you put \lstinline{static} Java
+        functions in the \lstinline{object} and the instance functions in the
+        \lstinline{class}.
+    \item \lstinline{traits} are like Java \lstinline{Interface}s plus an
+        implementation. \lstinline{implements} becomes \lstinline{with} in Scala.
+    \item Moving onto more functional features, can define naked functions too.
+    \item Also have \lstinline{List}s, can mix types (to JVM, list of
+        \lstinline{Any}s). List access is done with \lstinline{()}.since it is a
+        function. Also, native \lstinline{Map}s.
+    \item \lstinline{Sets} can be unioned, differenced and intersected with
+    \lstinline{++,--,\item}.
+    \item Equality works by value for lists and sets!
+    \item All three of these collections can be iterated in various more
+        functional ways e.g. \ \lstinline{foreach, fold}.
+    \item Can assign XML to variables, query, iterate, pattern match! Supports
+        XPath syntax for querying. Apparently useful since Java is XML heavy.
+    \item Pattern matching both looks a lot like switch case but also hearkens
+        to various pattern matching we've seen in Prolog and will see in other
+        functional programming languages!
+    \item Concurrency done with actors and message passing, send message using
+        \lstinline{!} e.g.\ \lstinline{actor ! message}. \lstinline{Actor} is a
+        parent class to \lstinline{extends}.
+        \begin{itemize}
+            \item \lstinline{loop} to loop while waiting for message
+            \item \lstinline$react { case ... }$ for pattern-matched
+                message-passing handling, or \lstinline{receive} equivalently.
+        \end{itemize}
+\end{itemize}
+
+Pattern matching + XML example
+% ugh lacheck is too dumb for lstlisting . . .
+\begin{verbatim}
+val movies = <movies>
+    <movie>a</movie>
+    <film>b</film>
+</movies>
+(movies \ "_").foreach { movie =>
+    movie match {
+        case <movie>{movieName></movie> => println(movieName)
+        case <film>{filmName></film> => println(filmName + " (film)")
+        case _ => println(" error")
+    }
+}
+\end{verbatim}
+
+\section{Erlang}
+
+Oh boy \emph{Few languages have the mystique of Erlang, the concurrency language
+that makes hard things easy and easy things hard}.
+
+\begin{itemize}
+    \item Near real-time, fault-tolerant distributed applications, hot
+        swappable. Functional, language-level message passing. Compiled but has
+        interpreter. Dynamically typed.
+        \begin{itemize}
+            \item Much syntax comes from Prolog, was implemented over Prolog at
+                first!
+        \end{itemize}
+    \item Erlang goes for processes instead of threads, tries to keep them
+        lightweight. Eliminates need for locks.
+    \item Actors are processes, pattern match off a queue of messages to decide
+        how to process.
+    \item Erlang handles reliability by ``let it crash'' mantra, then spinning
+        processes back up. Lightweight processes important!
+    \item Periods terminate lines wow \smiley.
+    \item \lstinline{String}s are just \lstinline{List}s, i.e.\ an array of
+        ASCII codes prints as a string in \lstinline{erl}.
+    \item Basic type coercion but no string $\leftrightarrow$ ints.
+    \item Lowercase symbols are atoms, not even assignable and only used in
+        pattern matching, uppercase are variables, assignable but immutable..
+    \item Tuples \lstinline|{}| and lists \lstinline{[]} exist, former is fixed
+        length is all.
+    \item Maps are generally implemented as list/tuple of tuples, and to access
+        we pattern match!
+        \begin{itemize}
+            \item Convention is to use the first entry in list as atom
+                corresponding to ``type'' of object, so it's easy to guarantee
+                pattern matching matches the right object type/attributes.
+        \end{itemize}
+    \item \emph{Bit matching} lets you pack data into effectively structs w/
+        predefined bit lengths for each attribute, e.g.
+        \lstinline{<<A:3, B:5, C:5, D:5>>} is a struct w/ 16 total bits, and
+        can unpack via pattern matching too.
+    \item \lstinline{module(name)}s \lstinline{export([function/numArgs])} in a
+        file, where we use shorthand \lstinline{f/1} to say function
+        \lstinline{f} takes one arg. Namespaced with
+        \lstinline{module:function}.
+        \begin{itemize}
+            \item \lstinline{mirror(Obj) -> Obj.} is valid syntax in Erlang.
+                Note differs from before since we don't specify type of
+                \lstinline{Obj} but the return type of \lstinline{mirror} is
+                obvious by its argument type. Dynamic typing!
+        \end{itemize}
+    \item Erlang also tail recurses, but does not overflow on $2000!$ and is
+        instantaneous apparently according to book example!
+    \item Tend to use \lstinline{case} statements to parse message passing,
+        common \lstinline{_ ->} wildcard match.
+        \begin{itemize}
+            \item Semicolon after each case except for last, so no
+                \lstinline{comma-dangle} eslint rule.
+            \item Commas separate lines within each case
+        \end{itemize}
+    \item \lstinline{if} statements use \emph{guards}, so kinda pattern match on
+        condition. Can have more than two guards in an if statement.
+        \begin{itemize}
+            \item Multiple guards can match, ordering is important.
+        \end{itemize}
+    \item \lstinline{fun(args)} defines an anonymous function of
+        \lstinline{args}, can assign to a Variable.
+        \begin{itemize}
+            \item Usual applications, \lstinline{lists:foldl},
+                \lstinline{lists:map}, \lstinline{lists:filter} and more under
+                the \lstinline{lists} module
+        \end{itemize}
+    \item Build lists using \lstinline{[|]} head/tail notation on the RHS of an
+        assignment.
+    \item List comprehensions with \lstinline{[op(X) || <clauses>]} where
+        \lstinline{clauses} can be generators for multiple variables and/or
+        constraints on these variables.
+    \item Three basic operations, \lstinline{!} sending message,
+        \lstinline{spawn}ing a process and \lstinline{receive}ing a message.
+        \begin{itemize}
+            \item Similar to \lstinline{loop} syntax of Ruby, the canonical way
+                to ``infinite loop'' in Erlang is to have a function
+                \lstinline{loop()} call itself via tail recursion.
+            \item We then \lstinline{spawn(loop/0)} a process that runs a
+                function, in this case the infinite loop \lstinline{loop()}
+                above. Returns a \lstinline{Pid}.
+            \item Then we \lstinline{! message} to the \lstinline{Pid}. When no
+                explicit return is specified by an actor (or if the actor is
+                dead), returns the message itself.
+            \item To achieve synchronous message passing, the receiver can take
+                a \lstinline{Pid} and message pass the return back, and the
+                sender can send \lstinline{self()} and then \lstinline{receive}
+                the returned message and \lstinline{->} return it.
+        \end{itemize}
+    \item Erlang does provide checked exceptions, but instead \emph{let it
+        fail} and handle its failure by linking processes together and handling
+        error cases.
+        \begin{itemize}
+            \item \lstinline{process_flag(trap_exit, true)} registers the
+                current process as \emph{the} process one traps exits.
+            \item Receives \lstinline${'EXIT', From, Reason }$ provided by
+                registering under \lstinline{process_flag}.
+            \item Can also receive another message that takes a
+                \lstinline{Process} and \lstinline{link(Process)}es it to
+                receive exit messages. Can use \lstinline{spawn_link} to spawn
+                and link immediately.
+            \item Then, if in the \lstinline{EXIT} message, the exit trapper
+                \lstinline{spawn_link}s another process, then we have built in
+                error handling!
+        \end{itemize}
+    \item Strengths
+        \begin{itemize}
+            \item Dynamically typed yet the most reliable core libraries.
+            \item Lightweight processes, isolation but easy to let die and spin
+                up.
+            \item Open Telecom Platform (OTP) enterprise libraries are vast,
+                owing to Erlang's original roots in a telecom company.
+            \item Let it crash very easy to reason about concurrency.
+        \end{itemize}
+    \item Weaknesses
+        \begin{itemize}
+            \item Syntax: everybody hates Erlang syntax \frownie.
+        \end{itemize}
+\end{itemize}
+
+\section{Clojure}
+
+\begin{itemize}
+    \item Lisp on the JVM\@. Dynamically, weakly typed. Lisp is:
+        \begin{itemize}
+            \item Language of lists: prefix notation is just a list w/ operator
+                first.
+            \item \emph{Data as code} data structures express code.
+        \end{itemize}
+    \item Concurrency done via agents. Rather than being fully immutable,
+        transactional memory.
+    \item Atoms/symbols in clojure are preceeded with \lstinline{:}.
+    \item Lists, maps, sets and vectors.
+        \begin{itemize}
+            \item Lists: \lstinline{()}. \lstinline{first}, \lstinline{last},
+                \lstinline{rest}. \lstinline{cons} appends.
+            \item Vectors/arrays: \lstinline{[]}. \lstinline{nth} so can random
+                access.
+            \item Sets: \lstinline$#{}$. Can \lstinline{sorted-set}. Are
+                also functions (!) that test for membership!
+            \item Maps: \lstinline${}$. Every other entry is a key, others are
+                values. Traditionally commas every two elements since they're
+                just whitespace. Also functions, do lookup. Can do both
+                \lstinline{(:key map)}, \lstinline{(map :key)}.
+        \end{itemize}
+    \item Use \lstinline{def} to bind a value to  a variable.
+    \item \lstinline{defn} to bind a function,
+        \lstinline{(defn <docstr> func [params] body)}, optional docstring
+        accessible via \lstinline{(doc func)}.
+    \item Can destructure e.g.\ the following are equivalent:
+        \lstinline{(defn f [l] (last l))} and
+        \lstinline{(defn f [[_ l]] l)}
+    \item Can declare anonymous function with just
+        \lstinline{(fn [params] body)}. If e.g.\ mapping, can even syntactic
+        sugar to \lstinline{(map #(* 2 \%) nums)} where \lstinline{\%} refers to
+        each item mapped over.
+    \item Clojure does not tail recurse automagically. Instead, use
+        \lstinline{recur} to re-enter a \lstinline{loop} to effect tail
+        recursion.
+    \item \emph{Sequences} are an abstraction library over lists, vectors, sets,
+        even I/O.
+        \begin{itemize}
+            \item Syntactic sugar for iterating through a list:
+                \lstinline{(for [x colors] ...)} is like ``for x in colors.''
+            \item Lazy sequences! \lstinline{take} to take a finite number of an
+                infinite sequence.
+        \end{itemize}
+    \item OO constructions
+        \begin{itemize}
+            \item \lstinline{defprotocol} defines a Java interface, functions
+                that records implementing the \lstinline{protocol} must implement.
+            \item \lstinline{defrecord} lets you specify what
+                \lstinline{protocol} you're implementing.
+        \end{itemize}
+    \item \lstinline{macro}s
+        \begin{itemize}
+            \item The problem is that w/ many functional languages, we evaluate
+                args then push them onto the call stack. Possible case we do not
+                want to do this is the \lstinline{unless} keyword from before;
+                do not evaluate function body.
+            \item Solution is to \lstinline{defmacro}, treat even executable
+                code as a list and do not execute, push directly onto call
+                stack instead. Powerful b/c data is all code!
+        \end{itemize}
+    \item Concurrency is solved via \emph{software transactional memory}.
+        \begin{itemize}
+            \item Most operations so far have been immutable, get
+                \emph{references} via \lstinline{ref} to a variable, then can
+                \lstinline{alter} it inside a \lstinline{dosync} transaction,
+                dereference with \lstinline{@ref} or full form
+                \lstinline{deref}.
+            \item Can also \lstinline{ref-set} instead of operating on the
+                existing value.
+            \item Can use \lstinline{atom}s to allow change changing w/o
+                transaction.
+            \item \lstinline{agent}s are also wrapped pieces of data that get
+                mutated asynchronously via \lstinline{send}. To get the value of
+                a reference after an asynchronous message has been processed,
+                \lstinline{await}.
+            \item Can also use \lstinline{future} to block until a value is
+                available.
+        \end{itemize}
+    \item Can implement multimethods depending on object metadata (which can be
+        attached to symbols and collections).
+    \item Clojure is a great lisp b/c fewer parens, ecosystem b/c Java, better
+        concurrency, lazy evaluation. It is pretty inaccessible though, being a
+        Lisp.
+\end{itemize}
+
+\section{Haskell}
+
+I already know a bit of Haskell so I might be a bit terse here, plus I need to
+finish this book now.
+
+\begin{itemize}
+    \item Absolutely pure functional, born out of functional programming
+        language conference in 1990 and revised in 1998. Strong, static typing,
+        widely considered the most effective type system.
+    \item Few primitive types, numbers, strings, bools. No type coercion, very
+        strong typing!
+    \item Functions can be dynamically typed, allow type variables.
+    \item Same pattern matching as before, takes first of matches. Can use
+        guards \lstinline{| expr = func} to guard expr to only execute when
+        func.
+    \item Same destructuring syntax as Clojure for the most part, except
+        destructure list using \lstinline{h:t} rather than \lstinline{h|t}.
+    \item Lists are homogeneous here!
+    \item Compose functions using \lstinline{f1.f2}, concat lists using
+        \lstinline{:} operator.
+    \item List comprehension like Erlang, e.g.
+        \lstinline{[x*2|x<-[1,2,3]]}.
+    \item Define anonymous functions with \lstinline{\x -> x}.
+    \item Higher order functions map, filter, fold etc.\ many many!
+    \item Cool concepts:
+        \begin{itemize}
+            \item Currying
+            \item Lazy evaluation, infinite lists, \lstinline{take}
+        \end{itemize}
+    \item Haskell type system:
+        \begin{itemize}
+            \item Define types \lstinline{data Boolean = True | False}.
+            \item To know how to display, you can \lstinline{deriving (Show)}.
+            \item Polymorphic functions by typing a function w/ type variables.
+            \item \lstinline{data} definitions can also be polymorphic.
+            \item \lstinline{class} defines function typings for people that
+                derive it and can have implementations for these functions for
+                derivees.
+        \end{itemize}
+    \item Monads
+        \begin{itemize}
+            \item Monads are meant to simulate program state.
+            \item Consist of a type constructor to hold a value, a
+                \lstinline{return} function that wraps a function into a monad
+                and a \lstinline{>>=} to unwrap a function in a monad.
+            \item \lstinline{monad >>= return = monad}.
+            \item Example monad \lstinline{Position}:
+\begin{lstlisting}
+module Main where
+    data Position t = Position t deriving (Show)
+
+    move (Position d) = Position (d + 2)
+    rtn x = x
+    x >>== f = f x
+\end{lstlisting}
+                then the advantage of using a monad for this is that instead of
+                doing \lstinline{(move (move (move position)))} where the
+                innermost one actually moves first, we can write them in
+                executed order instead!
+            \item The binding reads ``for a given monad \lstinline{x}, bind the
+                application of function \lstinline{f} to apply \lstinline{f x},
+                so an identity monad.
+            \item \lstinline{do} + \lstinline{return} makes function
+                declarations look imperative but actually uses monads.
+        \end{itemize}
 \end{itemize}
 
 \end{document}
