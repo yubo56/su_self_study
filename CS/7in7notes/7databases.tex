@@ -1,0 +1,149 @@
+    \documentclass[10pt]{article}
+    \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
+    hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings, times}
+    % chancery
+    \usepackage[margin=1in]{geometry}
+    \newcommand{\scinot}[2]{#1\times10^{#2}}
+    \newcommand{\bra}[1]{\left<#1\right|}
+    \newcommand{\ket}[1]{\left|#1\right>}
+    \newcommand{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+    \newcommand{\abs}[1]{\left|#1\right|}
+    \newcommand{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand{\svec}[1]{\vec{#1}\;\!}
+    \newcommand{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+    \let\Re\undefined
+    \let\Im\undefined
+    \newcommand{\ang}[0]{\text{\AA}}
+    \newcommand{\mum}[0]{\upmu \mathrm{m}}
+    \DeclareMathOperator{\Res}{Res}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \DeclareMathOperator{\diag}{diag}
+    \newcommand{\expvalue}[1]{\left<#1\right>}
+    \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
+    \usepackage[font=scriptsize]{subcaption}
+    \everymath{\displaystyle}
+    \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
+
+\tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
+height=2em]
+
+\begin{document}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\rhead{Yubo Su}
+\cfoot{\thepage/\pageref{LastPage}}
+
+\section{Introduction}
+
+\begin{itemize}
+    \item The questions we ask of each database:
+        \begin{itemize}
+            \item \emph{What type of DB is this?} Relational etc.
+            \item \emph{What was the motivation?} Who developed and why.
+            \item \emph{How do you talk to it?} Through shell, programming,
+                protocols?
+            \item \emph{Why is it unique?}
+            \item Performance/scalability.
+        \end{itemize}
+    \item Large genres of DBs:
+        \begin{description}
+            \item[Relational] Two-dimensional tables from set theory, queries
+                are in Structured Query Language (SQL), based on relational set
+                theory. PostgreSQL.\@
+            \item[Key-Value] Literally a hash. Riak + Redis.
+            \item[Columnar] Instead of storing rows of a table together, store
+                columns together. Easy to build sparse attributes. HBase.
+            \item[Document] Stores hashes of basically anything (JSON). MongoDB
+                + CouchDB.\@
+            \item[Graph] Stores nodes and relationships between nodes, can
+                traverse along relationships effectively. Neo4J.
+        \end{description}
+    \item Best practice is obviously to use multiple DBs for diff use cases.
+\end{itemize}
+
+Glossary:
+\begin{description}
+    \item[Relational] Based on relational albegra, not based on relations
+        between tables.
+    \item[CRUD] Create Read Update Delete. Every other operation is a higher
+        order composition of these.
+\end{description}
+
+\section{PostgreSQL}
+
+\begin{itemize}
+    \item Roots in 1970s, supported SQL by 1996. Relational. Archetypally
+        stable/reliable.
+    \item Relations = \lstinline{TABLE}s, attributes = \lstinline{COLUMN}s,
+        tuples = \lstinline{ROW}s.
+    \item On \lstinline{INSERT}, can specify \lstinline{RETURNING} to get any
+        automatically populated values e.g.\ \lstinline{SERIAL} primary keys.
+    \item Joins
+        \begin{description}
+            \item[Inner Join] Join two columns from two tables on equality of
+                those columns.
+            \item[Outer Join] Join two columns from two tables and for at least
+                one of the two tables always return even if the lookup in the
+                other table fails.
+        \end{description}
+    \item \emph{Indexing} helps avoid full table scans. PostgreSQL automatically
+        indexes the primary key and all \lstinline{UNIQUE} attributes. Can do
+        either hash or btree indexes. Also when specify \lstinline{FOREIGN KEY},
+        index target table.
+    \item Can \lstinline{INSERT INTO} values that are \lstinline{SELECT}ed from
+        another table! Handy to prevent hardcoding primary keys everywhere.
+    \item Aggregate functions allow post-processing, e.g.\ \lstinline{count()}.
+        Can \lstinline{GROUP_BY} aggregate functions and can also filter on
+        aggregated values with \lstinline{HAVING} the same way
+        \lstinline{SELECT} filters with \lstinline{WHERE}.
+    \item Can use \lstinline{PARTITION_BY} to not collapse rows within each
+        group. Use case is when \lstinline{SELECT}ing over a field not used in
+        an aggregate query and so can get conflicting values when also
+        \lstinline{GROUP_BY}ing.
+    \item Transactions + ACID compliance:
+        \begin{itemize}
+            \item Transactions ensure that every command of a set is executed
+                else none.
+            \item ACID---Atomic (all or nothing), Consistent (never stuck in
+                inconsistent state e.g.\ nonexistent foreign keys), Isolated
+                (transactions do not interfere), Durable (committed transactions
+                will always endure even if server crashes).
+        \end{itemize}
+    \item Can store procedures (\lstinline{FUNCTION}s) that are loaded by the
+        database side. Obviously faster than postprocessing returned data from
+        the db but higher maintenance cost.
+    \item Can specify \lstinline{TRIGGER}s that hit these stored procedures
+    \item Lifecycle of a SQL command: parsed into query tree, modify ased off
+        rules (and views, which are a specific type of rule), hit query planner,
+        executed and return.
+    \item Can specify custom rules e.g.\ how to interpret certain operations on
+        a view.
+    \item Can fuzzy string search using \lstinline{LIKE} and \lstinline{ILIKE},
+        can regex or even Levenstein (edit distance), trigram. All have
+        corresponding indexes that can be built, all plugable using
+        PostgreSQL-exclusive packages.
+    \item The \lstinline{cube} seems neat, you can define feature vectors for
+        each row and tell PostgreSQL how to measure distances between feature
+        vectors and query on said distance.
+    \item Apparently does not scale well horizontally b/c partitioning is
+        difficult for relational databases. But is very good for normalized
+        data, extremely reliable w/ transactions + ACID compliance.
+\end{itemize}
+\end{document}
+
