@@ -83,6 +83,8 @@ Glossary:
         between tables.
     \item[CRUD] Create Read Update Delete. Every other operation is a higher
         order composition of these.
+    \item[REST] REpresentational State Transfer, guideline for mapping CRUD
+        resources to URLs.
 \end{description}
 
 \section{PostgreSQL}
@@ -145,5 +147,25 @@ Glossary:
         difficult for relational databases. But is very good for normalized
         data, extremely reliable w/ transactions + ACID compliance.
 \end{itemize}
-\end{document}
 
+\section{Riak}
+
+\begin{itemize}
+    \item Riak is a highly distributed, highly available key-value DB that is
+        built for a web interface, notably to be \lstinline{cURL}ed.
+    \item All nodes are equal, very easy to join nodes
+        \lstinline{riak-admin join}.
+    \item Insert by \lstinline{curl -X PUT}, delete by
+        \lstinline{curl -X DELETE}.
+    \item Key format is \lstinline{<server>/<bucket>/<key>} and the key can be
+        auto-generated on insertion.
+    \item Can \lstinline{Link} values to metadata labels. Say that the label
+        \lstinline{contains} the value. Is one-way pointer.
+    \item Can query on links, called \emph{link walking}, with \lstinline{GET}
+        to \lstinline{<server>/<link bucket>/<link>}. Can specify to
+        \lstinline{keep} each step in the link walking.
+    \item Can also tag with various other metadata, \lstinline{X-Riak-Meta-*}.
+        Can also specify MIME type to store images etc.\ that are linked to
+        existing entries.
+\end{itemize}
+\end{document}
