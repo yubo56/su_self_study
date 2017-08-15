@@ -85,6 +85,15 @@ Glossary:
         order composition of these.
     \item[REST] REpresentational State Transfer, guideline for mapping CRUD
         resources to URLs.
+    \item[MapReduce] Not a new concept, but succinctly captured by \emph{It is
+        faster to send the algorithm to the data than the data to the
+        algorithm}. (\emph{Note: Generally best when reducing in MapReduce to
+        reduce to the same schema as mapped values to allow chaining reduces.})
+    \item[CAP Theorem] When a network partition error occurs and messages are
+        lost in a \emph{partitioned} network, you can only guarantee
+        \emph{consistency} (across partitions) or \emph{availability} to further
+        incoming requests. More precisely, \emph{at any given moment in time you
+        cannot be consistent, available and partition tolerant.}
 \end{description}
 
 \section{PostgreSQL}
@@ -167,5 +176,50 @@ Glossary:
     \item Can also tag with various other metadata, \lstinline{X-Riak-Meta-*}.
         Can also specify MIME type to store images etc.\ that are linked to
         existing entries.
+    \item Can execute commands by posting JSON bodies to endpoints e.g.\
+        \lstinline{/mapred}. Endpoints often take a function body in plaintext,
+        so can generally point to a bucket + key instead. Stored procedures!
+    \item Riak supports filtering keys prior to map reduce.
+    \item The \emph{Riak Ring} is key to consistency and durability;
+        \begin{itemize}
+            \item All nodes are peers, growing and shrinking the cluster is
+                trivial.
+            \item Riak uses a 160-bit \emph{ring} hashing keys to determine
+                which Riak servers store the values for which key.
+            \item Riak then partitions the ring and each server claims
+                partitions sequentially on startup.
+            \item Riak accomplishes redundancy by hashing each key to
+                \lstinline{N} nodes, considering a write successful when
+                \lstinline{W} nodes have completed the write, and then you can
+                specify reading from \lstinline{R} nodes.
+        \end{itemize}
+    \item Writes in Riak are by default not durable and not written to disk
+        before acknowledgement.
+    \item Riak by default 204s when writing to a server that is not yet up, and
+        a neighboring node will buffer the write! Careful for \emph{cascading
+        failure} when the neighboring nodes fail consecutively due to overload.
+    \item Riak handles concurrent writes by effectively tagging each update w/ a
+        commit history, and conflict resolution must be performed manually by
+        specifying which \lstinline{Vclock}s an update overwrites.
+        \begin{itemize}
+            \item The commit history, called the \emph{vector clock}, is pruned
+                as more updates to a value occur, configurable per bucket.
+        \end{itemize}
+    \item Can specify pre/post commit hooks, notably validators and/or computed
+        values.
+    \item Search wih Apache Solr interface, \lstinline{/solr}.
+\end{itemize}
+
+\section{HBase}
+
+\begin{itemize}
+    \item Apache HBase is made for very big data, on the order of GBs (EN:\@??
+        That's really small.).
+    \item HBase also uses buckets of data it calls \emph{tables}, and
+        \emph{cells} that appear at the intersection of \emph{rows} and
+        \emph{columns}, but is not an RDBMS at all!
+    \item Built on Hadoop, strong for analytics since many features e.g.\
+        versioning, compression and old data purge make it an appetizing
+        prospect for data analytics.
 \end{itemize}
 \end{document}
