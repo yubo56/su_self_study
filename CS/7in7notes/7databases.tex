@@ -221,5 +221,58 @@ Glossary:
     \item Built on Hadoop, strong for analytics since many features e.g.\
         versioning, compression and old data purge make it an appetizing
         prospect for data analytics.
+    \item XML configuration, by default uses temporary directory to store data
+        (\lstinline{hbase.rootdir}), JRuby shell.
+    \item Tables in HBase are just big maps of maps. Each key maps to a
+        \emph{row} of data, which consists of maps from keys/\emph{columns} into
+        uninterrupted arrays of bytes. Columns' full names consist of two parts,
+        a \emph{column family} name and a \emph{column qualifier}, often
+        concatenated with a colon.
+    \item Use \lstinline$put <table>, <key>, [<column>, <value>, ...]$ to
+        insert, and \lstinline$get <table>, <key>, [<projections>]$ to query.
+    \item All entries are timestamped and chill around, baked in versioning!
+        \lstinline{put} and \lstinline{get} can accept timestamps. Default 3
+        versions, can set to store \lstinline{ALL_VERSIONS}.
+    \item Interesting case study, Facebook's message index table:
+        \begin{itemize}
+            \item Row keys are user IDs.
+            \item Timestamps are used as messageIDs
+            \item Column qualifiers are the individual words of messages.
+            \item Allows for fast searching of messages, just by looking at all
+                timestamps of a given word, then querying along the row for all
+                matches to each timestamp! Wow!
+            \item Since messages are immutable, no reason to use versioning,
+                clever overloading of timestamp!
+        \end{itemize}
+    \item Can make schema changes with \lstinline{alter}, but must
+        \lstinline{disable} the table. Internally, creates a new column family
+        and copies all data over, so extremely expensive!
+    \item No formal schemas! Do not enforce certain column qualifiers to exist,
+        allows unknown column qualifiers.
+    \item Column families allow for different keys to be configured with
+        different performance parameters.
+    \item HBase operations are all atomic at the row level.
+    \item Script in Ruby for larger operations e.g.\ XML streaming imports.
+    \item Inbuild support for compression, Gzip, and Bloom filters for seeing
+        whether a row key or a row + column exists w/o making a disk call!
+    \item Scalability by assigning regions to row keys, servers own regions.
+        \begin{itemize}
+            \item Write-ahead log (WAL) buffers edit operations, which are batch persisted
+                to disk.
+            \item Track where regions are assigned with the \lstinline{.META}
+                table, and assignments are done by the \emph{master} node, which can
+                also be a region server.
+            \item Regions allow for built-in distributed processing, operating
+                over regions in parallel.
+        \end{itemize}
+    \item Generally keep column families per table down, colocate data that is
+        often fetched together but otherwise more tables is preferred.
+    \item Can use Thrift API to access remote HBase clusters.
+    \item One notable weakness is that HBase is designed for scale, so using any
+        fewer than five nodes is not recommended by the HBase community. Also
+        does not have support for indexed columns, so have to be very clever
+        about it!
 \end{itemize}
+
+\section{MongoDB}
 \end{document}
