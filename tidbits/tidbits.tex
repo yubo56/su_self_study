@@ -10,6 +10,7 @@
     hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings,
     chancery}
     \usepackage[margin=1in]{geometry}
+    \usepackage{float}
     \newcommand{\scinot}[2]{#1\times10^{#2}}
     \newcommand{\bra}[1]{\left<#1\right|}
     \newcommand{\ket}[1]{\left|#1\right>}
@@ -43,10 +44,21 @@
     \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
     \usepackage[font=scriptsize]{subcaption}
     \everymath{\displaystyle}
-    \lstset{basicstyle=\ttfamily\footnotesize,frame=single,numbers=left}
 
 \tikzstyle{circ} = [draw, circle, fill=white, node distance=3cm, minimum
 height=2em]
+
+\definecolor{commentgreen}{rgb}{0,0.6,0}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    frame=single,
+    numbers=left,
+    showstringspaces=false,
+    keywordstyle=\color{blue},
+    stringstyle=\color{purple},
+    commentstyle=\color{commentgreen},
+    morecomment=[l][\color{magenta}]{\#}
+}
 
 \begin{document}
 
@@ -1721,8 +1733,99 @@ so the SVD $\bm{U\Sigma V}$ consists of three matricies:
         eigenvalues, and these are the principal components we expect.
 \end{itemize}
 
-As a demonstratioo, let's try!
+As a demonstration, let's try!
 
 Conclusion from my demonstration: Forgot that PCA and clustering are different.
+Oops. Probably not gonna resume this one.
+
+\chapter{08/15/17---Sum until $> 1$}
+
+Sum random numbers uniformly distributed $\in [0,1]$ until you exceed $1$.
+What's the expected value of the number you end up with?
+
+\section{Simulation}
+
+We can first simulate, as in \autoref{fig:sumToOne10e6}. The simulation
+concludes that the mean is pretty close to $\frac{e}{2}$. The Python code used
+is:
+\lstinputlisting[basicstyle=\ttfamily\scriptsize, language=python]
+{sumToOne/sim.py}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{sumToOne/trials10e6.png}
+    \caption{Simulation with $10^6$ data points.\label{fig:sumToOne10e6}}
+\end{figure}
+
+\section{Solution}
+
+So what's the theory behind this?
+
+The probability that you to take $> k$ additions to exceed $1$ is the
+probability that $k$ $U_0^1$ numbers sum to $\leq 1$. This is the volume of the
+volume formed by the origin and each of the unit vectors in $k$ dimensions, also
+$\frac{1}{k!}$ (lemma coming).
+
+Given this, the probability that we exceed exactly on the $k$th addition is the
+probability that we have not yet succeeded by the $k-1$th addition ($1/(k-1)!$)
+but subsequently fail by the $k$th addition. The probability that we \emph{do
+not} fail on the $k$th addition is $1/k!$, but everything that does not fail on
+the $k$th addition also does not on the $k-1$th addition, so the probability
+that we do not fail on the $k$th addition conditional on not failing on the
+$k-1$th addition is just $1/k$, from which we easily deduce that \emph{failing}
+on the $k$th addition is $(k-1)/k!$.
+
+Then, the expected number of additions is just $\sum\limits_{k}^{} k P(k)$ where
+$P(k)$ is the probability of terminating exactly on the $k$th addition as
+computed above. The sum starts at $k=2$ since this is the first point at which
+we can first exceed $1$, and so we have $\E =
+\sum\limits_{k=2}^{\infty}\frac{1}{(k - 2)!} = e$. Then, since each addition
+contributes on average $1/2$, we have that the expected value is $e/2$.
+
+\subsection{Lemma}
+
+\textbf{Claim:} In $D$ dimensions, the volume of points satisfying $q_k \geq 0$
+and $\sum\limits_{k=1}^{D} q_k \leq a$ has volume $\frac{a^D}{D!}$.
+Geometrically, it is the volume bound by the origin and the points distance $a$
+along each of the $D$ dimensions (i.e.\ $(a,0,0,\dots), (0,a,0,\dots)$).
+
+\textbf{Proof:} We prove via induction. The base case is simply $D=1$, in which
+case the line segment of length $a$ has length $a = \frac{a^1}{1!}$.
+
+Inductively, let $V_D(a)$ be the volume in $D$ dimensions summing to $\leq a$.
+Then we notice that $V_D(a)$ is just the sum of all $V_{D - 1}(a')$ where $0
+\leq a' \leq a$ multiplied by some thickness $\mathrm{d}a'$. But since $\int
+\frac{a^{D - 1}}{D!} \mathrm{d}a = \frac{a^D}{D!}$ we are done.
+
+This proves the result we used where the volume is $\frac{1}{D!}$.
+
+To be fair, this is a fairly trivial result if we use the result that
+$\norm{\bigwedge_k a\hat{e}_k}$ is the above described volume, since the norm of
+the wedge product is the $1/D!$ times the determinant of the matrix containing
+the basis vectors, and the matrix is just $a \mathbb{I}_D$ where $\mathbb{I}_D$
+is the identity matrix in $D$ dimensions.
+
+\subsection{Distribution}
+
+A much more interesting problem is deriving the distribution that we found in
+the simulation!
+
+Consider $P_k(x)$ the probability of being on value $x$ after exactly $k$
+additions. The probability of ending on some value $x_f$ is then
+\begin{align}
+    P_k(1 \leq x_f \leq 2) &= \int\limits_{x_f - 1}^{1}P_{k - 1}(x_i)\;\mathrm{d}x_i
+\end{align}
+
+But we know from above that $P_{k - 1}(x_i) = \frac{(x_i)^{k - 2}}{(k - 2)!}$
+since this is the PDF, we must differentiate one time from the CDF\@. Then,
+summing over all $k$, we have that
+\begin{align}
+    P(1 \leq x_f \leq 2) &= \int\limits_{x_f - 1}^{1}P(x_i)\;\mathrm{d}x_i\\
+        &\propto \int\limits_{x_f - 1}^{1}e^{x_i}\;\mathrm{d}x_i\\
+        &\propto e - e^{x_f - 1}
+\end{align}
+
+Normalization is a bit tricky to get from first principles since there's some
+``leakage'' when summing over $P(x_i)$, but we can always just normalize
+$P(x_f)$ directly instead. The fit is shown in \autoref{fig:sumToOne10e6}.
 
 \end{document}
