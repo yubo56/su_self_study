@@ -49,6 +49,10 @@ height=2em]
 \rhead{Yubo Su}
 \cfoot{\thepage/\pageref{LastPage}}
 
+\tableofcontents
+
+\clearpage
+
 \section{Introduction}
 
 \begin{itemize}
@@ -275,4 +279,53 @@ Glossary:
 \end{itemize}
 
 \section{MongoDB}
+
+\begin{itemize}
+    \item MongoDB is highly versatile, document database and schemaless (as of
+        the writing, by now you can specify validators).
+    \item Powerful for being able to do ad hoc queries. Stores arbitrary JSON
+        documents.
+    \item Databases contain collections (similar to \emph{buckets}).
+    \item Auto-generated autoincrementing \lstinline{_id} consisting of
+        timestamp, client machine ID, client process ID and a 3-byte incremented
+        counter.
+    \item Purely JS, so syntax for operators \verb|{ $op: val }| is a bit
+        verbose, but can build queries like JS objects!
+        % ugh, lstinline triggers the linter b/c dollar sign...
+    \item \verb|$elemMatch| is amazing, lets specify multiple criteria for a
+        query on a nested field in Mongo.
+    \item Can pass code into most mongo functions, and especially into
+        \verb|$where| blocks!
+    \item Indexing is done in a B-tree. \lstinline{db.coll.ensureIndex()}.
+    \item Can also \lstinline{db.coll.[distinct, group]()}.
+    \item Turns out that most of the magic we execute on Mongo are actually
+        commands sent to the server and executed on the server side, aliased via
+        the \verb|$cmd| collection. Can replicate with \lstinline{db.eval}.
+    \item Map reduce is also doable, can store the results to a collection as a
+        materialized view or print inline.
+    \item Replica sets + sharding provide durability + scale.
+        \begin{itemize}
+            \item Replica sets are master-slave, writes and reads only through
+                master by default.
+            \item Elections when master fails, can drop data.
+            \item So writes can drop when master fails; solve by requiring
+                majority of nodes written before considered written.
+        \end{itemize}
+    \item Multi-master is difficult to resolve conflicts, Mongo simply
+        disallows, vs.\ Riak where we did manual conflict resolution.
+    \item Use a \lstinline{mongos} to connect to a \lstinline{mongoconfig}
+        config server and track sharding configuration. Can \lstinline{mongo}
+        into a \lstinline{mongos} instance and use normally, sharding is handled
+        behind the scenes!
+    \item Can use \lstinline${ location: "2d" }$ \lstinline{ensureIndex}es, then
+        can use the \verb|$near| operator to get an indexed query \emph{near} a
+        point in 2D space!
+\end{itemize}
+
+\section{CouchDB}
+
+\begin{itemize}
+    \item JSON + REST document-oriented database, robust under network failure,
+        scales to all sizes. No ad-hoc querying though vs.\ Mongo.
+\end{itemize}
 \end{document}
