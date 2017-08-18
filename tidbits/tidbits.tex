@@ -1548,12 +1548,6 @@ $\frac{k}{N - k}$, so it's expected that as this approaches unity our expansion
 falls apart, which happens when $k = N/2$. A quick exercise replacing the Taylor
 expansion with the full exponent recovers the exactly correct curve.
 
-\subsection{Markov Chains}
-
-Motivated by stock prices. Consider if for every price $P_1$ there is a
-time-independent probability $\mathcal{P}(P_2, P_1)$ of transitioning to $P_2$
-from $P_1$. Compute the PSD of the random trajectories this produces.
-
 \chapter{05/02/17---L'H\^opital's Rule and Complex Analysis}
 
 This ought to be a short chapter. Had a sudden shower thought to prove
@@ -1827,5 +1821,46 @@ summing over all $k$, we have that
 Normalization is a bit tricky to get from first principles since there's some
 ``leakage'' when summing over $P(x_i)$, but we can always just normalize
 $P(x_f)$ directly instead. The fit is shown in \autoref{fig:sumToOne10e6}.
+
+\chapter{8/18/2017---Random Processes}
+
+Motivated by stock prices. Consider if for every price $P_1$ there is a
+time-independent probability $\Delta(P_2, P_1)$ of transitioning to $P_2$
+from $P_1$. Compute the PSD of the random trajectories this produces.
+
+The analysis is most easily carried out by looking at mixed states of prices.
+Consider a state $\ket{\psi} = \sum\limits_{k=1}^{N} a_kP_k$ that is an
+eigenvector of $\Delta$, such that $\Delta\ket{\psi} = \ket{\psi}$
+(let's assume $N$ the number of states is finite for now). The significance of
+such a state is that if we choose $M \gg N$ prices, distributed with
+$\dotp{P_k}{\psi}$ probability distribution, then the distribution after the
+action of $\Delta$ is still $\ket{\psi}$.
+
+The way that we capture the ``transition with probability'' is as follows:
+suppose you start at some value $P_0$, then apply $\Delta$ a few, $q$,
+times. Then the probability of measuring each of the $P_k$ prices is simply
+$P[P_k] = \bra{P_k}\Delta^q\ket{P_0}$, just like in quantum mechanics.
+
+Thus, decompose any initial state $\ket{\varphi_0}$ (which may be a pure state)
+into some sum of eigenvectors $a_j\ket{\psi_j}$. Then at some future time $t$
+the probability of finding $\ket{\varphi_t}$ in state $P_k$ is given simply
+\begin{align}
+    P[\varphi_t = P_k]
+        &= \sum\limits_{j}^{} \bra{P_k}\Delta^t a_j\ket{\psi_j} \nonumber\\
+        &= \sum\limits_{j}^{} a_j\dotp{P_k}{\psi_j}
+\end{align}
+
+This is not very helpful to us though, since to compute any spatial correlations
+we have to discount spurious transitions (e.g.\ in a random walk, one cannot go
+from $t=1, x=-1$ to $t=2, x=2$, but by simply integrating the probability
+distribution such contributions are included). We'll have to find something more
+clever.
+
+% To compute the PSD, we look to the autocorrelation. Recall that the PSD of a
+% continuous signal $f(t)$ is given by the FT of the autocorrelation, defined to
+% be
+% \begin{align}
+%     R_{ff}(\tau) &\propto \int\limits_{-\infty}^{\infty}f(u + \tau) f(u)\;\mathrm{d}u
+% \end{align}
 
 \end{document}
