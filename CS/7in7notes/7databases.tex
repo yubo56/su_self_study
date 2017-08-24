@@ -327,5 +327,58 @@ Glossary:
 \begin{itemize}
     \item JSON + REST document-oriented database, robust under network failure,
         scales to all sizes. No ad-hoc querying though vs.\ Mongo.
+    \item Meant to be able to be deployed anywhere and extremely robust: the
+        only way to shut it down is to kill the process! Append-only storage
+        model.
+    \item Behind a REST interface like Riak.
+    \item From \lstinline{<server>/_utils}, can create DBs and manually insert
+        documensts.
+    \item Automagically assigned \lstinline{_id} field, just like Mongo.
+    \item All fields that begin with an underscore have special meaning, in
+        particular \lstinline{_id} and \lstinline{_rev}.
+    \item To update/delete an existing document, need both \lstinline{_id} and
+        \lstinline{_rev}, which is just an autoincrementing int with a uuid
+        after. Can't update any revision but the latest. Prevents conflicts!
+    \item Behind REST interface, \lstinline{<host>/<db>/<doc._id>}
+    \item \lstinline{GET} to fetch objects, \lstinline{POST} to create,
+        \lstinline{PUT} to update, \lstinline{DELETE} to delete.
+    \item Views consist of a mapper and reducer that generate an ordered list of
+        key-value pairs. Key is whatever the mapper emits and value is whatever
+        is aggregated behind the key (often a list of \lstinline{doc._id}'s).
+        Ordered by whatever key mapper emits. Built in view
+        \lstinline{_all_docs}.
+    \item Can \lstinline{POST} to \lstinline{_temp_view} with a body containing
+        mapper and reducer! Can also persist a view as a \emph{design document}.
+    \item CouchDB recursively calls the reduce function until no duplicate keys
+        remain! To this end, reduce functions take
+        \lstinline{(key, values, rereduce)} where the third parameter is a
+        boolean describing whether it's a rereduce. Best practice dictates we
+        should never need this function\dots
+    \item Changes API makes it easy to keep up to date on data changes.
+        \begin{itemize}
+            \item \lstinline{cURL} can just hit \lstinline{<host>/<db>/_changes}
+                for paginated view of changes to the db. Polling.
+            \item Can also specify \lstinline{?feed=longpoll} to leave
+                connection open for a while, can implement a listener on any new
+                data on the connection (example in Node in book).
+            \item Can also specify \lstinline{?feed=continuous} instead for
+                continuous stream!
+        \end{itemize}
+    \item Replication:
+        \begin{itemize}
+            \item Supports multi-master a.k.a.\ master-master replication!
+            \item Inserting a new master only copies inserts, not
+                deletions/updates.
+            \item If two masters get different updates, then replication starts,
+                CouchDB just deterministically picks one to win and stores the
+                other as a conflicted version, accessible with
+                \lstinline{?conflicts=true}.
+        \end{itemize}
+\end{itemize}
+
+\section{Neo4J}
+
+\begin{itemize}
+    \item Graph database!
 \end{itemize}
 \end{document}
