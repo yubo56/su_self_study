@@ -379,6 +379,142 @@ Glossary:
 \section{Neo4J}
 
 \begin{itemize}
-    \item Graph database!
+    \item Graph database! Means inherently schemaless.
+    \item Terminology:
+        \begin{description}
+            \item[Node] Vertex between edges that may hold data as a set of
+                key-values, \emph{properties}. Each node contains by default
+                property \lstinline${id}$.
+            \item[Relationship] Joins two nodes, labeled with a label,
+                \emph{type}.
+            \item[Visualization Profile] Can basically strformat a label for
+                each node in the visualization, store as a profile.
+        \end{description}
+    \item We will learn to use Neo4j via Gremlin, a language built for graph
+        traversal written in Groovy but basically a DSL\@.
+    \item Gremlin loads the graph as \lstinline{g}, can do \lstinline{g.V} which
+        returns \lstinline{v[i]} enumerated, or \lstinline{g.E} which returns
+
+        \lstinline{e[i][<source node id>-<type>-><dest node id>]}.
+
+        Index into verticies \lstinline{g.v(index)} (note, lower case for
+        method). Can also filter via \lstinline$g.V.filter{it.prop=='val'}$.
+
+    \item Retrieved verticies have member functions
+        \begin{itemize}
+            \item \lstinline{map()} retrieves the full map of the node.
+            \item \lstinline{inE(), bothE(), outE()} retrieves list of incoming
+                and outgoing edges.
+        \end{itemize}
+
+    \item Retrieved edges have member functions
+        \begin{itemize}
+            \item \lstinline{inV()} retrieves the incoming vertex for any edge.
+        \end{itemize}
+    \item Note that all these functions will automatically map if called by
+        multiple results! e.g.\ \lstinline{<vertex>.in()} gets all
+        \lstinline{<vertex>.inE().outV()}. Formally, operations are a series of
+        \emph{pipes}, so a \emph{pipeline} can operate on any number of
+        inputs/outputs.
+
+    \item Sample query that can be built is
+\begin{lstlisting}
+v = g.v(0)
+v.out('prop').in('prop').filter{ !it.equals(v) }
+\end{lstlisting}
+        which we can read to look at all other nodes that have edge
+        \lstinline{prop} to the same node that \lstinline{v} has edge
+        \lstinline{prop} to.
+    \item To turn a pipeline into a single element, call \lstinline{next()} on
+        it. Can also \lstinline{>> N} to get the first $N$ entries of a
+        pipeline.
+    \item Can write looping pipelines with \lstinline$loop(){<predicate>}$,
+        where we can use \lstinline{it.loops} in the predicate for how many
+        times the loop has executed.
+    \item More useful commands
+        \lstinline{dedup(), paths(), groupCount(), each()}, some more Groovy
+        built-ins like \lstinline{collect(), inject()} mapreduce, define
+        functions like any sensible language.
+    \item CRUD done by calling \lstinline{save()} on edges/verticies (not
+        pipelines, so use \lstinline{next()}!).
+    \item Also has a REST interface! Not gonna note this, pretty redundant
+        functionality.
+    \item Can build indexes, query on them.
+    \item Neo4J is ACID compliant! Transactions yay.
+    \item High Availability mode is eventually consistent. Slave writes are
+        enabled though, just propagates to master. Solutions for per-session
+        consistency are to bind a session to a single server. In any case,
+        strongest with read-dominated access patterns.
+    \item Shipped with easy-to-use backup tool, can do incremental backups!
+\end{itemize}
+
+\section{Redis}
+
+\begin{itemize}
+    \item Super fast key-value store db, but supports beyond key-value store to
+        advanced data structures, heavily speed-optimized. Also commonly used
+        for publish-subscribe systems. Only 20k lines of source code, a very
+        simple project w/ simple interface.
+    \item Built in \lstinline{redis-benchmark} allows testing of conf; obviously
+        very perf-emphasis from start!
+    \item \lstinline{SET <key> <value>} and then \lstinline{GET <key>} from the
+        \lstinline{redis-cli}
+    \item \lstinline{MSET <key1> <value1> <key2> ...} and
+        \lstinline{MGET <key1> <key2> ...}.
+    \item \lstinline{MULTI ... EXEC} blocks form transactions, or more
+        precisely, it queues the operations. Rather than SQL, where we had to
+        rollback transactions, \lstinline{DISCARD} simply empties the current
+        \lstinline{MULTI} queue.
+    \item Redis natively supports complex data structures with \emph{extremely}
+        large sizes, $2^{32}$:
+        \begin{description}
+            \item[Hashes] Commands generally prefixed with
+                \lstinline{H}. \emph{Cannot nest}, unlike Mongo/Couch!
+            \item[List] Commands prefixed with \lstinline{L, R} depending on
+                which side of the list they act, so can act as both queues and
+                stacks.
+            \item[Blocking List] Commands prefixed with \lstinline{B}, block an
+                operation until the \emph{next} value can be returned.
+                Publish-subscribe!
+            \item[Set] Commands prefixed with \lstinline{S}, can add to
+                different sets and perform set operations on them and can even
+                store the results into a new key!
+            \item[Sorted Sets] Prefixed with \lstinline{Z}, sets are stored in
+                sorted order by their key. Think priority queue! Built in
+                operations to update the priority of each entry as well as most
+                of the previous set operations.
+        \end{description}
+    \item Redis provides built in expiry, since it's commonly used for caching.
+        Can use \lstinline{EXPIRE} to set expiry for existing entries or use
+        \lstinline{SETEX} (and relatives presumably) to set with expiry. Can use
+        \lstinline{TTL} to check time remaining, and can undo timeout with
+        \lstinline{PERSIST}.
+    \item Can \lstinline{telnet} in, or can \emph{pipeline} with \lstinline{nc}
+        netcat, send multiple commands to all be executed with a single api
+        call.
+    \item \lstinline{SUBSCRIBE} can subscribe to a particular key, called a
+        \emph{channel} for pubsub purposes. Producers \lstinline{PUBLISH} to the
+        channel instead and get response of how many subscribers received the
+        message.
+    \item Redis has a few persistence options, the most basic being no
+        persistence at all (purely in memory!). Redis also by default only saves
+        occassionally, get \lstinline{LASTSAVE} to get last saved time. Can
+        alter \lstinline{save} fields to say ``when there are N writes then save
+        within M seconds.''
+    \item Can provide more persistence via an \lstinline{appendonly} log of all
+        writes that can be re-read on server crash. Can also set how often to
+        append, generally \lstinline{appendfsync everysec} is used in
+        \lstinline{redis.conf}.
+    \item Interestingly, Redis is not natively built to be secure:
+        \lstinline{requirepass} conf and \lstinline{AUTH} command access plain
+        text passwords w/o debounce!
+    \item Instead, provide command-level security via obscurity by renaming
+        commands like \lstinline{FLUSHALL} to a random key instead!
+    \item Also provides master-slave replication! Seems like no secondary
+        reads/writes, just for backup.
+    \item For distributed dbs, client is responsible for computing which
+        distributed server a key lives on.
+    \item Use Bloom filters with built in \lstinline{SETBIT, GETBIT} commands to
+        do really fast membership!
 \end{itemize}
 \end{document}
