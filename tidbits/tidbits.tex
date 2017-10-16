@@ -1856,11 +1856,160 @@ from $t=1, x=-1$ to $t=2, x=2$, but by simply integrating the probability
 distribution such contributions are included). We'll have to find something more
 clever.
 
-% To compute the PSD, we look to the autocorrelation. Recall that the PSD of a
-% continuous signal $f(t)$ is given by the FT of the autocorrelation, defined to
-% be
-% \begin{align}
-%     R_{ff}(\tau) &\propto \int\limits_{-\infty}^{\infty}f(u + \tau) f(u)\;\mathrm{d}u
-% \end{align}
+To compute the PSD, we look to the autocorrelation. Recall that the PSD of a
+continuous signal $f(t)$ is given by the FT of the autocorrelation, defined to
+be
+\begin{align}
+    R_{ff}(\tau) &\propto \int\limits_{-\infty}^{\infty}f(u + \tau) f(u)
+        \;\mathrm{d}u.
+\end{align}
+
+\chapter{10/16/17---Hopping Bunny}
+
+A bunny in two dimensions takes three hops of unit distance in random
+directions. What's the probability the bunny ends up within unit distance of its
+starting position?
+
+\section{Simple Solution}\label{s:10/16/17.simple}
+
+Label the points that the bunny hops to be labeled by $P_i$ and the circles of
+unit radius about each of the $P_i$ be labeled $C_i$. Let $P_0$ be the origin,
+then $P_1$ must lie on the unit circle $C_0$. WLOG choose $P_1 = (0, 1)$.
+
+Now, we know that $P_3$ must lie on $C_2$, and the
+probability that $P_3$ lies inside the unit circle is the arclength of $C_2$
+inside $C_0$. We can draw diagram \autoref{fig:10/16/17.circles}.
+\begin{figure}[!h]
+    \centering
+    \begin{tikzpicture}[scale=2]
+        \filldraw[black] (0, 0) circle(0.05);
+        \node[below] at (0, 0) {$P_0$};
+        \filldraw[black] (0, 1) circle(0.05);
+        \node[below] at (0, 1) {$P_1$};
+        \filldraw[black] (0.85, 1.5) circle(0.05);
+        \node[below] at (0.85, 1.5) {$P_2$};
+        \draw (0, 0) circle(1);
+        \draw[dashed] (0.85, 1.5) circle(1);
+    \end{tikzpicture}
+    \caption{Schematic drawing of the argument for \autoref{s:10/16/17.simple}.}
+\end{figure}\label{fig:10/16/17.circles}
+
+We note that if we define $\theta$ to be the angle formed by $P_0$--$P_1$--$P_2$
+then the intersection of $C_2, C_0$ has arclength $\abs{\pi - \theta}$. Thus,
+the probability given $\theta$ of ending up inside $C_0$ is $\frac{\abs{\pi -
+\theta}}{2\pi}$. Then since $\theta$ ranges uniformly over $[0, 2\pi]$, we
+simply average and find probability $P$ of ending up inside $C_0$ to be
+\begin{equation}
+    P = \frac{1}{2\pi}\int\limits_{0}^{2\pi}\frac{\abs{\pi - \theta}}{2\pi}
+        \;\mathrm{d}\theta
+        = \frac{1}{4}.
+\end{equation}
+
+\section{Generalizable Solution}
+
+Let's develop a more powerful solution capable of explaining the probability
+trends in two dimensions:
+\lstinputlisting[basicstyle=\ttfamily\tiny]{bunny/2sim.dat}
+and three dimensions:
+\lstinputlisting[basicstyle=\ttfamily\tiny]{bunny/3sim.dat}
+
+\subsection{Computing $P_n(r)$}
+
+We wish to compute a general formula for $P_n(r)$, the probability distribution
+of $r$ after $n$ jumps. To compute this, WLOG suppose we are at a point $(a, 0)$
+and we wish to compute the probability that we jump to a distance $r$ away. We
+note that $r, a$ are related by
+\begin{align}
+    r^2 &= a^2 + 1 - 2a\cos\theta,\\
+    \mathrm{d}r &= \frac{r}{2a\sin\theta}\mathrm{d}\theta,\\
+    P(r|a) &= P(\theta)\rd{r}{\theta},\nonumber\\
+        &= \frac{1}{2\pi} \frac{r}{2a\sin\theta},\nonumber\\
+        & = 2\frac{1}{2\pi}\frac{r}{2a\sqrt{1 - \left(
+            \frac{r^2 - a^2 - 1}{2a}
+        \right)^2}},\label{eq:10/16/17.sol}
+\end{align}
+where a factor of $2$ arises since there are two values of $\theta$ that can
+satisfy the given square root.
+
+But this means that we can just integrate over all $a$ given an existing
+$P_{n-1}(a)$ to obtain $P_n(r)$, namely
+\begin{equation}
+    P_n(r) = \int\limits_{0}^{n - 1}
+        P_{n - 1}(a) 2\frac{1}{2\pi}\frac{r}{2a\sqrt{1 - \left(
+            \frac{r^2 - a^2 - 1}{2a}
+        \right)^2}}\;\mathrm{d}a.
+        \label{eq:10/16/17.recursive}
+\end{equation}
+
+We can verify this expression by computing explicitly $P_2(a)$, since $P_1(a) =
+\delta(1)$. We first compute it from scratch then take the limit of
+\autoref{eq:10/16/17.sol} to verify that the two expressions agree. First
+\begin{align}
+    r^2 &= 2 - 2\cos \theta & r = 2\sin\frac{\theta}{2},\\
+    \mathrm{d}r &= \cos \frac{\theta}{2}\mathrm{d}\theta,\\
+    P_2(r) &= \frac{1}{2\pi} \frac{1}{\cos \frac{\theta}{2}},\nonumber\\
+        &= 2\frac{1}{2\pi}\sqrt{\frac{1}{1 - \left( \frac{r}{2} \right)^2}}.
+\end{align}
+
+It is clear that $\int\limits_{0}^{1}P_2(r)\;\mathrm{d}r$ must be $\frac{1}{3}$,
+since $C_1$ must have arclength $\frac{\pi}{3}$ inside $C_0$, and indeed
+performing the integral we obtain this result.
+
+We then need to set $a = 1$ in \autoref{eq:10/16/17.sol}. This gives us
+\begin{align}
+    P(r|a = 1) &= 2\frac{1}{2\pi}\frac{r}{2\sqrt{1 - \left(
+        \frac{r^2 - 2}{2}
+    \right)^2}},\nonumber\\
+        &= \frac{r}{2\pi} \frac{1}{\sin\theta} = \frac{1}{2\pi}\frac{1}{\cos
+        \frac{\theta}{2}}.
+\end{align}
+The results thankfully agree!
+
+\subsection{Computing $P_n$}
+
+Define $P_n = P_n(r < 1)$. Now, we do some seriously hacky algebra. We can
+express $P_n$ in terms of \autoref{eq:10/16/17.recursive} as follows
+\begin{equation}
+    P_n = \int\limits_{0}^{1}\int\limits_{0}^{2}P_{n - 1}(a)
+        2\frac{1}{2\pi} \frac{r}{\sqrt{1 - \left( \frac{r^2 - a^2 - 1}{2a}
+        \right)^2}}\;\mathrm{d}a\mathrm{d}r.
+\end{equation}
+We know that we only need to integrate out to $a = 2$ since any larger cannot
+produce $r < 1$.
+
+We exchange the order of integration and perform the $r$ integral first. We
+recognize the integrand to be of form $-\frac{f'(x)}{\sqrt{1 - f(x)}}$ which
+integrates to a $\sin^{-1}$, or more precisely
+\begin{equation}
+    P_n = -\int\limits_{0}^{2}P_{n - 1}(a)
+        \frac{1}{2\pi} \arcsin \left[
+            \frac{r^2 - a^2 - 1}{2a}
+        \right]_0^1\;\mathrm{d}a.
+\end{equation}
+
+Now we drop the $r = 0$ evaluation (TODO why??? Probably wrong too), then the
+integrand simplifies to
+\begin{equation}
+    P_n = \int\limits_{0}^{2}P_{n - 1}(a)
+        \frac{1}{2\pi} \arcsin \frac{a}{2}\;\mathrm{d}a,
+\end{equation}
+Now, just to verify this expression, let's evaluate for $n = 3$ using our
+$P_2(a)$ that we have from before. This integral is then
+\begin{align}
+    P_3 &= \int\limits_{0}^{2}\frac{1}{2\pi^2}
+        \sqrt{\frac{1}{1 - \left( \frac{a}{2} \right)^2}}
+        \arcsin \frac{a}{2}\;\mathrm{d}a,\nonumber\\
+        &= \int\limits_{0}^{1}\frac{1}{\pi^2}
+            \sqrt{\frac{1}{1 - \left( \frac{a}{2} \right)^2}}
+            \arcsin \frac{a}{2}\;\mathrm{d}\frac{a}{2},\nonumber\\
+        &= \frac{1}{\pi^2} \arcsin^2 x\Bigg|_{x=0}^{x=1},\nonumber\\
+        &= \frac{1}{4}.
+\end{align}
+
+So technically this is prescriptive. And we can feasibly see that the successive
+antiderivatives might go something like $\arcsin^{n-1}(x)$ which somehow
+fortuitously yields a $\frac{1}{n + 1}$ relationship? At least there is
+something linearly increasing. But this is far beyond our algebraic abilities
+sadly.
 
 \end{document}
