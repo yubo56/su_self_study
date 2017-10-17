@@ -1987,8 +1987,9 @@ integrates to a $\sin^{-1}$, or more precisely
         \right]_0^1\;\mathrm{d}a.
 \end{equation}
 
-Now we drop the $r = 0$ evaluation (TODO why??? Probably wrong too), then the
-integrand simplifies to
+Now we drop the $r = 0$ evaluation since it's just evaluating the CDF at the
+lower boundary (I agree it's scary that the integrand doesn't seem to vanish
+stop giving me a hard time), then the integrand simplifies to
 \begin{equation}
     P_n = \int\limits_{0}^{2}P_{n - 1}(a)
         \frac{1}{2\pi} \arcsin \frac{a}{2}\;\mathrm{d}a,
