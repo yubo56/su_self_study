@@ -2013,4 +2013,80 @@ fortuitously yields a $\frac{1}{n + 1}$ relationship? At least there is
 something linearly increasing. But this is far beyond our algebraic abilities
 sadly.
 
+\chapter{10/22/17---Other Leaping Bunny}
+
+A bunny starts at $x = 0$ on the one-dimensional real number line. Each time
+step, it jumps with constant integer $v$ (positive or negative) to a new integer
+position. You can only examine one $x$ value at each time. Find the bunny in
+finite time.
+
+\section{Rigorously Defining ``In Finite Time''}
+
+What does it mean to find the bunny in finite time? This means that given an
+initial bunny velocity $v < V$, we are guaranteed to find the bunny in some time
+$t < T(V)$ where $T(V)$ is finite for all finite $V$.
+
+\section{Positive Velocity Starting at Origin}
+
+Consider if we are given integer $v \geq 0$. Then for any given $t$, we examine
+what position the bunny would be at if $v = t$. This means at time $t = 0$, we
+examine $x = 0$ because $x = vt = 0 \times 0 = 0$. At $t = 1$, we examine $x =
+4$ because $x = vt = 1 \times 1 = 1$, and so on.
+
+\section{Integer Velocity Starting at Origin}
+
+This is a bit trickier; we obviously cannot examine all positive $v$ then all
+negative $v$ since then if $v$ is negative we will not find it in finite time!
+Instead, we search as follows: for odd $t = 2\tau - 1$, we search as if $v =
+-\tau$, and for even $t = 2\tau'$ we search as if $v = \tau'$.
+
+We prove that the bunny velocity can be found in finite time: for a bunny
+velocity $v < V$, we are guaranteed to find the bunny in $t < 2\abs{V}$ time,
+and since $T(V) = 2\abs{V}$ we guarantee that for any finite bunny velocity we
+find the bunny in finite time. After the bunny is found, the position of the
+bunny one-to-one maps to the $v$ of the bunny, so the bunny velocity can be
+computed in constant time as well.
+
+This follows the same train of thought as Cantor cardinality counting arguments:
+two sets are of the same cardinality if for any finite member of one we can
+determine to which member of another it corresponds in finite time, very
+intuitively and roughly.
+
+\section{Integer Velocity, Unknown Integer Initial Position}
+
+The initial conditions for the bunny live in some countable configuration space
+$(x_0, v)$, i.e.\ given $x_0, v$ of the bunny we can determine for any time
+where the bunny is located. We need to map a linear search $t$ to this
+configuration space. The intuitive algorithm suffices; within time $t \in [k^2,
+k + 1^2]$ time for some $k$, we search over rectangular perimeter $(k/2,
+-k/2)$--$(k/2, k/2)$--$(-k/2, k/2)$--$(-k/2, -k/2)$--$(k/2, -k/2)$. This traces
+out a spiral in $(x_0, v)$ space. Then of course at each $(x_0, v)$, we examine
+the position the bunny would be found at.
+
+However, this problem is harder than the previous problem; once we have located
+the bunny, we cannot invert to find the initial $(x_0, v)$ because the map
+$(x_0, v) \to x$ is not injective and hence not invertible! More precisely, the
+map is many-to-one, since multiple $(x_0, v)$s can end up at a given position
+$x$ where we find the bunny, even for a constant time.
+
+However, once we have found the bunny once, we can let this position $x$ be the
+new origin, then this problem reduces to the previously solved problem, bunny
+starting at the origin with integer velocity, and we can apply our previous
+algorithm to compute $v$ and disambiguate between the degenerate $(x_0, v)$
+incurred by the previous step.
+
+We prove that this finds the bunny in finite time: for any bunny in
+configuration space bound by $\abs{x_0} < X, \abs{v} < V$, we are guaranteed to
+find the bunny in time $t < 4\max(X, V)^2$ which is finite for all finite values
+of $X, V$ (this is the natural extension of the earlier ``finite time''
+definition now that configuration space is larger), thus for any finite initial
+position and velocity the bunny can be found in finite time. Then, once the
+bunny is found, the second step to determine $v$ has also been proven to take
+finite time for finite $v$, therefore we are guaranteed to determine the bunny's
+velocity $v$ in finite time.
+
+This can obviously be generalized to any countable configuration space, giving
+some more intuition to Cantor's notion of \emph{countable sets} having
+equivalent cardinality.
+
 \end{document}
