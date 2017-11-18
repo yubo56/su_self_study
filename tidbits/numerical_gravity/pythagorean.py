@@ -3,14 +3,15 @@ import common
 import matplotlib.pyplot as plt
 import numpy as np
 import steppers
-if __name__ == '__main__':
+
+def run(stepper):
     # numerical params
-    NUM_SAMPLES=80
+    NUM_SAMPLES = 80
     T = 0
-    dt=3e-3
+    dt = 3e-4
 
     # physical params
-    MS = np.array([4, 5, 3]) * 10000
+    MS = np.array([4, 5, 3]) * 30000
     G = common.get_G(common.M_E, common.AU, common.YR)
     f = common.get_f(G, MS)
 
@@ -20,35 +21,40 @@ if __name__ == '__main__':
         3, 0, 0, 0,
         0, 4, 0, 0
     ], dtype=np.float64)
-    p1_pos = [np.copy(ys[0:2])]
-    p2_pos = [np.copy(ys[4:6])]
-    p3_pos = [np.copy(ys[8:10])]
-    solver = steppers.RK4Solver(f, T, ys, T_F, max_step=dt)
+    state = [np.copy(ys)]
+    solver = stepper(f, T, ys, T_F, max_step=dt, G=G, Ms=MS,
+                     get_jerk=common.get_jerk, get_accel=common.get_accel
+                    )
     times = [T]
     while solver.status == 'running':
         solver.step()
-        p1_pos.append(np.copy(solver.y[0:2]))
-        p2_pos.append(np.copy(solver.y[4:6]))
-        p3_pos.append(np.copy(solver.y[8:10]))
+        state.append(np.copy(solver.y))
         times.append(solver.t)
+    print('Done Running')
     num_pts = len(times)
-    p1_arr = np.array(p1_pos[::num_pts // NUM_SAMPLES])
-    p2_arr = np.array(p2_pos[::num_pts // NUM_SAMPLES])
-    p3_arr = np.array(p3_pos[::num_pts // NUM_SAMPLES])
+    state_arr = np.array(state[::num_pts // NUM_SAMPLES])
     times = times[::num_pts // NUM_SAMPLES]
 
-    lims = (1.2 * np.min([p1_arr[:, 0], p2_arr[:, 0], p3_arr[:, 0]]),
-            1.2 * np.max([p1_arr[:, 0], p2_arr[:, 0], p3_arr[:, 0]]),
-            1.2 * np.min([p1_arr[:, 1], p2_arr[:, 1], p3_arr[:, 1]]),
-            1.2 * np.max([p1_arr[:, 1], p2_arr[:, 1], p3_arr[:, 1]]))
+    lims = (1.2 * np.min(state_arr[:, 0::4]),
+            1.2 * np.max(state_arr[:, 0::4]),
+            1.2 * np.min(state_arr[:, 1::4]),
+            1.2 * np.max(state_arr[:, 1::4]))
     for i, t in enumerate(times):
         plt.clf()
         plt.axis(lims)
-        plt.scatter(p1_arr[i, 0], p1_arr[i, 1], label='p1')
-        plt.scatter(p2_arr[i, 0], p2_arr[i, 1], label='p2')
-        plt.scatter(p3_arr[i, 0], p3_arr[i, 1], label='p3')
+        plt.scatter(state_arr[i, 0], state_arr[i, 1], label='p1')
+        plt.scatter(state_arr[i, 4], state_arr[i, 5], label='p2')
+        plt.scatter(state_arr[i, 8], state_arr[i, 9], label='p3')
         plt.xlabel('x')
         plt.ylabel('y')
         plt.title('T = %.3f' % t)
-        plt.legend(loc=4)
+        plt.legend(loc=4) # bottom right
+        plt.annotate('Energy: %.3e' % common.get_E(state_arr[i], G, MS),
+                     xy=(0.75, 0.95),
+                     xycoords='axes fraction',
+                     fontsize=8
+                    )
         plt.savefig('plots/%03d.png' % i)
+
+if __name__ == '__main__':
+    run(steppers.RK4Solver)
