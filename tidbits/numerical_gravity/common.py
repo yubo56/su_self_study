@@ -17,21 +17,28 @@ def get_f(G, Ms):
     returns a function to compute dx/dt = f(x)
     @param G - gravitational constant
     @param Ms - masses of bodies
-    @return function(const xs) => d(xs)/dt
-        - @param xs = N x 2 x D array: [N bodies: x + x':dimensions]
+    @return functionxs) => d(xs)/dt
+        - @param xs = N x 2 x D 1D array
     """
-    def f(xs):
+    def f(xs, _):
         """
         computes dx/dt = v, dv/dt = sum_j (G * Mj / |r_j - r|^3 * (x_j - x))
         """
+        xs = np.array(xs)
         dx_dt = np.zeros(np.shape(xs))
-        for i in range(len(dx_dt)):
-            dx_dt[i][0] = xs[i][1]
-            for j in range(len(xs)):
+        D = 2
+        num_masses = xs.size // (2 * D)
+        for i in range(num_masses):
+            dx_dt[i * 2 * D: (i * 2 + 1) * D] +=\
+                xs[(i * 2 + 1) * D: (i + 1) * 2 * D]
+            for j in range(num_masses):
+                # skip self interactions
                 if i == j:
                     continue
-                dr_j = (xs[j][0] - xs[i][0])
-                dx_dt[i][1] += G * Ms[j] * dr_j / sum(dr_j**2) ** (3/2)
+                dr_j = (xs[j * 2 * D: (j * 2 + 1) * D] -
+                        xs[i * 2 * D: (i * 2 + 1) * D])
+                dx_dt[(i * 2 + 1) * D: (i + 1) * 2 * D] +=\
+                        G * Ms[j] * dr_j / sum(dr_j**2) ** (3/2)
         return dx_dt
     return f
 def l2_norm(x, y):
