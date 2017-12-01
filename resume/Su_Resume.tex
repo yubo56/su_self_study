@@ -20,6 +20,9 @@
 % operating system or comment the line out to use the default font.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newif\ifisCS
+% true by default, makefile will set to false to compile physics resume
+\isCStrue
 \documentclass[]{yubo-resume-openfont}
 
 \begin{document}
@@ -60,7 +63,7 @@
 \section{Education}
     \subsection[Cornell]{Cornell University}
     \descript{Ph.D.~Astrophysics}
-    \location{Jun 2016--Present \\
+    \location{Aug 2017--Present \\
     Ithaca, NY}
     \sectionsep
     \subsection[CIT]{California Institute\\
@@ -75,16 +78,29 @@
 %     SKILLS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Skills}
+\def\ProgrammingSkills{
     \subsection{Programming}
     Javascript (Node.js) $\bullet$ Python $\bullet$ C/C++\\
     Java $\bullet$ Shell $\bullet$ CUDA $\bullet$ Assembly\\
-    \sectionsep
+}
+\def\Skillset{
     \subsection{Skillset}
     Numerical Simulation\\
     Systems Infrastructure \&\\
         \tab Optimization\\
     Data Management \& Security
+}
+
+\section{Skills}
+    \ifisCS
+        \ProgrammingSkills
+        \sectionsep
+        \Skillset
+    \else
+        \Skillset
+        \sectionsep
+        \ProgrammingSkills
+    \fi
     \sectionsep
     \subsection{Tools}
     Matlab $\bullet$ Mathematica $\bullet$ \LaTeX\\
@@ -107,20 +123,32 @@
 %     COURSEWORK
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Coursework}
+\def\PhWork{
     \subsection{Physics}
         Astrophysical Processes\\
         Advanced Plasma Physics\\
         Computational Physics\\
         Introduction to Particle Physics\\
         Introduction to Solid State Physics\\
-    \sectionsep
-
+}
+\def\CSWork{
     \subsection{Computer Science}
         Machine Learning\\
         GPU Programming\\
         Networks and Economics\\
         Relational Databases
+}
+
+\section{Coursework}
+    \ifisCS
+        \PhWork
+        \sectionsep
+        \CSWork
+    \else
+        \CSWork
+        \sectionsep
+        \PhWork
+    \fi
     \sectionsep
 
     \subsection{Teaching}
@@ -140,88 +168,107 @@
 \begin{minipage}[t]{0.66\textwidth}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     EXPERIENCE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Experience}
-
-\runsubsection{Blend Labs}
-\descript{| Software Engineer}
-\location{July 2016--Present | San Francisco, CA}
-\vspace{\topsep} % Hacky fix for awkward extra vertical space
-\begin{tightemize}
-    \item Developed AWS S3 file management microservice. Implemented per-file
-        encryption, set up load testing suite and stabilized all microservice
-        deploys.
-    \item Data permissioning to enable industry-first multiple accounts on
-        single loan.
-    \item Profiled and optimized unit tests and app deploy by parallelizing
-        tests, improving build caching and decreasing app size. Average speed
-        up of 2x.
-    \item Stabilized unit and end-to-end tests, reducing failures by 3x to 99\%+
-        stability.
-    \item Improved scope/accessibility of data backup \& restore in app.
-    \item Node.js, Angular, Mongo, Python, Docker, Shell, Ansible, AWS services
-    \item Career fair recruiting, phone and on-site interviewing.
-\end{tightemize}
-\sectionsep
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     RESEARCH
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Research}
-\subsection{California Institute of Technology}
-\descript{Undergraduate Researcher (Computational Cosmology)}
-\location{Jan 2015--Jun 2016 | Pasadana, CA}
-\begin{tightemize}
-    \item Worked with \textbf{\href
-            {http://www.astro.caltech.edu/~golwala/}
-            {Prof Sunil Golwala}
-        } to quantify detectability of kinetic Sunyaev-Zel'dovich Effect with
-        future sub-millimeter telescopes.
-    \item Developed a procedure to remove contaminating sources from
-        simulated 2D telescope data conforming to accuracy bounds in optimal
-        filtering theory.
-    \item Code at
-        \url{https://github.com/yubo56/Bolocam_Source_Subtraction}.
-    \item Signal Processing, IDL, Linux
-\end{tightemize}
-\sectionsep
+\def\ResearchSec{
+    \section{Research}
 
-\subsection{NASA Jet Propulsion Laboratory}
-\descript{Undergraduate Researcher (Solar Physics)}
-\location{Jun 2014--Dec 2014 | Pasadena, CA}
-\begin{tightemize}
-    \item Worked with \textbf{\href
-            {https://science.jpl.nasa.gov/people/Liewer/}
-            {Dr.\ Paulett Liewer}
-        } to generate synthetic white light images for solar phenomena
-        simulating Solar Probe Plus (exp.~2020) view parameters.
-    \item AGU 2014---
-        {\small
-            \url{https://agu.confex.com/agu/fm14/webprogram/Paper18882.html}
-        }
-    \item Raytracing, IDL, C
-\end{tightemize}
-\sectionsep
+    \subsection{Cornell University}
+    \descript{Graduate Research Assistant}
+    \location{Aug 2017--Present | Pasadena, CA}
+    \ifisCS
+    \else
+        \vspace{\topsep} % Hacky fix for awkward extra vertical space
+    \fi
+    \begin{tightemize}
+        \item Working with \textbf{\href
+               {http://astro.cornell.edu/members/dong-lai.html}
+               {Prof.\ Dong Lai}
+            } to explore numerically energy and angular momentum distribution by
+            nonlinear wave breaking of internal tidal excitations in white dwarfs.
+        \item Working with Sr.\ Research Associate Henrik Spoon on webpage to
+            disseminate diagnostics for \emph{The Infrared Database of Extragalactic
+            Observables from Spitzer}, to go live at \url{
+                http://ideos.astro.cornell.edu
+            }.
+        \item High performance computing, numerical fluid dynamics, theoretical
+            astrophysics.
+    \end{tightemize}
+    \sectionsep
 
-\subsection{California Institute of Technology}
-\descript{Undergraduate Researcher (Computational Chemistry)}
-\location{Mar 2013--Aug 2013 | Pasadena, CA}
-\begin{tightemize}
-    \item Worked with \textbf{\href
-           {http://www.cce.caltech.edu/content/william-goddard}
-           {Prof William A. Goddard}
-        } and
-        \textbf{\href
-          {http://mendoza.eng.fsu.edu/}
-          {Prof Jose L. Mendoza-Cortes}
-        } to develop \emph{ab
-        initio} force field parameters to compute hydrogen adsorption of
-        various COF/MOFs.
-    \item Numerical Optimization, Monte Carlo methods
-\end{tightemize}
+    \subsection{California Institute of Technology}
+    \descript{Undergraduate Research Assistant}
+    \location{Jan 2015--Jun 2016 | Pasadana, CA}
+    \begin{tightemize}
+        \item Worked with \textbf{\href
+                {http://www.astro.caltech.edu/~golwala/}
+                {Prof.\ Sunil Golwala}
+            } to quantify detectability of kinetic Sunyaev-Zel'dovich Effect with
+            future sub-millimeter telescopes.
+        \item Used Monte Carlo simulation to estimate nonlinear kSZ detection
+            uncertainties due to imperfect source subtraction.
+        \item Code at
+            \url{https://github.com/yubo56/Bolocam_Source_Subtraction}.
+        \item Signal Processing, IDL, Linux
+    \end{tightemize}
+    \sectionsep
+
+    \subsection{NASA Jet Propulsion Laboratory}
+    \descript{Undergraduate Research Assistant}
+    \location{Jun 2014--Dec 2014 | Pasadena, CA}
+    \begin{tightemize}
+        \item Worked with \textbf{\href
+                {https://science.jpl.nasa.gov/people/Liewer/}
+                {Dr.\ Paulett Liewer}
+            } to generate synthetic white light images for solar phenomena
+            simulating Solar Probe Plus (exp.~2020) view parameters.
+        \item AGU 2014---
+            {\small
+                \url{https://agu.confex.com/agu/fm14/webprogram/Paper18882.html}
+            }
+        \item Raytracing, IDL, C
+    \end{tightemize}
+    \sectionsep
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     EXPERIENCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\ExperienceSec{
+    \section{Experience}
+
+    \runsubsection{Blend Labs}
+    \descript{| Software Engineer}
+    \ifisCS
+        \location{July 2016--Present | San Francisco, CA}
+        \vspace{\topsep} % Hacky fix for awkward extra vertical space
+    \else
+        \location{July 2016--Aug 2017 | San Francisco, CA}
+    \fi
+    \begin{tightemize}
+        \item Developed AWS S3 file management microservice. Implemented
+            per-file encryption, set up load testing suite and stabilized all
+            microservice deploys.
+        \item Profiled and optimized test suites and app deploy by parallelizing
+            tests, improving build caching and decreasing app size. Average
+            speed up of 3x.
+        \item Developed internal SDK to simplify encoding user transition
+            business logic.
+        \item Stabilized unit and end-to-end tests, reducing failures by 3x to
+            99\%+ stability.
+        \item Node.js, Angular, Mongo, Python, Docker, Shell, Ansible, AWS services
+    \end{tightemize}
+}
+
+\ifisCS
+    \ExperienceSec
+    \ResearchSec
+\else
+    \ResearchSec
+    \ExperienceSec
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     AWARDS
