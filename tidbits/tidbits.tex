@@ -40,6 +40,11 @@
     \DeclareMathOperator*{\argmin}{argmin}
     \DeclareMathOperator*{\argmax}{argmax}
     \DeclareMathOperator{\sgn}{sgn}
+
+    \DeclarePairedDelimiter\p{\lparen}{\rparen}
+    \DeclarePairedDelimiter\s{\lbrack}{\rbrack}
+    \DeclarePairedDelimiter\z{\lbrace}{\rbrace}
+
     \newcommand{\expvalue}[1]{\left<#1\right>}
     \usepackage[labelfont=bf, font=scriptsize]{caption}\usepackage{tikz}
     \usepackage[font=scriptsize]{subcaption}
@@ -2088,5 +2093,121 @@ velocity $v$ in finite time.
 This can obviously be generalized to any countable configuration space, giving
 some more intuition to Cantor's notion of \emph{countable sets} having
 equivalent cardinality.
+
+\chapter{02/04/18---Conformal Mapping}
+
+Conformal maps locally preserve angles.
+
+\section{Reviewing Analytic Functions as Conformal Maps}
+
+Consider an analytic function $f: \mathbb{C} \to \mathbb{C}$, and write $w =
+f(z)$. We wish to see what happens to angles in the $z$ plane under the action
+of $f$. Angles are a local property, so we expand $f(z)$ about some local point
+$z_0$ in a Taylor series
+\begin{align}
+    f(z_0 + \Delta z) &\approx f(z_0) + \sum\limits_{k=1}^\infty
+        \frac{f^{(k)}(z_0)}{k!}\p*{\Delta z}^k,\\
+    \Delta w &= \sum\limits \frac{f^{(k)}(z_0)}{k!}\p*{\Delta z}^k,
+\end{align}
+where $\Delta w = f(z_0 + \Delta z) - f(z_0)$. For small $\Delta z$, it's clear
+that $\Delta w$ is set by the leading order in the summation above.
+
+Notably, if $f'(z_0) \neq 0$ then we have $\Delta w = f'(z_0) \Delta z$. In this
+case, $\abs{\Delta w} = \abs{f'(z_0)}\abs{\Delta z}$ while $\Arg \Delta w = \Arg
+f'(z_0) + \Arg \Delta z$. It is of worth to note that it preserves relative
+lengths (two $\Delta z$ of the same length produce two $\Delta w$ of the same
+length) though not area, and that it preserves angles (two $\Delta z$ with
+different arguments will correspond to two $\Delta w$ that differ by the same
+argument).
+
+If $f'(z_0) = 0$, then the relation between $\Delta w$ and $\Delta z$ is more
+complex; namely $\Delta w = \frac{f^{(k)}(z_0)}{k!} (\Delta z)^k$ for a $k$-th order
+zero $f(z_0)$. We still have shape-preserving properties, but angles are
+\emph{enlarged} in $w$ space, $\Arg \Delta w = \Arg f^{(k)}(z_0) + k \Arg \Delta
+z$.
+
+\section{Complex Analysis and Conformal Mapping}
+
+It was mentioned in the book I'm reading out of, Churchill \emph{Complex
+Variables and Applications}, that conformal mapping is only used in 2D problems.
+One naturally wonders why conformal mapping is restricted to 2D\@; one can
+easily imagine e.g.\ why should quaternions not be able to extend conformal
+mapping to 4D domains?
+
+This turns out to be \emph{Liouville's Theorem}, for which the proof is
+sufficiently complicated it is not outlined on Wikipedia \frownie. But I think
+we can get some understanding of the factors at play.
+
+Consider two vector spaces $V, W$ and a function $f: V \to W$. By choosing
+vector spaces for our domain and range, we guarantee that members of $V, W$ are
+closed under addition and scalar multiplication. Furthermore, in the context of
+conformal mapping, endow both $V, W$ with an inner product satisfying linearity,
+which we will denote by $\expvalue{u, v}, u, v \in V$ such that $\expvalue{u, u}
+\neq 0$ unless $u = 0$.
+
+With this structure, we are able to introduce \emph{components}. Call two
+vectors $\expvalue{u, v} = 0$ \emph{orthogonal}. For vector space $V$, consider
+the maximal set of vectors that are pairwise orthogonal and have norm $1$; call
+these $\expvalue{e_i e_j} = \delta_{ij}$ (we will take the set to be finite for
+now, but natural extensions follow for countably infinite and continuously
+infinite sets I imagine). Then, by linearity, vectors $v \in V$ can be written
+$\sum\limits_i v_ie_i$; this is obviously possible by decomposing $v$ into two
+other vectors $v_1, v_2$ such that $\expvalue{v_1 e_i} = 0, \expvalue{v_2e_j} =
+0 \forall j \neq i$, doable since the $\z*{e_i}$ are maximal. It is then obvious
+that $\expvalue{u, v} = \sum\limits_i u_iv_i$, and we have our usual dot
+product.
+
+What this shows is that \emph{the linear norm for a vector space is necessarily
+an $\mathcal{L}^2$ norm}. In fact, any bilinear form on the vector space is
+necessarily quadratic in the components of an arbitrarily vector in a spanning
+basis of the bilinear form. If we only definitions of angles that only use two
+vectors from $V$ in a bilinear form (e.g.\ $\cos\theta = \expvalue{u, v}$), then
+any angle-preserving transformation must preserve the $\mathcal{L}^2$ norm of
+elements of $V$. This is in agreement with Liouville's Theorem which basically
+restricts conformal mappings in Euclidean space to mappings that are conformal
+in $2D$. Of course, my result assumes one only uses angles related to a bilinear
+form, but that seems reasonable from a practical perspective.
+
+It lastly bears noting that our requirement that $V, W$ have an inner product
+satisfying linearity is natural. Only a vector space with a linear inner product
+exhibits notions of proximity, and we want to study ``close'' to some vector
+$v_0$ to employ linearization such as the Taylor Series.
+
+Thus, we see that angle-preserving transformations can only operate in a 2D
+slice of a higher dimensionality system and no generalizations to higher
+dimension systems can capture additional complexity. This is obviously not meant
+to be a proof, but it seems reasonably clear that performing an analysis like
+the one we do above can only be done in 2D topologies.
+
+\section{Harmonic Functions and Conformal Mappings}
+
+Recall a harmonic function $u(x, y)$ satisfies Laplace equation $\nabla^2 u =
+0$. We can show that there exists another harmonic function $v(x, y)$ such that
+$u + iv$ is analytic in $z = x + iy$; this is just inverting the Cauchy-Reimann
+conditions. Thus, a function being harmonic over a domain is equivalent to the
+sum of it and its harmonic conjugate being analytic over the same domain.
+
+Harmonic functions are important because they crop up everywhere, with Neumann
+or Dirichlet BCs. It's also important that every harmonic function of $z = x +
+iy$ is also harmonic under change of variables $z = f(u + iv)$ if $f$ is
+analytic; the proof follows because for the harmonic function, there is a
+harmonic conjugate that makes it an analytic function of $z$ and ergo of $u +
+iv$, which forces the original harmonic function te be harmonic in $u + iv$ as
+well.
+
+Finally, to finish applying conformal mappings to harmonic functions, we must
+study how boundary conditions map. It turns out that Dirichlet and Neumann BCs
+for a function $H(x, y)$ on a \emph{level curve} (curve where $H(x_c, y_c) = C$)
+are unchanged under conformal mapping; $H$ will be constant on the image of the
+level curve.
+
+Consider a boundary parameterized by $p(s)$, whose image boundary is $f(p(s))$.
+Then at some $p(s_0)$ and neighboring point $p(s_0 + \Delta s)$, the harmonic
+function $H$ takes on value $H(s_0), H(s_0 + \Delta s)$, their difference
+being approximately $H'(s) \Delta s$. Under conformal mapping $w = f(z)$,
+path $p(s)$ maps to $p'(\sigma)$ where $\sigma$ the new path length is related
+to the old by $\sigma = \abs{\rd{w}{z}}s$. Thus the new path length difference
+is $\rd{H}{\sigma} = \rd{H}{s}\abs{\rd{w}{z}} \neq \rd{H}{s}$ unless $\rd{H}{s}
+= 0$, exactly a level curve.
 
 \end{document}
