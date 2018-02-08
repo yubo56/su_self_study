@@ -1,4 +1,4 @@
-CC = ghc
+CC = ghc -dynamic
 CCFLAGS = -Wall
 
 4: 4structures_take2.bin
