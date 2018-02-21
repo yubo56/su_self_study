@@ -2210,4 +2210,45 @@ to the old by $\sigma = \abs{\rd{w}{z}}s$. Thus the new path length difference
 is $\rd{H}{\sigma} = \rd{H}{s}\abs{\rd{w}{z}} \neq \rd{H}{s}$ unless $\rd{H}{s}
 = 0$, exactly a level curve.
 
+\section{Conformal Mapping and Laplace's Equation, Examples}
+
+Let's consider trying to compute steady-state $T(x, y)$, when $T(x = \pm \pi/2)
+= 0$, $T(y = 0) = 1$ and $T(x, y) < \infty$ everywhere (equivalently, $T(y \to
+\infty) \to 0$), in the semi-infinite slab. With no heat sources, $T$ must
+satisfy $\nabla^2 T = 0$ in the steady state limit. Of course, we could solve
+using separation of varibables and obtain a series solution, but there is a
+slicker solution.
+
+Let $z = x + iy$. We consider a two-step transformation: $z' = \sin z$ maps the
+semi-infinite slab in $z$ to the half plane $y' > 0$ onto . Then $w = \Log
+\frac{z' - 1}{z' + 1}$ maps the half plane $y' > 0$ onto an infinite horizontal
+slab $w = u + iv, v \in [0, \pi]$.
+
+Let's now keep careful track of where the boundaries of the original $z$ domain
+map to. In $z'$, it is clear that the real axis of the $z$ domain maps to the
+$x' \in [-1, 1]$ region in $z'$ as well. The other two boundaries, $z = \pm 1 +
+iy, y > 0$ map to $z' = x, \abs{x} > 1$. Thus, $T(z') = 1$ on the real axis
+between $[-1, 1]$ and is zero along the rest of the real axis.
+
+Then, when making the $w$ mapping, the two boundaries $w = u, w = u + i\pi$, we
+note that $\Re(z') \in [-1, 1]$ maps to $w = u + i\pi$ and the remainder of the
+axis maps to $w = u$. Thus, $T(u) = 0, T(u + i\pi) = 1$.
+
+Now, a simple harmonic function that is bounded in the strip and satisfies the
+boundary conditions is just $T(w) = \frac{v}{\pi} = \frac{\Im(w)}{\pi}$. We note
+that it is level on the boundary (to satisfy the BCs) and is bounded in the
+domain. Inverting the transformations gives us
+\begin{align}
+    T(w) &= \frac{\Im(w)}{\pi},\\
+    T(z') &= \frac{1}{\pi}\arctan \frac{2y'}{x'^2 + y'^2 - 1},\\
+    T(z) &= \frac{2}{\pi} \arctan \frac{\cos x}{\sinh y}.
+\end{align}
+
+It is worth noting that if we do not require $T$ remain finite at infinity, we
+could have added any homogeneous solution to $T(w)$; one class of such functions
+are $T(u, v) = \sin nv e^{\pm nu}$, obtained by a simple separation of variables
+ansatz. Inverting this to find its effect on $T(z)$ is a bit too much work for
+the aging author, but the book's example of $T(z) [ + A\sin z]$ suggests this
+will map to some class of functions $A \sin nz$ or the ilk.
+
 \end{document}
