@@ -1,0 +1,364 @@
+    \documentclass[11pt,
+        usenames, % allows access to some tikz colors
+        dvipsnames % more colors: https://en.wikibooks.org/wiki/LaTeX/Colors
+    ]{article}
+    \usepackage{
+        amsmath,
+        amssymb,
+        fouriernc, % fourier font w/ new century book
+        fancyhdr, % page styling
+        lastpage, % footer fanciness
+        hyperref, % various links
+        setspace, % line spacing
+        amsthm, % newtheorem and proof environment
+        mathtools, % \Aboxed for boxing inside aligns, among others
+        float, % Allow [H] figure env alignment
+        enumerate, % Allow custom enumerate numbering
+        graphicx, % allow includegraphics with more filetypes
+        wasysym, % \smiley!
+        upgreek, % \upmu for \mum macro
+        listings, % writing TrueType fonts and including code prettily
+        tikz, % drawing things
+        booktabs, % \bottomrule instead of hline apparently
+        cancel % can cancel things out!
+    }
+    \usepackage[margin=1in]{geometry} % page geometry
+    \usepackage[
+        labelfont=bf, % caption names are labeled in bold
+        font=scriptsize % smaller font for captions
+    ]{caption}
+    \usepackage[font=scriptsize]{subcaption} % subfigures
+
+    \newcommand*{\scinot}[2]{#1\times10^{#2}}
+    \newcommand*{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand*{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand*{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand*{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand*{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand*{\md}[2]{\frac{\mathrm{D}#1}{\mathrm{D}#2}}
+    \newcommand*{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand*{\svec}[1]{\vec{#1}\;\!}
+    \newcommand*{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+    \newcommand*{\ang}[0]{\;\text{\AA}}
+    \newcommand*{\mum}[0]{\;\upmu \mathrm{m}}
+    \newcommand*{\at}[1]{\left.#1\right|}
+
+    \newtheorem{theorem}{Theorem}[section]
+
+    \let\Re\undefined
+    \let\Im\undefined
+    \DeclareMathOperator{\Res}{Res}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \DeclareMathOperator{\diag}{diag\;}
+
+    \DeclarePairedDelimiter\bra{\langle}{\rvert}
+    \DeclarePairedDelimiter\ket{\lvert}{\rangle}
+    \DeclarePairedDelimiter\abs{\lvert}{\rvert}
+    \DeclarePairedDelimiter\ev{\langle}{\rangle}
+    \DeclarePairedDelimiter\p{\lparen}{\rparen}
+    \DeclarePairedDelimiter\s{\lbrack}{\rbrack}
+    \DeclarePairedDelimiter\z{\lbrace}{\rbrace}
+
+    % \everymath{\displaystyle} % biggify limits of inline sums and integrals
+    \tikzstyle{circ} % usage: \node[circ, placement] (label) {text};
+        = [draw, circle, fill=white, node distance=3cm, minimum height=2em]
+    \definecolor{commentgreen}{rgb}{0,0.6,0}
+    \lstset{
+        basicstyle=\ttfamily\footnotesize,
+        frame=single,
+        numbers=left,
+        showstringspaces=false,
+        keywordstyle=\color{blue},
+        stringstyle=\color{purple},
+        commentstyle=\color{commentgreen},
+        morecomment=[l][\color{magenta}]{\#}
+    }
+
+\begin{document}
+
+\def\Snospace~{\S{}} % hack to remove the space left after autorefs
+\renewcommand*{\sectionautorefname}{\Snospace}
+\renewcommand*{\appendixautorefname}{\Snospace}
+\renewcommand*{\figureautorefname}{Fig.}
+\renewcommand*{\equationautorefname}{Eq.}
+\renewcommand*{\tableautorefname}{Tab.}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\rfoot{Yubo Su}
+\rhead{}
+\cfoot{\thepage/\pageref{LastPage}}
+
+\title{Q Exam Notes}
+\author{Yubo Su}
+
+\maketitle
+
+\section{PHYS 7680: Computational Physics}
+
+Not much to review here, we know most of it or it's too low level
+
+\begin{itemize}
+    \item CFL conditions, von Neumann Analysis.
+    \item Spectral methods (exponential conv, low numerical viscosity).
+    \item What is numerical viscosity, how does it arise?
+    \item Convergence of various numerical schemes, higher order than RK4.
+    \item Runge Phenomenon vs Gibbs Phenomenon, non-sinusoidal expansions.
+\end{itemize}
+
+\section{ASTRO 6578: Planet Formation}
+
+\begin{itemize}
+    \item Protostellar disks: Coolers stars have more complex lines, young stars
+        don't support planets. OBAFGKM (Oh be a fine gal, kiss me) stars.
+    \item Lol: Peak power generation of the core $\ll$ human power generation
+        (recall Eddington luminosity as well from Ph101).
+    \item Disk formation must be driven by eddy viscosity in order for the only
+        timescale $t = \frac{L^2}{\nu}$ to be less than a Hubble time.
+    \item Shakura-Sunyaev discs $\nu = \alpha c_s H$ viscosity parameterization.
+    \item In a disc w/ gas and dust, gas orbits sub-Keplerian if polytrope $P
+        \propto r^{-n}$ profile.
+
+    \item Planet formation: Isochron dating.
+    \item Gravitational focusing $\propto R^2/R^4$ for small/large objects,
+        favors runaway accretion.
+    \item Pebble accretion for gas giants, ice line means smaller inner planets.
+        Dynamical friction speeds up smaller bodies and counteracts
+        gravitational focusing, preventing runaway accretion and inducing
+        oligarchal growth but no big planets. Pebble accretion solves because
+        pebbles ($\sim 10\;\mathrm{cm}$) feel gas drag, further magnifying
+        gravitational focusing.
+    \item Minimum Mass Solar Nebula constructed by replenishing all planets up
+        to solar abundances (makes up for photoevaporation, though not ejecta
+        from early Sun).
+
+    \item Planetary migration: Grand Tack model uses Jupiter/Saturn resonances
+        to form small Mars. Also produces \emph{Late Heavy Bombardment}.
+    \item Lindblad resonances spaced unevenly on either side of planet, Type I
+        migration until planet opens a permanent gap immune to disc viscosity
+        replenishing (Saturn-sized).
+
+    \item Giant planet interiors: molecular hydrogen envelope, metallic hydrogen
+        mantle and diffuse core in Jupiter.
+\end{itemize}
+
+\section{AEP 6060: Introduction to Plasma Physics}
+
+\begin{itemize}
+    \item Electron plasma frequency $\omega_{pe} =
+        \sqrt{\frac{n_0e^2}{\varepsilon_0m_e}}$ (derivation: oscillating box of
+        charges).
+    \item Debye length is bottom end for plasmas.
+    \item $\rd{f}{t} = 0$ Vlasov equation/kinetic theory, produces fluid
+        equations.
+    \item The world is Maxwellian $f(\vec{v}) \propto e^{-\p*{\vec{v} -
+        \vec{v}_0}^2}$ or $f(v) \propto v^2e^{-(v - v_0)^2}$.
+    \item Alfv\'en speed $v_A = B/\sqrt{\mu_0\rho}$. Two-fluid yields more waves
+        than MHD unless introduce thermal/pressure terms.
+
+    \item Instabilities: streaming instability, Landau damping.
+    \begin{itemize}
+        \item Plane wave ansatz gets dispersion relation of form $1 + \chi_e =
+            0$ where $\chi_e$ the electron susceptibility consists of an
+            integral over a singular value.
+
+        \item Careful IVP analysis + Landau prescription deforming contour above
+            the singularity in $\chi_e$ shows that the correct way to interpret
+            the dispersion relation is to deform the integral (equivalent).
+    \end{itemize}
+
+    \item Infinite cold plasma waves (instead of permitting pressure/temp terms,
+        use source term in Amp\`ere's Law, dielectric tensor).
+
+    \item Geometric optics for waves, magnetic reconnection.
+\end{itemize}
+
+\section{ASTRO 6531: Astrophysical Fluids}
+
+\begin{itemize}
+    \item Boundi radius (1D accretion), Bondi-Lyttleton Accretion (moving BH
+        accretion) for \emph{barotropic flow} $P \propto \rho^\gamma$.
+
+    \item Waves in self-gravitating fluid have $\omega^2 = a^2k^2 - 4\pi G
+        \rho_0$. Extra term is self gravitation, \emph{Jean's Mass}.
+
+    \item Surface gravity waves (deep vs shallow). Coarse treatment of
+        steepening, just ``increased height makes faster velocity.''
+
+    \item Atmospheric waves, $N^2 > 0$ is \emph{Schwarzchild criterion}.
+        Nonradial spherical atmospheric waves = my research.
+
+    \item Sommerfield quantization condition for modes in irregular cavities.
+
+    \item Kelvin-Helmholtz Instability: two fluid streaming. Extension: shear
+        flow instability, Richardson criterion.
+
+    \item Rotating flows, Rossby waves, can source Chandrasekar-Friedman-Schutz
+        Instability (major GW source for quadrupole moment).
+
+    \item Viscous flows, high/low Re drag, Stokes flow. Boundary layers, Ekman
+        layer in rotating flow.
+
+    \item Kolmogorov turbulence, similarity.
+
+    \item Discs: Shakura-Sunyaev discs, radial-epicyclic frequencty. Toomre $Q$
+        stability, Lindblad resonance, corotation resonance.
+
+    \item Shocks, Rankine-Huginot conditions continuity. Blast waves,
+        Sedov-Taylor = radial shocks and self-similarity.
+
+    \item MHD, Alfv\'en speed, magnetorotational instability.
+\end{itemize}
+
+\section{PHYS 6562: Statistal Mechanics}
+
+\begin{itemize}
+    \item The diffusion equation, probability current.
+
+    \item Microcanonical Ensemble: ensemble of all states at fixed energy $E$.
+
+    \item Entropy is uncertainty, log number of accessible states. Is a
+        thermodynamic potential like chemical potential (derivatives of thermo
+        potentials = observables), $T^{-1} = \pd{S}{E}, \frac{\mu}{T} =
+        -\pd{S}{N}$.
+
+    \item Bunch of free energy stuff. Bosons (condensation)/Fermions (Fermi
+        sea).
+
+    \item Markov chains (detailed balance).
+
+    \item Ising model, phase changes (discontinuities in order parameters).
+
+    \item Correlation functions show power laws in continuous phase transitions.
+
+    \item Abrupt transitions require often some small activation energy past the
+        critical value.
+
+    \item Scale invariance, renormalization.
+\end{itemize}
+
+\section{ASTRO 6516: Galaxies}
+
+\begin{itemize}
+    \item Milky Way: $10\;\mathrm{kpc} \times 0.5\;\mathrm{kpc}$,
+        $\sim 10^{11}L_{\odot}$. Rotation curve flattens $220\;\mathrm{km/s}$
+        (implies mass is not dominated by SMBH at center). Galaxy spacing $\sim
+        \;\mathrm{Mpc}$.
+
+    \item \emph{Cold} regions = dominated by Keplerian motion, \emph{warm}
+        dominated by many-body gravitational interactions.
+
+    \item Plummer law for galactic density distribution $\rho(r) =
+        \frac{\rho_0}{\p*{1 + x^2}^{5/2}}$, $x = r/r_c$, simply looks like $\Phi
+        = \frac{GM}{r}\frac{1}{\sqrt{1 + x^2}}$ smoothing.
+
+    \item Quasars are AGNs, very bright compared to rest of galaxy. Standard
+        model of AGNs is that viewing angle and dustiness produce varying kinds
+        of emission (broader IR lines if obscured e.g.\ DSFGs).
+
+    \item Universe age $t = 0.3\;\mathrm{s}\p*{T/\;\mathrm{MeV}}^{-2}$. Early
+        universe is radiation dominated, then hydrogen formation/recombination
+        when photons drop below photodissociation (photon decoupling releases
+        photons as new atoms decay, CMB). Then eventually Population III stars,
+        galaxies, large scale structure.
+        \begin{itemize}
+            \item Recombination $z = 1100$.
+            \item Dark ages (no stars).
+            \item Reionization $z = 20$--$6$ as stars and galaxies form,
+                ionizing radiation.
+
+            \item Only now can clusters form, lasts until present day.
+        \end{itemize}
+
+    \item Lyman-$\alpha$ forest: high redshift light passes through many
+        different redshift absorbing media. Largely happens before reionization
+        since much more hydrogen.
+
+    \item Lyman-$\alpha$ emitters are very old galaxies that have mostly neutral
+        hydrogen. Lyman-break galaxies have lower redshifts $z \sim 3, 4$ whose
+        redshift can be pinpointed by the $912\ang$ dropoff in radiation.
+
+    \item Metallicity tracks how many stars have already formed in the galaxy.
+
+    \item $21\;\mathrm{cm}$ line is important since one of only transitions
+        possible in neutral Hydrogen.
+
+    \item Collisionless Boltzmann Equation is the Vlasov equation, with
+        Maxwellian energy distribution allows solving density distributions in
+        galaxies.
+\end{itemize}
+
+\section{MATH 6270: Applied Dynamical Systems}
+
+\begin{itemize}
+    \item Homoclinic tangles: stable and unstable manifolds intersect
+        transversely!
+    \item Melnikov's Method predicts when a system pertubed from a homoclinic
+        orbit exhibits chaos (whether the stable + unstable manifolds cleanly
+        untangle or homoclinic tangle/chaos). Can also use to predict
+        topological changes in behavior.
+
+    \item Symbolic dynamics to describe objects in the invariant set of a map.
+
+    \item Center manifold theory! Dynamics near a center manifold. Fast-decaying
+        variable is slaved to motion along the center manifold. Can predict
+        e.g.\ XY model topological nature of phase transition.
+
+    \item Normal forms: find spanning subset of a degenerate linearization about
+        a fixed point.
+
+    \item ``Find a global bifurcation by blowing up a local analysis on a
+        rescaled system.'' Melnikov's Method again.
+
+    \item Kuramoto oscillators synchronization.
+
+    \item Fermi-Pasta-Ulam-Tsingou solitons, Kortweg de Vries.
+
+    \item Henon-Heiles arises from studying star motion around galactic center;
+        for sufficiently high level curves, Hamiltonian invariant tori break
+        down into chaos. Can study via a map, though I missed this part of
+        lecture.
+\end{itemize}
+
+\section{ASTRO 6530: Astrophysical Processes}
+
+\begin{itemize}
+    \item Radiative transfer equation! $\rd{I_\nu}{\tau_\nu} = -I_\nu + S_\nu$.
+
+    \item Einstein coefficients, stimulated emission key (detailed balance).
+
+    \item In isotropic radiation, expanding in small multipoles gives closure
+        relation, plus two-stream approximation relates $I_\nu$ to $J_\nu$.
+
+    \item Polarization: Stokes parameters!
+
+    \item Thomson scattering is non-relativistic limit of Compton.
+
+    \item Bremsstrahlung is when a charged particle moves through a plasma,
+        bunch of scatterings means acceleration and radiation. Mostly spectrally
+        flat in the R-J regime.
+
+    \item Coherent vs incoherent radiation (groups of particles generally
+        incoherent $\sim N$ unless population inversion, cascade $\sim N^2$).
+
+    \item Cyclotron radiation when electron in magnetic field, L-W potential
+        gives radiation field $\sim r^{-1}$,
+
+    \item Synchrotron radiation: particle blips $\Delta t \propto \gamma^{-3}$,
+        power laws over all frequencies.
+
+    \item Propagation through a plasma, AEP 6060.
+\end{itemize}
+
+\end{document}
+
