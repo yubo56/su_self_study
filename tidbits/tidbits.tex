@@ -1234,23 +1234,6 @@ above the Nyquist frequency.
 
 Seems like can solve now. \textbf{UNFINISHED}.
 
-\chapter{02/12/17---Cards Against Humanity Hole}
-
-For those of us unindocrinated, cards against humanity for Black Friday of 2016
-pulled the following stunt: donate money to us so we can dig a really big hole
-in the ground and fill it up again. Digging will continue until funds are
-exhausted. This produced an integrated donations over time of
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.5\textwidth]{hole.png}
-    \caption{The famous Cards Against Humanity hole plot.\label{fig:hole}}
-\end{figure}
-
-What shape should we expect if we assume some simple models for how
-contributions to the hole are expected to increase?
-
-TODO
-
 \chapter{04/28/17---Bridges,  Chains and others}
 
 \section{Bridges and Dem Chainz}
@@ -2250,5 +2233,95 @@ are $T(u, v) = \sin nv e^{\pm nu}$, obtained by a simple separation of variables
 ansatz. Inverting this to find its effect on $T(z)$ is a bit too much work for
 the aging author, but the book's example of $T(z) [ + A\sin z]$ suggests this
 will map to some class of functions $A \sin nz$ or the ilk.
+
+\chapter{10/05/18---Plane Boarding}
+
+Anybody that has boarded a plane knows that one always has to wait for the
+person in front to put up their bag before getting a seat. It's so infuriating!
+So, on a flight right now, let's give some thought to how we might treat this
+mathematically.
+
+\section{Counting Inversions}
+
+Let's think about the simplest problem: given a sequence $x_i$ of $N$ numbers,
+consider an \emph{inversion} to be a subsequence $x_i < x_{i + 1}$, a
+discrepancy from being sorted in descending order. This is of course motivated
+by the fact that, if everybody in the back of the plane boarded first, there
+would be no waiting for people in front of you (assuming each row has only one
+seat). What is the distribution of inversions?
+
+Well, it should be obvious first that you expect $\frac{N - 1}{2}$ inversions:
+each subsequence of length $2$ is either ordered or not ordered, with
+probability $1/2$, and so by linearity of expectation we expect $\frac{N -
+1}{2}$ inversions. By another argument, if we flipped the definition of
+inversion, there is exactly one other sequence (reversing the numbers) that
+contributes to the original inversion definition in the exact same way. Thus,
+the definition of an inversion should not depend on the sign, and so the average
+number of inversions must be exactly half so that they sum to be $N - 1$ the
+total number of subsequences.
+
+Additionally, since each $X_i$ seems to be  just a Bernoulli process, the
+variance is $p(1 - p) = \frac{1}{4}$, and so the standard deviation of the
+distribution should be $\frac{\sqrt{N - 1}}{2}$. Instead, the standard deviation
+seems to be $\sqrt{(N - 1) / 12}$! See \autoref{fig:inversions}.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plane_boarding/inversions.png}
+    \caption{Histogram of inversions, fitted with $\mu = \frac{N - 1}{2},
+    \sigma^2 = \frac{N - 1}{12}$.}\label{fig:inversions}
+\end{figure}
+
+I'm not sure what the discrepancy is for the time being.
+
+\section{Number of people to sit}
+
+This is a slightly more involved problem and a bit more realistic: if everybody
+in front of you in line has a seat number further to the back, you can sit!
+Thus, if we have a sequence $x_i$ of $N$ numbers, a number $x_i$ can sit
+\emph{if it is smaller than every number before it}.
+
+The problem may seem more intimidating, but a closed formula exists. Consider
+the first person on line, this person always can sit. Of the remaining people,
+everybody who is larger than the first person is immediately ineligible; only
+those who are smaller can continue to be eligible for a seat. The first person
+is equally distributed among the $N$ possible values, and so letting $f(n)$ be
+the expected number of people that can sit of a total of $n$, we may write down
+recursive formula
+\begin{equation}
+    f(n) = \frac{1}{n}\sum\limits_{m = 1}^n f(n - m) + 1.\label{eq:plane.anal}
+\end{equation}
+The base case of the recursive formula is just $f(0) = 0$, with no people in
+line, nobody can be seated. We may examine the agreement of this recursive
+formula in \autoref{fig:plane.anal}.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plane_boarding//seatings.png}
+    \caption{Agreement of \autoref{eq:plane.anal} with simulation.
+    }\label{fig:plane.anal}
+\end{figure}
+
+Of course, of interest is evaluation of \autoref{eq:plane.anal} in closed form.
+Perhaps easiest is to observe that $(n - 1)f(n - 1) - (n - 1) = \sum\limits_{m =
+1}^{n - 1}f(n - m)$, and so $f(n) - 1 = \frac{1}{n}\s*{f(n - 1) - \frac{n -
+1}{n}}$, or $f(n) = f(n - 1) + \frac{1}{n}$! This is easily $f(n) =
+\sum\limits_{m = 1}^n \frac{1}{m}$. This agreement can be seen in
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plane_boarding/seating_trend.png}
+    \caption{$f(n)$ evaluated using the recursive formula. The harmonic sum is
+    evident in the logarithmic increase.}\label{fig:plane.trend}
+\end{figure}
+
+In hindsight, this is another instance of the power of linearity of expectation:
+suppose you add people to the line randomly in decreasing order, then for each
+subsequent person, there is a $1/m$ probability they're placed at the front of
+the line, if they're the $m$th addition.
+
+This has a simple relation to wait times: unlike a geometric series, e.g.\ where
+$n/k$ of the people at each iteration get to be seated for some number $k$, we
+can only seat $\ln n / n$. This will be a reasonably large number for small
+lines, but as the line grows the number of people we can seat \emph{decreases}
+rather than increasing as in exponential decay. So longer lines are actually
+increasingly inefficient in this model.
 
 \end{document}
