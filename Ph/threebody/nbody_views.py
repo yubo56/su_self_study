@@ -31,6 +31,11 @@ def get_traj(_star_init, star_mass, _planet_init, tf, dt, t0=0):
     tf: end time
     dt: timestep
     t0: start time (defaullt = 0)
+
+    returns:
+        [[[x1(t=0), v1(t=0)] ... [x(N+M)(t=0), v(N+M)(t=0)]],
+         [[x1(t=1), v1(t=1)] ... [x(N+M)(t=1), v(N+M)(t=1)]],... ]
+        times - simulation times
     '''
     N = len(_star_init)
     M = len(_planet_init)
@@ -69,6 +74,22 @@ def get_traj(_star_init, star_mass, _planet_init, tf, dt, t0=0):
                         np.concatenate((star_init, planet_init)),
                         times)
     return np.reshape(trajectory, (len(times), N + M, 2, 3)), times
+
+def get_proj(star_arr, planet_pos, facing, up):
+    '''
+    From star positions, planet positions and orientation of observer,
+    calculates (theta, phi) projection of the stars for the observer
+
+    star_arr: [[x1, v1] ... [xN, vN]] - vN are ignored
+    planet_pos: (x, y, z)
+    facing: (x, y, z) - need not be a unit vector
+    up: (x, y, z) - need not be a unit vector
+
+    return: [[theta1, phi1] ... [thetaN, phiN]]
+
+    Note: np.dot(star_pos, planet_pos) / norms = cos theta
+    '''
+    pass
 
 if __name__ == '__main__':
     star_init = np.array([
