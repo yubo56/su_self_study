@@ -13,3 +13,36 @@
     4) beat yolks + sugar, slowly add warm milk (not boiling), beat to bubbles
     5) fill molds, then pour custard to top
     6) bake 25m @ 400F (TODO too hot & short)
+
+- Unenriched bread, high hydration:
+    - up to 50% whole wheat, rest bread flour
+    - 2% salt
+    - between 1/4 tsp for 100g to 1/2 tsp for 500g
+    - 85% hydration
+
+    1) combine, proof 1h-8h 2x (TODO proof in bread tin)
+    2) 35m @ 425F
+
+- Enriched bread (TODO check):
+    - 75% hydration w/ milk
+    - 5% sugar?
+    - 1.5% salt, same yeast
+    - ~1.5tbsp butter for 500g flour
+
+    1) combine, proof 1h 2x
+    2) 35m  @ 375F
+
+- Almonds: 280F, 40m (single layer). oil before, toppings after
+
+- Cookies (TODO grams):
+    - 3/8 cup applesauce
+    - 3/16 cup white sugar
+    - 3/8 cup brown sugar
+    - 1 cup all-purp flour
+    - 1/8 cup cocoa powder
+    - 1/2 tsp salt
+    - 3/8 cup butter
+    - 1/2 tsp vanilla
+    - 1 egg
+
+    1) combine, bake 375 11 min (TODO 10m?)
