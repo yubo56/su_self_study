@@ -1,11 +1,12 @@
-- Custard tart: (12 tarts on muffin tin)
+- Custard tart:
     - 190g flour
     - 120g butter
     - 55g sugar
     - 1 egg
 
-    - 700g milk (TODO too much)
-    - 6 yolks
+    Will have slight bit leftover custard
+    - 600g milk
+    - 7 yolks
     - 90g sugar
 
     1) flour + butter cornmeal, 2) sugar, mix well, 3) egg, bring together,
@@ -46,3 +47,22 @@
     - 1 egg
 
     1) combine, bake 375 11 min (TODO 10m?)
+
+- Apple pie (top + bottom crust, TODO seems big/thick)
+    - 400g flour
+    - 240g butter
+    - 2tbsp sugar
+    - 1tsp salt
+    - ~120g cold water
+
+    - 1/4 cup brown, white sugar
+    - 1/4 tsp nutmeg, 1tsp cinnamon
+    - ~4+ small apples
+
+    - mix flour + sugar + salt, cube in butter, rub until breadcrumbs,
+      incorporate with water
+    - disc, refridgerate ~1h
+    - blind bake ~30m @350F
+
+    - mix spices, then cut in apples
+    - bake ~1h @375
