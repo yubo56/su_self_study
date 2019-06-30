@@ -8,7 +8,7 @@
     \documentclass[12pt]{report}
     \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
     hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings,
-    chancery}
+    fouriernc}
     \usepackage[margin=1in]{geometry}
     \usepackage{float}
     \newcommand{\scinot}[2]{#1\times10^{#2}}
@@ -2323,5 +2323,51 @@ can only seat $\ln n / n$. This will be a reasonably large number for small
 lines, but as the line grows the number of people we can seat \emph{decreases}
 rather than increasing as in exponential decay. So longer lines are actually
 increasingly inefficient in this model.
+
+\chapter{06/29/19---Research Learning}
+
+\section{Collisionless Boltzmann Equation in Galaxies: Landau Damping}
+
+Inspired by \url{https://arxiv.org/pdf/1906.08655.pdf}. The problem is basically
+formulated as thus: consider a kinetic-theoretic description of a fluid using
+distribution function $f(t, x, p)$ which obeys collisionless Boltzmann equation
+$\rd{f}{t} = 0$ (we use $p$ instead of $v$ to work in Hamiltonian coordinates).
+Introducing a periodic perturbation to this fluid results in a singular
+dispersion relation, which can be resolved via the usual Landau prescription
+(consider a perturbation having grown from zero at $t=-\infty$). The dispersion
+relation describes \emph{Landau damping} (or growth), in which energy from the
+fluid is exchanged with the perturber.
+
+\subsection{Linearized EOM}
+
+The point of the paper is instead to analytically compute the impact of the
+perturber on the distribution function, to quantify the \emph{scarring} of a
+galaxy upon encounters with a nearby perturber. The equations of motion coupling
+the distribution function and gravitational potential are given
+\begin{equation}
+    \rd{f}{t} = \pd{f}{t} + \z*{f, \mathcal{H}} = 0,
+\end{equation}
+where $\mathcal{H} = \frac{p^2}{2} + \Phi$ and $\z*{\dots}$ denotes the Poisson
+bracket $\z*{f, \mathcal{H}} = \vec{\nabla}_xf \cdot \vec{\nabla}_p \mathcal{H}
+- \vec{\nabla}_pf \cdot \vec{\nabla}_x\mathcal{H}$.
+
+If we linearize for perturbation quantities $f_1, \Phi_1$ where $\Phi_1(x)$ does
+not depend on the momenta, we obtain
+\begin{align*}
+    0 &= \pd{f_1}{t} + \z*{f_1, \mathcal{H}_0}
+            - \vec{\nabla}_pf \cdot \vec{\nabla}_x \mathcal{H}_0,\\
+        &= \pd{f_1}{t} + \vec{\nabla}_x f_1 \cdot \vec{p}
+            - \vec{\nabla}_p f_1 \cdot \vec{\nabla}_x \Phi_0
+            - \vec{\nabla}_p f_0 \cdot \vec{\nabla}_x \Phi_1.
+\end{align*}
+
+\section{Generalized Melnikov Method Derivation}
+
+In MATH6270, we discussed the Melnikov method for a weakly dissipitive
+Hamiltonian system. Wiggins has a chapter in his book \emph{Global Bifurcations
+and Chaos} that generalizes this to a large number of systems. We may include
+this proof in a future paper, but we should work through it here; we cast the
+proof for a Hamiltonian system with adiabatically varying parameter and a weak
+non-Hamiltonian perturbation in familiar notation.
 
 \end{document}
