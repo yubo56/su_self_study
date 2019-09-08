@@ -18,20 +18,16 @@
 - Unenriched bread, high hydration:
     - up to 50% whole wheat, rest bread flour
     - 2% salt
-    - between 1/4 tsp for 100g to 1/2 tsp for 500g
+    - yeast - 1/4 tsp - 1/2 tsp (1/4 tsp + 500g ~ 8h each prove)
     - 85% hydration
-
-    1) combine, proof 1h-8h 2x (TODO proof in bread tin)
-    2) 35m @ 425F
+    - 35m @ 410F w/ tin
 
 - Enriched bread (TODO check):
-    - 75% hydration w/ milk
-    - 5% sugar?
-    - 1.5% salt, same yeast
-    - ~1.5tbsp butter for 500g flour
-
-    1) combine, proof 1h 2x
-    2) 35m  @ 375F
+    - 80% hydration w/ water, > 80% w/ milk
+    - 4% sugar
+    - 2% salt, some yeast (1tsp + 500g ~1h each prove)
+    - 2tbsp butter for 500g flour (less w/ milk)
+    - 45m  @ 375F w/ tin (steam)
 
 - Almonds: 280F, 40m (single layer). oil before, toppings after
 
@@ -66,3 +62,6 @@
 
     - mix spices, then cut in apples
     - bake ~1h @375
+
+- Pressure cooker chicken
+    - 25m low pressure for ~3lb chicken
