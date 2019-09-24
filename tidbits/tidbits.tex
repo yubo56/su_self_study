@@ -435,7 +435,51 @@ implications on the exact prefactor we obtain.
         general probability distribution?
 \end{itemize}
 
-\clearpage
+\section{Delta Function Properties}
+
+I can never remember these, so I'll derive some of them below (used in PHYS7653
+HW2, FA 2019). These are usually used for marginalizing over delta function
+PDFs, so I'm not going to include any nontrivial integrand multiplying the
+delta.
+\begin{itemize}
+    \item $\int \delta\p*{x - x_0}\;\mathrm{d}x = 1$ axiom.
+
+    \item $\int \delta\p*{cx - y_0}\;\mathrm{d}x = \int \delta\p*{y -
+        y_0}\;\mathrm{d}\frac{y}{c} = \frac{1}{c}$.
+
+    \item $\int \delta\p*{f(x) - f_0}\;\mathrm{d}x = \int \delta\p*{f(x_0) - f_0
+        + f'(x_0)(x - x_0)}\;\mathrm{d}x$ where $f(x_0) = f_0$, then applying
+        above $= \frac{1}{f'(x_0)}$.
+
+    \item $\int \delta\p*{f(x, y_i) - f_0}\;\mathrm{d}y_i$: this seems a little
+        bit trickier, but I've actually included the generalization in
+        \autoref{s:rand_var_dist}, it hinges on
+        \begin{equation}
+            \int \delta\p*{z - f(x_i)}\;\mathrm{d}^Nx_i =
+                \int_{\mathcal{S}} \frac{1}{\hat{n} \cdot \vec{\nabla}
+                    f(x_i)}\;\mathrm{d}^{N - 1}x_i.
+        \end{equation}
+        Note Wikipedia states the denominator as $\abs*{\vec{\nabla}f(x_i)}$,
+        which is equivalent to our definition since $\hat{n}$ is the direction
+        of steepest descent from $f(x_i)$; we will use their definition for
+        clarity. We denote $\mathcal{S}$ to be the $N-1$ surface that satisfies
+        constraint $f(x_i) = z$. This is always a little bit tricky to apply,
+        since the units on the delta function matter, but using an integrand of
+        $\delta\p*{\sqrt{\sum\limits_i x_i^2} - r}$ on the left hand side yields
+        exactly $1$ for the integrand on the right hand side.
+
+        Then the desired form is just
+        \begin{equation}
+            \int \delta\p*{f(x, y_i) - f_0}\;\mathrm{d}^Ny_i
+                = \int\limits_{f(x, y_i) = f_0} \frac{1}{\abs{
+                    \vec{\nabla} f\p*{x, y_i}}}\;\mathrm{d}^{N - 1}y_i.
+        \end{equation}
+        Note that the dot product in the denominator of the RHS must run over
+        $x$ as well.
+
+    \item $\int \delta\p*{f(x, y) - f_0} \delta\p*{g(x, y) -
+        g_0}\;\mathrm{d}x\;\mathrm{d}y$: didn't end up using this one.
+\end{itemize}
 
 \chapter{Feynman-style number theory}
 
@@ -1094,7 +1138,8 @@ trajectory) is described by random matrix theory, specifically the distribution
 of gaps between eigenvalues of random matricies follows the same distribution.
 Let's see how much ground we can make on these results.
 
-\section{Prelim: Distributions of combinations of random variables}
+\section{Prelim: Distributions of combinations of random
+variables}\label{s:rand_var_dist}
 
 Suppose we want the difference of two random variables $X, Y$. For simplicity,
 let's say that they're normally distributed. Of course, if we're just talking
@@ -2360,14 +2405,5 @@ not depend on the momenta, we obtain
             - \vec{\nabla}_p f_1 \cdot \vec{\nabla}_x \Phi_0
             - \vec{\nabla}_p f_0 \cdot \vec{\nabla}_x \Phi_1.
 \end{align*}
-
-\section{Generalized Melnikov Method Derivation}
-
-In MATH6270, we discussed the Melnikov method for a weakly dissipitive
-Hamiltonian system. Wiggins has a chapter in his book \emph{Global Bifurcations
-and Chaos} that generalizes this to a large number of systems. We may include
-this proof in a future paper, but we should work through it here; we cast the
-proof for a Hamiltonian system with adiabatically varying parameter and a weak
-non-Hamiltonian perturbation in familiar notation.
 
 \end{document}
