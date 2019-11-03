@@ -15,6 +15,28 @@
     5) fill molds, then pour custard to top
     6) bake 25m @ 400F (TODO too hot & short)
 
+- Pasteis de nata (Paul Hollywood)
+    - 150g plain flour
+    - 85g butter
+    - 50-75ml chilled water
+    - pinch salt
+
+    - 375ml whole milk
+    - 45g flour
+    - <200g sugar
+    - 185ml water
+    - 7 large egg yolks
+    - (opt) 1tsp vanilla / cinnamon
+
+    - NOTE: had extra custard, maybe ~13.5 muffin tins worth
+
+    1) flour + salt, + 25g butter -> breadcrumbs, just enough water to dough
+    2) roll out dough, grate 30g butter over bottom 2/3, one turn, grate 30g
+    more butter, one more turn. 2x more turn w/ fridge. Shape
+    3) custard: milk + flour, warm until thicken, dissolve sugar in water, boil
+    until 106-112C, whisk sugar into milk, whisk into yolks.
+    4) fill (~1cm below top) and bake, 475F 15-18 minute
+
 - Unenriched bread, high hydration:
     - up to 50% whole wheat, rest bread flour
     - 2% salt
@@ -27,7 +49,9 @@
     - 4% sugar
     - 2% salt, some yeast (1tsp + 500g ~1h each prove)
     - 2tbsp butter for 500g flour (less w/ milk)
-    - 45m  @ 375F w/ tin (steam)
+
+    - also have tried 4tbsp butter, 75% water, one egg
+    1) 45m  @ 375F w/ tin (steam)
 
 - Almonds: 280F, 40m (single layer). oil before, toppings after
 
@@ -43,6 +67,19 @@
     - 1 egg
 
     1) combine, bake 375 11 min (TODO 10m?)
+
+- Pan bang cookies
+    - 256 g flour
+    - 1/2 tsp baking soda
+    - 3/4 tsp salt
+    - 227 g butter (2 sticks)
+    - 302 g white sugar
+    - 55g brown sugar
+    - 1 egg
+    - 1.5 tsp vanilla
+
+    1) combine (cream butter + sugars optional), bake 9m @ 350F, then bang pan
+    ~3x for a total of ~15-16m baking time
 
 - Apple pie (top + bottom crust, TODO seems big/thick)
     - 400g flour
