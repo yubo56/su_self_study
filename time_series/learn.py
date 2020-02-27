@@ -8,6 +8,8 @@ from datetime import datetime
 
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.arima_model import ARIMA
+from statsmodels.tsa.stattools import acf, pacf
 import pandas as pd
 
 import numpy as np
@@ -154,10 +156,10 @@ def parse_airdata():
         plot(ts_rm_mean_avg, fn='airpassengers_clean')
     # rm_trend()
 
+    ts_diff = ts - ts.shift()
+    ts_diff.dropna(inplace=True)
     def rm_trend_delta():
         # other way to rm trend is to model only the deltas/derivatives
-        ts_diff = ts - ts.shift()
-        ts_diff.dropna(inplace=True)
         do_adf(ts_diff)
     # rm_trend_delta()
 
@@ -166,7 +168,51 @@ def parse_airdata():
         do_adf(residual)
 
     # seasonal_decomp_test()
+    def arima_test():
+        lag_acf = acf(ts_diff, nlags=20)
+        lag_pacf = pacf(ts_diff, nlags=20, method='ols')
+
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(6, 6), sharex=True)
+        ax1.plot(lag_acf)
+        # confidence intervals, PACF cross upper interval = p, ACF crosses
+        # upper interval = q. Then, use AR(p, q), where p, q are the numebr of
+        # AR/MA terms
+        ax1.axhline(0, linestyle='--', color='gray')
+        ax1.axhline(-1.96/np.sqrt(len(ts_diff)), linestyle='--', color='gray')
+        ax1.axhline(+1.96/np.sqrt(len(ts_diff)), linestyle='--', color='gray')
+
+        ax2.plot(lag_pacf)
+        ax2.axhline(0, linestyle='--', color='gray')
+        ax2.axhline(-1.96/np.sqrt(len(ts_diff)), linestyle='--', color='gray')
+        ax2.axhline(+1.96/np.sqrt(len(ts_diff)), linestyle='--', color='gray')
+        ax1.set_title('ACF')
+        ax2.set_title('PACF')
+        plt.tight_layout()
+        plt.savefig('acfs')
+        plt.clf()
+
+        # order = (p, d, q), where d = number of differences
+        model = ARIMA(ts, order=(2, 1, 2))
+        results_ARIMA = model.fit()
+        plt.plot(ts_diff, 'b')
+        plt.plot(results_ARIMA.fittedvalues, 'r')
+        # residual sum of squares
+        plt.title('RSS: %.4f' % sum((results_ARIMA.fittedvalues - ts_diff)**2))
+        plt.savefig('arima_fit')
+        plt.clf()
+
+        predictions = pd.Series(results_ARIMA.fittedvalues, copy=True)
+        pred_cumsum = predictions.cumsum()
+        # pred_with_first = pd.Series(ts.iloc[0], index=ts.index).add(
+        #     pred_cumsum, fill_value=0)
+        plt.plot(ts_diff.cumsum(), 'b')
+        plt.plot(pred_cumsum, 'r')
+        # room mean square error
+        rmse = np.sqrt(sum((pred_cumsum - ts)**2) / len(ts))
+        plt.title('RMSE: %.4f' % rmse)
+        plt.savefig('predictions')
+    arima_test()
 
 if __name__ == '__main__':
-    gen_airdata()
+    # gen_airdata()
     parse_airdata()
