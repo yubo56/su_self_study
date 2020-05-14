@@ -36,7 +36,11 @@
     more butter, one more turn. 2x more turn w/ fridge. Shape
     3) custard: milk + flour, warm until thicken, dissolve sugar in water, boil
     until 106-112C, whisk sugar into warm milk, whisk into yolks.
+        - Can all-in-one milk + flour + water + sugar, will not get rising
+          custard in the oven, no ridges in final product
     4) cool custard, then fill (~1cm below top) and bake, 475F 15-18 minute
+        - 16min at 480 just started charring, lots of rise, try even higher
+          temp?
 
 - Unenriched bread, high hydration:
     - up to 50% whole wheat, rest bread flour
@@ -53,6 +57,26 @@
 
     - also have tried 4tbsp butter, 75% water, one egg
     1) 45m  @ 375F w/ tin (steam)
+
+- Tangzhong
+    - 43g water
+    - 43g milk
+    - 14g bread flour
+
+    - 298g flour
+    - 50g sugar
+    - 1 tsp salt
+    - 1.5tsp yeast
+    - 120g milk
+    - 1 egg
+    - 57g melted butter
+
+    1) thicken Tangzhong, cool
+    2) knead with bread (will be very sticky; consider 113g milk + 18g dry milk
+    per original recipe?)
+    3) If buns, 350F 25-30M. Milk wash can work instead of egg white wash
+    - Original recipe calls for 1tbsp yeast, 60-90 (less than double) then
+      40-50min proves; above proves for ~2-3h each time
 
 - Almonds: 280F, 40m (single layer). oil before, toppings after
 
