@@ -20,9 +20,6 @@
 % operating system or comment the line out to use the default font.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newif\ifisCS
-% true by default, makefile will set to false to compile physics resume
-\isCStrue
 \documentclass[]{yubo-resume-openfont}
 
 \begin{document}
@@ -81,29 +78,16 @@
 %     SKILLS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\ProgrammingSkills{
+\section{Skills}
     \subsection{Programming}
     Javascript (Node.js) $\bullet$ Python $\bullet$ C/C++\\
     Java $\bullet$ Shell $\bullet$ CUDA $\bullet$ Assembly\\
-}
-\def\Skillset{
+    \sectionsep
     \subsection{Skillset}
     Numerical Simulation\\
     Systems Infrastructure \&\\
         \tab Optimization\\
     Data Management \& Security
-}
-
-\section{Skills}
-    \ifisCS
-        \ProgrammingSkills
-        \sectionsep
-        \Skillset
-    \else
-        \Skillset
-        \sectionsep
-        \ProgrammingSkills
-    \fi
     \sectionsep
     \subsection{Tools}
     MongoDB $\bullet$ PostgreSQL \\
@@ -126,32 +110,19 @@
 %     COURSEWORK
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\PhWork{
+\section{Coursework}
     \subsection{Physics}
         Astrophysical Processes\\
         Advanced Plasma Physics\\
         Computational Physics\\
         Advanced Phase Transitions\\
         Introduction to Particle Physics\\
-}
-\def\CSWork{
+    \sectionsep
     \subsection{Computer Science}
         Machine Learning\\
         GPU Programming\\
         Networks and Economics\\
         Relational Databases
-}
-
-\section{Coursework}
-    \ifisCS
-        \PhWork
-        \sectionsep
-        \CSWork
-    \else
-        \CSWork
-        \sectionsep
-        \PhWork
-    \fi
     \sectionsep
 
     \subsection{Teaching}
@@ -175,6 +146,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Publications}
+\vspace{\topsep} % Hacky fix for awkward extra vertical space
 \begin{tightemize}
     \item Su, Y., \& Lai, D. (2020).
         Dynamics of Colombo's Top: Generating Exoplanet Obliquities from
@@ -194,10 +166,7 @@
 \subsection{Cornell University}
 \descript{Graduate Research Assistant}
 \location{Aug 2017--Present | Pasadena, CA}
-\ifisCS
-\else
-    \vspace{\topsep} % Hacky fix for awkward extra vertical space
-\fi
+\vspace{\topsep} % Hacky fix for awkward extra vertical space
 \begin{tightemize}
     \item Working with \textbf{\href
            {http://astro.cornell.edu/members/dong-lai.html}
@@ -281,8 +250,7 @@
 %     AWARDS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Select Awards}
-\subsection{Cornell University}
+\section{Awards}
 \begin{tabular}{p{50pt}p{80pt}p{7.5cm}}
     2019--22 & NASA FINESST & One of 21/188 funded graduate students nationwide
     in the astrophysics category.\\
@@ -296,7 +264,6 @@
     % 2015 & NSF GRFP Honorable Mention & Proposed to study core-collapse
     % supernovae gravitational waves using machine learning techinques.
 \end{tabular}
-\sectionsep
 
 \end{minipage}
 \end{document}
