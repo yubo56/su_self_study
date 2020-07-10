@@ -8,7 +8,7 @@ using Toybox.Sensor;
 
 var lat = 42.377410; // default location, Somerville
 var lon = -71.103310;
-var appid = ""; // TODO add
+var appid = ""
 
 (:background)
 class YuboWatchSDelegate extends System.ServiceDelegate {
