@@ -247,20 +247,26 @@ class YuboWatchView extends WatchUi.WatchFace {
 	            // generate plots, assume temp in (-10, 30)
 	            var px = Math.round(1.0 * (i + 1) / (numDays + 1) * dx + left);
 
-	            var low = bound(lows[i], -10.0, 35.0);
-	            var lowpy = Math.round((1.0 - (low + 12.0) / 49) * dy + top);
-	            
-	            var hi = bound(his[i], -10.0, 35.0);
-	            var hipy = Math.round((1.0 - (hi + 12.0) / 49) * dy + top);
-	            
-	            var dew = bound(dews[i], -10.0, 35.0);
-	            var dewpy = Math.round((1.0 - (dew + 12.0) / 49) * dy + top);
-
+                // null check for backcompat
                 dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-	            dc.fillRectangle(px - 1, lowpy - 1, 3, 3);
-	            dc.fillRectangle(px - 1, hipy - 1, 3, 3);
+                if (lows != null) {
+	               var low = bound(lows[i], -10.0, 35.0);
+	               var lowpy = Math.round((1.0 - (low + 12.0) / 49) * dy + top);
+	               dc.fillRectangle(px - 1, lowpy - 1, 3, 3);
+	            }
+	            
+	            if (his != null) {
+	               var hi = bound(his[i], -10.0, 35.0);
+	               var hipy = Math.round((1.0 - (hi + 12.0) / 49) * dy + top);
+	               dc.fillRectangle(px - 1, hipy - 1, 3, 3);
+	            }
+
 	            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-	            dc.fillRectangle(px - 1, dewpy - 1, 3, 3);
+	            if (dews != null) {
+	               var dew = bound(dews[i], -10.0, 35.0);
+	               var dewpy = Math.round((1.0 - (dew + 12.0) / 49) * dy + top);
+	               dc.fillRectangle(px - 1, dewpy - 1, 3, 3);
+	            }
 	        }
 	    }
     }
