@@ -51,12 +51,12 @@ class YuboDataFieldView extends WatchUi.DataField {
             infoDict.put("delapsed", (info.elapsedDistance).format("%05d"));
         }
         if (info has :currentHeartRate && info.currentHeartRate != null) {
-            infoDict.put("hrate", info.currentHeartRate);
+            infoDict.put("hrate", (info.currentHeartRate % 100).format("%02d"));
         }
         if (info has :currentSpeed && info.currentSpeed != null && info.currentSpeed > 0) {
             var pace = 1000.0 / (60 * info.currentSpeed); // min/km, frac
             infoDict.put("pace", Lang.format("$1$:$2$", [
-                (pace.toNumber() % 10).format("%d"),
+                (pace.toNumber() % 100).format("%02d"),
                 ((pace - pace.toNumber()) * 60).format("%02d")
             ]));
         }
@@ -72,18 +72,18 @@ class YuboDataFieldView extends WatchUi.DataField {
             }
             var timeSplit = ((info.elapsedTime - lastSplitTime) / 1000).toNumber();
             infoDict.put("tsplit", Lang.format("$1$:$2$", [
-                ((timeSplit / 60) % 10).toNumber().format("%d"),
+                ((timeSplit / 60) % 100).toNumber().format("%02d"),
                 (timeSplit % 60).format("%02d")
             ]));
         }
         if (info has :energyExpenditure && info.energyExpenditure != null) {
-            infoDict.put("power", (info.energyExpenditure * 69.78).format("%03d"));
+            infoDict.put("power", (info.energyExpenditure * 69.78 * 0.239).format("%03d"));
         }
         if (info has :trainingEffect && info.trainingEffect != null) {
             infoDict.put("effect", info.trainingEffect.format("%03.1f")); 
         }
         if (info has :maxHeartRate && info.maxHeartRate != null) {
-            infoDict.put("maxhrate", (info.maxHeartRate % 100).format("%03d"));
+            infoDict.put("maxhrate", (info.maxHeartRate % 100).format("%02d"));
         }
         
         var data = rd.getRunningDynamics();
@@ -156,7 +156,7 @@ class YuboDataFieldView extends WatchUi.DataField {
         dc.drawLine(0.5 * width, h4, 0.5 * width, height);
         
         dc.setColor(Graphics.COLOR_ORANGE, cbg);
-        dc.drawText(12, y2 + 20, fs, infoDict.get("maxhrate"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(12, y2, fs2, infoDict.get("maxhrate"), Graphics.TEXT_JUSTIFY_LEFT);
     }
 
 }
