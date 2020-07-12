@@ -6,8 +6,8 @@ using Toybox.Timer;
 using Toybox.Position;
 using Toybox.Sensor;
 
-var lat = 42.377410; // default location, Somerville
-var lon = -71.103310;
+var lat = 42.4522; // default location, cornell
+var lon = -76.4804;
 var appid = "";
 
 (:background)
