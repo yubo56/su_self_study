@@ -102,7 +102,8 @@
 \rhead{}
 \cfoot{\thepage/\pageref{LastPage}}
 
-\title{Miscellaneous Book Notes}
+\title{Miscellaneous Book Notes\\
+So I Don't Have to Keep Reopening Books}
 \author{Yubo Su}
 \date{\today}
 
@@ -337,11 +338,11 @@ Moving onto Fourier Transforms (continuous):
     \item Some special functions that are related to this are: the \emph{theta
         function}
         \begin{equation}
-            \theta(s) = \sum\limits_{n = -\infty}^\infty e^{-\pi n^2s}.
+            \vartheta(s) = \sum\limits_{n = -\infty}^\infty e^{-\pi n^2s}.
         \end{equation}
-        Note that $s^{-1/2}\theta(1/s) = \theta(s)$ for $s > 0$, which follows
-        from the Poisson summation formula for $\exp(-\pi sx^2)$. This is
-        connected to the zeta function
+        Note that $s^{-1/2}\vartheta(1/s) = \vartheta(s)$ for $s > 0$, which
+        follows from the Poisson summation formula for $\exp(-\pi sx^2)$. This
+        is connected to the zeta function
         \begin{equation}
             \zeta(s) = \sum\limits_{n=1}^\infty \frac{1}{n^s},
         \end{equation}
@@ -349,7 +350,7 @@ Moving onto Fourier Transforms (continuous):
         \begin{equation}
             \pi^{-s/2}\Gamma\p{s/2}\zeta(s)
                 = \frac{1}{2}\int\limits_{0}^\infty t^{s/2 - 1}
-                    \p{\theta(t) - 1}\;\mathrm{d}t.
+                    \p{\vartheta(t) - 1}\;\mathrm{d}t.
         \end{equation}
 
     \item The \emph{Radon transform} is a useful concept in imaging, and
@@ -383,9 +384,900 @@ Moving onto Fourier Transforms (continuous):
     \item By applying Fourier analysis to finite spaces, we can prove
         \emph{Dirichlet's theorem} on primes in arithmetic progression: if $q,
         l$ are positive integers with no common factor, then $l + kq$ for $k \in
-        \mathbb{Z}$ contains infinitely many prime numbers. I won't actually
-        ever use this, so see Ch 8 of this book.
+        \mathbb{Z}$ contains infinitely many prime numbers. We first cover some
+        background in number theory:
+        \begin{itemize}
+            \item One key result of number theory is the \emph{fundamental
+                theorem of arithmetic}: every positive integer $> 1$ can be
+                factored uniquely into a product of primes.
+
+            \item A key result on infinite \emph{products} of real numbers is
+                that, if $A_n = 1 + a_n$, and $\sum\limits \abs{a_n}$ converges,
+                then $\prod_n A_n$ also converges, and vanishes iff one of the
+                $a_n = 0$. Furthermore, as long as none of the $a_n \neq 1$,
+                $\prod_n 1/(1 - a_n)$ also converges.
+
+            \item For $s > 1$, we define the \emph{zeta function}
+                \begin{equation}
+                    \zeta(s) = \sum\limits_{n = 1}^\infty \frac{1}{n^s}.
+                \end{equation}
+                Note that $\zeta$ is continuous for $s > 1$.
+
+            \item Importantly, \emph{Euler's product formula} argues that
+                \begin{equation}
+                    \zeta(s) = \prod_p \frac{1}{1 - 1/p^s},
+                \end{equation}
+                where the sum is only taken over prime $p$.
+
+                Note that this is just a re-expression of the fundamental
+                theorem of arithmetic. Recall
+                \begin{equation}
+                    \frac{1}{1 - p^{-s}}
+                        = 1 + \frac{1}{p^s} + \frac{1}{p^{2s}} + \dots
+                \end{equation}
+                But then, by the fundamental theorem of arithmetic, every number
+                $n$ in the zeta funciton sum can be uniquely decomposed as a
+                product of powers of primes. Thus, multiplying all these
+                powers together, we get each $n$ exactly once. I'm not going to
+                work through the proof.
+
+            \item A next ingredient is another Euler proposition: $\sum\limits_p
+                1/p$ is divergent, when summed over prime $p$. To prove this, we
+                take a log of both sides of the Euler formula
+                \begin{align}
+                    \log \zeta(s) &= -\sum\limits_p \log\p{1 - 1/p^s},\\
+                        &= -\sum\limits_p \s{-1/p^s + \mathcal{O}(1/p^{2s})},\\
+                        &= \sum\limits_p 1/p^s + \mathcal{O}(1).
+                \end{align}
+                Here, recall $\sum\limits_p 1/p^{2s} \leq \sum\limits_n 1/n^2 =
+                \pi^2/6$. But the zeta function diverges as $s \to 1^+$, as it
+                becomes the harmonic sum.
+        \end{itemize}
+
+    \item Now, to prove Dirichlet's theorem, we just have to show that one
+        further refinement of the Euler proposition diverges:
+        \begin{equation}
+            \sum\limits_{p \equiv l \pmod q}1/p.
+        \end{equation}
+        This proof is nontrivial and requires Fourier analysis on the finite
+        group $\mathbb{Z}^*(q)$ (which I skipped), but we proceed:
+        \begin{itemize}
+            \item I skipped this, but: $\mathbb{Z}(q)$ is the integers modulo
+                $q$. Multiplication is unambigious on $\mathbb{Z}(q)$, as we
+                just multiply then take the modulus. An integer $n \in
+                \mathbb{Z}(q)$ is a \emph{unit} if $m \in \mathbb{Z}(q)$ such
+                that $nm \equiv 1 \pmod q$. $\mathbb{Z}^*(q)$ is an abelian
+                group under multiplication modulo $q$. Alternatively,
+                $\mathbb{Z}^*(q)$ are the elements in $\mathbb{Z}(q)$ that are
+                relatively prime to $q$. It's somewhat interesting that the
+                multiplicative group $\mathbb{Z}^*(q)$ lies within the additive
+                group $\mathbb{Z}(q)$!
+
+            \item Let's specialize to $q = 4, l = 1$ for simplicity. We define
+                the character on $\mathbb{Z}^*(4)$ such that $\chi(1) = 1$ and
+                $\chi(3) = -1$, and zero otherwise. This generalizes to the rest
+                of $\mathbb{Z}$ by just taking modulo $4$. This character is
+                multiplicative, so $\chi(nm) = \chi(n)\chi(m)$. Let's define the
+                sum
+                \begin{equation}
+                    L(s, \chi) = \sum\limits_{n = 1}^\infty \frac{\chi(n)}{n^s}.
+                \end{equation}
+                Note that $L(1, \chi) = \pi/4 < \infty$. The Euler product can
+                be generalized, since $\chi$ is multiplicative, so
+                \begin{equation}
+                    L(s, \chi) = \prod_p \frac{1}{1 - \chi(p) / p^s}.
+                \end{equation}
+                Taking the logarithm of both sides, we find
+                \begin{equation}
+                    \log L(s, \chi) = \sum\limits_{p \equiv 1}\frac{1}{p^s}
+                        - \sum\limits_{p \equiv 3}\frac{1}{p^s}
+                        + \mathcal{O}(1).
+                \end{equation}
+                Taking $s \to 1^+$, we find the RHS converges. However, since
+                $\sum\limits_p p^{-s}$ diverges when $s \to 1^+$, which is the
+                sum of the two terms on the RHS, the individual terms must
+                diverge as well. This proves that $\sum\limits_{p \equiv 1}1/p$
+                diverges, so there must be infinitely many primes of the form
+                $4k + 1$.
+
+                I omit the general proof, as the last step (summing over the
+                different characters) seems very complicated to do in general.
+        \end{itemize}
 \end{itemize}
+
+\section{Book 2: Complex Analysis}
+
+\begin{itemize}
+    \item Recall \emph{holomorphic} functions are differentiable in the
+        complex plane. A \emph{meromorphic} function is holomorphic except over
+        a set of isolated points. A general principle of complex analysis is
+        that analytic functions are effectively determined by their zeros, and
+        meromorphic functions by their zeros and poles.
+
+    \item For a given power series $\sum\limits_{n = 0}^\infty a_nz^n$, there
+        exists $0 \leq R \leq \infty$ such that (i) if $\abs{z} < R$ then the
+        series converges absolutely, and (ii) if $\abs{z} > R$ then the series
+        diverges, and $R$ the radius of convergence is given by \emph{Hadamard's
+        formula}
+        \begin{equation}
+            \frac{1}{R} = \lim \sup \abs{a_n}^{1/n}.
+        \end{equation}
+        Note that a power series defines a holomorphic function in its disc of
+        convergence, the derivative obtained by term-by-term differentiation,
+        which has the same radius of convergence. This implies that a power
+        series is infinitely complex differentiable in its disc of convergence.
+
+        A function $f$ is \emph{analytic} at a point $z_0$ if it has a local
+        power series expansion with positive radius of convergence. This turns
+        out to be equivalent to being holomorphic.
+
+    \item Of the three types of singularities (removable, poles, and essential),
+        poles are handled by the Cauchy residue theorem, while removable
+        singularities of $f(z)$ at $z_0$ require that $f(z)$ be finite in any
+        deleted neighborhood about $z_0$. Essential singularities are described
+        by the \emph{Casorati-Weierstrass Theorem}: suppose $f$ is holomorphic
+        in the deleted disk $D_r(z_0) - \z{z_0}$, and has an essential
+        singularity at $z_0$, then the image of $D_r(z_0) - \z{z_0}$ under $f$
+        is dense in the complex plane.
+
+        This is proven simply by contradiction. If the range of $f$ is not
+        dense, there exists $w \in \mathbb{C}$ and $\delta > 0$ such that
+        $\abs{f(z) - w} > \delta$ for all $z \in D_r(z_0) - \z{z_0}$. But if we
+        define $g(z) = 1 / \p{f(z) - w}$ on the deleted disk, it is holomorphic
+        on the deleted neighborhood, and $z_0$ must be either a removable
+        singularity or pole depending on whether $g(z) \neq 0$ or not,
+        respectively.
+
+        Picard proved a much stronger result, that $f$ about the essential
+        singularity takes on every complex value infinitely many times, with at
+        most one exception! Neat.
+
+    \item The Cauchy integral formula states (we did this in ACM95, I just am a
+        bit hazy so I rewrite briefly)
+        \begin{equation}
+            f(z) = \frac{1}{2\pi i}\int\limits_C \frac{f(\zeta)}{\zeta - z}
+                \;\mathrm{d}\zeta,
+        \end{equation}
+        for any point $z \in D$ if $F$ is holomorphic on $D$. This has some
+        clear consequences, including the averaging formula ($\zeta - z$ is
+        constant), Liouville's Theorem (entire, bounded functions are constant).
+
+        An complex analog to Weierstrass's theorem in real analysis (continuous
+        functions on a compact interval can be uniformly approximated by
+        polynomials) is Runge's approximation: any function holomorphic in a
+        neighborhood of a compact set $K$ can be uniformly approximated by
+        polynomials if $K^c$ (the complement) is connected.
+
+    \item Note that the meromorphic functions in the extended complex plane are
+        the rational functions! This is simple: for such a function, its
+        behavior near all poles must be described by \emph{principal parts},
+        i.e.\ near pole $z_k$, $f(z) = f_k(z) + g_k(z)$ where $f_k$ is
+        polynomial in $1 / (z - z_k)$ and $g_k$ is holomorphic in the deleted
+        neighborhood about $z_k$. Then, $H = f - \sum\limits_k f_k$ is nowhere
+        singular in the extended complex plane, so it must be entire and
+        bounded. By Liouville's Theorem, all bounded and entire functions must
+        be constant, so $H$ is in fact constant, and $f$ rational.
+
+    \item The \emph{argument principle} is a useful application of the Cauchy
+        residue theorem to meromorphic functions, and just requires a bit of
+        thinking if we're willing to be slapdash:
+        \begin{equation}
+            \frac{1}{2\pi i}\int\limits_{C}
+                \frac{f'(z)}{f(z)}\;\mathrm{d}z = N - P,
+        \end{equation}
+        where $N, P$ are the number of zeros and poles inside of $C$ of $f$,
+        including multiplicities. The idea is clear: zeros become poles because
+        $f(z)$ is in the denominator, while $f'(z) / f(z)$, if $f(z) = 1/z^p$,
+        becomes $-p/z$, coarsely (this is me reading).
+
+    \item We learned about deformation of integrals in ACM95. This is rigorously
+        defined by requiring a \emph{homotopy} $\gamma_s, s \in [0, 1]$
+        connecting the two curves $\gamma_0, \gamma_1$.
+\end{itemize}
+
+Harmonic/Fourier stuff:
+\begin{itemize}
+    \item Consider power series $f(z) = \sum\limits_{n = 0}^\infty a_n\p{z -
+        z_0}^n$. Then
+        \begin{equation}
+            a_n = \frac{1}{2\pi r^n}\int\limits_{0}^{2\pi}
+                f\p{z_0 + re^{i\theta}}e^{-in\theta}\;\mathrm{d}\theta.
+        \end{equation}
+        This is interesting, since Fourier analysis and complex functions become
+        related. Continuing.
+
+    \item A holomorphic function $f$ satisfies that the real and imaginary parts
+        $f: g + ih$ for $g, h: \mathbb{C} \to \mathbb{R}$ are \emph{harmonic},
+        so $\nabla^2 g = \nabla^2 h = 0$ where $\nabla^2 = \partial_{xx} +
+        \partial_{yy}$.
+
+    \item Functions for which the Fourier inversion formulae are valid, given by
+        \begin{align}
+            f(x) &= \int\limits_{-\infty}^\infty
+                \hat{f}\p{\xi}e^{2\pi i x \xi}\;\mathrm{d}\xi,\\
+            \hat{f}(\xi) &= -\int\limits_{-\infty}^\infty
+                f(x) e^{-2\pi ix\xi}\;\mathrm{d}x,
+        \end{align}
+        require $\abs{f(x)} \leq A / \p{1 + x^2}$ and $\abs{\hat{f}\p{\xi}} \leq
+        A' / (1 + \xi^2)$, ``moderate decrease''.
+
+        The \emph{Paley-Wiener Theorem} says that if $f$ is continuous and of
+        moderate decrease in $\mathbb{R}$, then $f$ has an extension to the
+        complex plane that is entire with $\abs{f(z)} \leq Ae^{2\pi M\abs{z}}$
+        for some $A > 0$ iff $\hat{f}$ is supported in the interval $\s{-M, M}$.
+        The intuition is just that the FT of $f(z)$ is bounded:
+        \begin{equation}
+            \abs{\int\limits_{-M}^M \hat{f}(\xi) e^{2\pi i \xi
+                z}\;\mathrm{d}\xi}
+                \leq
+            \int\limits_{-M}^M \abs{\hat{f}(\xi)} e^{-2\pi \xi
+                \p{\Im(z)}}\;\mathrm{d}\xi
+                \leq Ae^{2\pi M\abs{z}}.
+        \end{equation}
+
+        The detailed proof is somewhat more complex, since the real part of $z$
+        needs to satisfy certain bounds to be integrable as $\Re z \to \infty$.
+        A key result is the \emph{Phragm\'en-Lindel\"of theorem}: suppose $F$ is
+        holomorphic on the sector $S = \z{z: -\pi/4 < \arg z < \pi/4}$ and is
+        continuous on the closure of $S$. Assume $\abs{F(z)} \leq 1$ on the
+        boundary of the sector, then there are constants $C, c > 0$ such that
+        $\abs{F(z)} \leq Ce^{c\abs{z}}$, then in fact $\abs{F(z)} \leq 1$ over
+        $S$. In other words, if $F$ is bounded on the boundary by $1$, and
+        doesn't exhibit unreasonable growth, it is bounded everywhere by $1$. A
+        simple counterexample exhibiting unreasonable growth is $f(z)
+        \exp(z^2)$.
+
+        The PL theorem can be generalized: if $S$ is a sector whose vertex is at
+        the origin with angle $\pi/\beta$, and $F$ is holomorphic on $S$ that
+        doesn't grow faster than $C\exp\p{c\abs{z}^\alpha}$ for $0 < \alpha <
+        \beta$, then $\abs{F(z)} \leq 1$.
+\end{itemize}
+
+Conformal Mappings
+\begin{itemize}
+    \item Conformal mappings answer the question: given two open sets $U, V
+        \subseteq \mathbb{C}$, doees there exist a holomorphic bijection between
+        them? We call $U$ and $V$ \emph{biholomorphic}
+        or \emph{conformally equivalent}.
+
+    \item Often want to map onto $V = \mathbb{D}$ the unit disk. It turns out
+        that $f: U \to V$ being holomorphic and injective is sufficient for
+        bijectivity. For instance, the upper half plane maps onto the unit disk
+        via injective, holomorphic map $F: \mathbb{H} \to \mathbb{D}$ where $z
+        \mapsto (i - z) / (i + z)$. Indeed, the inverse exists, $G(w) = i\p{1 -
+        w} / (1 + w)$.
+
+    \item Why is this useful? Consider the Dirichlet problem (BVP) on an open
+        set $\Omega$, given by $\nabla^2 u = 0$ on $\Omega$ and $u = f$ on
+        $\partial\Omega$. The solution where $\Omega = \mathbb{D}$ is well
+        studied and is simple:
+        \begin{equation}
+            u\p{re^{i\theta}} = \frac{1}{2\pi}\int\limits_{0}^{2\pi}
+                P_r\p{\theta - \varphi} \tilde{f}\p{e^{i\varphi}}
+                \;\mathrm{d}\varphi,
+        \end{equation}
+        where $P_r$ is the Poisson kernel, and $\tilde{f}$ is the boundary data.
+        We can use conformal maps to generalize this solution to other domains,
+        e.g.\ in the book we try this for a strip. This works because of the
+        following lemma: if $U, V$ are open sets in $\mathbb{C}$ and $F: V \to
+        U$ holomorphic while $u: U \to \mathbb{C}$, then $u \circ F$ is harmonic
+        on $V$.
+
+    \item The Schwarz lemma gives us a bit more understanding of holomorphic
+        functions on $\mathbb{D}$. Suppose $f: \mathbb{D} \to \mathbb{D}$ is
+        holomorphic, and $f(0) = 0$. Then over $\mathbb{D}$:
+        \begin{itemize}
+            \item $\abs{f(z)} \leq \abs{z}$
+            \item $\abs{f'(0)} \leq 1$.
+            \item If for any $z_0 \neq 0$, we have $\abs{f\p{z_0}} = \abs{z_0}$,
+                then $f$ is a rotation.
+            \item If $\abs{f'(0)} = 1$, then $f$ is a rotation.
+        \end{itemize}
+        This defines the group of \emph{automorphisms} (map of an open set to
+        itself) of $\mathbb{D}$, denoted in general $\mathrm{Aut}(\mathbb{D})$,
+        which forms a group under composition.
+
+        The obvious automorphisms are the identity and rotations. An interesting
+        class of automorphisms are $\psi_\alpha(z) = (\alpha - z) / (1 -
+        \bar{\alpha}z)$ where $\abs{\alpha} < 1$, as they are their own inverse.
+        In particular, combining rotations and these automorphisms span
+        $\mathrm{Aut}(\mathbb{D})$.
+
+    \item Note that, since we have the conformal map $F: \mathbb{H} \to
+        \mathbb{D}$, and $\mathrm{Aut}\p{\mathbb{D}}$, we also can build
+        $\mathrm{Aut}\p{\mathbb{H}}$ as $\Gamma: \mathrm{Aut}\p{\mathbb{D}} \to
+        \mathrm{Aut}\p{\mathbb{H}}$ such that $\varphi \mapsto F^{-1} \circ
+        \varphi \circ F$. So $\Gamma$ is an isomorphism between these two
+        groups. Carrying this calculation out shows that
+        \begin{equation}
+            \mathrm{Aut}\p{\mathbb{H}} = \z{
+                f(z): z \mapsto \frac{az + b}{cz + d} \mid
+                a, b, c, d \in \mathbb{R}, ad - bc = 1}.
+        \end{equation}
+        Thus, we see that $\mathrm{Aut}\p{\mathbb{H}}$ is related to
+        $\mathrm{SL}_2\p{\mathbb{R}}$, the group of $2 \times 2$ matricies with
+        real entries and determinant $1$. However, the same transformation is
+        generated by matrix elements $M = ((a, b), (c, d))$ and $-M$, so the
+        group that is isomorphic with $\mathrm{Aut}\p{\mathbb{H}}$ is the
+        \emph{projective special linear group} $\mathrm{PSL}_2\p{\mathbb{R}}$,
+        for which the sign of $M$ is projected/quotiented out.
+
+    \item The \emph{Riemann mapping theorem} is the key result. If $\Omega$ is
+        proper and simply connected, and $z_0 \in \Omega$, then there exists a
+        unique conformal map $F: \Omega \to \mathbb{D}$ such that $F(z_0) = 0$
+        and $F'(z_0) > 0$. Equivalently, any two proper simply connected open
+        subsets in $\mathbb{C}$ are conformally equivalent.
+
+        One special case of the Riemann mapping theorem is when we want to map
+        polygons onto the disk; these maps can be given explicitly by the
+        \emph{Schwarz-Christoffel formula}. First, we define the
+        Schwarz-Christoffel integral
+        \begin{equation}
+            S(z) = \int\limits_0^z \prod_{i=1}^N \p{\zeta - A_i}^{\beta_i}
+                \;\mathrm{d}\zeta,
+        \end{equation}
+        where the $A_i$ are $N$ distinct points on the real axis arranged in
+        increasing order, and $\beta_i$ satisfy $\beta_k < 1$ and $\sum\limits_k
+        \beta_k > 1$. Up to some branch cut, $\lim_{\abs{z} \to \infty} S(z) =
+        a_\infty$ exists. If we also define $a_k = S(A_k)$, then it turns out
+        that the $\z{a_k, a_\infty}$ will form a polygon of either $N$ or $N +
+        1$ verticies. In these two cases, the formal map of $\mathbb{H}$ to the
+        polygon $P$ is given by $F(z) = c_1 S(z) + c_2$ (in the latter case, the
+        product runs up to $N$, one fewer than the number of vertices).
+
+    \item An example of these conformal maps is the elliptic integral
+        \begin{equation}
+            I(z) = \int\limits_0^z \frac{1}{\s{\p{1 - \zeta^2}
+                \p{1 - k^2\zeta^2}}^{1/2}}\;\mathrm{d}\zeta.
+        \end{equation}
+        This clearly has the same form sa the Schwarz-Christoffel formula above,
+        and indeed we find it is map from the real axis to a rectangle with
+        verticies $\pm K, \pm K + iK'$ for
+        \begin{align}
+            K(k) &= \int\limits_{0}^1\frac{1}{\sqrt{\p{1 - x^2}
+                \p{1 - k^2x^2}}}\;\mathrm{d}x,\\
+            K'(k) &= \int\limits_1^{1/k}\frac{1}{\sqrt{
+                \p{x^2 - 1}\p{1 - k^2x^2}}}\;\mathrm{d}x.
+        \end{align}
+        Indeed, $I(z)$ maps $\mathbb{H}$ to the interior of this rectangle. If
+        we consider $\mathrm{sn}(z)$ the inverse of $I(z)$, we note that the
+        reflection principle gives $\mathrm{sn}(z) =
+        \overline{\mathrm{sn}\p{\overline{z}}}$. In fact, careful application of
+        such reflections shows that $\mathrm{sn}(z) = \mathrm{sn}(z + 4K) =
+        \mathrm{sn}\p{z + 2iK'}$, i.e.\ it is \emph{doubly periodic} in either
+        direction. This is characteristic of \emph{elliptic functions}, which we
+        will study later.
+\end{itemize}
+
+Entire Functions, Theory and Examples
+\begin{itemize}
+    \item \emph{Jensen's formula} says that if $f$ is holomorphic in some disk
+        $D_R$ where $R$ is the radius, and $z_k$ are the zeros of $f$ in $D_R$,
+        then
+        \begin{equation}
+            \log \abs{f(0)} = \sum\limits_{k = 1}^N \log\p{\frac{\abs{z_k}}{R}}
+                + \frac{1}{2\pi}\int\limits_{0}^{2 \pi}
+                    \log\abs{f\p{Re^{i\theta}}}\;\mathrm{d}\theta.
+        \end{equation}
+        If $f$ has no zeros in $D_R$, $\log \abs{f}$ is a harmonic function,
+        which also has a mean value property, so this is a generalization of
+        that.
+
+    \item We will want to consider infinite products, so we need some theorems.
+        Note that if the sum $\sum\limits_n \abs{a_n} < \infty$, then the
+        product $\prod\limits_{n = 1}^\infty \p{1 + a_n}$ converges, and
+        converges to $0$ iff any of the $a_n = 1$.
+
+        Given this, if $\z{F_n}$ is a sequence of holomorphic functions on the
+        open set $\Omega$ that satisfy $\abs{F_n(z) - 1} \leq c_n$ and
+        $\sum\limits_n c_n < \infty$, then the infinite product $\prod\limits_{n
+        = 1}^\infty F_n(z)$ converges uniformly in $\Omega$ to a holomorphic
+        function $F(z)$. This just follows from the previous note.
+
+    \item Before introducing the Weierstrass products, we give an example.
+        Consider the identity
+        \begin{equation}
+            \pi \cot \p{\pi z} = \mathrm{P}
+                \s{\sum\limits_{n = -\infty}^\infty \frac{1}{z + n}},
+        \end{equation}
+        where we denote the principal value of the sum. It is easy to show that
+        the difference between these two functions is entire, bounded, and odd,
+        implying it is zero. This is then related to the infinite product
+        \begin{equation}
+            \frac{\sin\p{\pi z}}{\pi} = z \prod_{n = 1}^\infty
+                \p{1 - \frac{z^2}{n^2}},
+        \end{equation}
+        recalling the famous Euler identity.
+
+        The above is a special case of the \emph{Weierstrass infinite product},
+        which states: if $\z{a_n}$ is a sequence of complex numbers with
+        $\abs{a_n} \to \infty$ (i.e.\ do not accumulate anywhere finite, and are
+        well-spaced, so no essential singularities), then all entire functions
+        $f$ that vanish at $z = a_n$ are related by some factor $e^{g(z)}$ where
+        $g(z)$ is entire. The second part of this is easy: let $f_1$ and $f_2$
+        be two such $f$, so $f_1 / f_2$ has removable singularities only at the
+        $a_n$ and vanishes nowhere, so $f_1 = f_2e^{g(z)}$.
+
+        The first part is a bit more complicated, since we have to construct at
+        least one such $f$. The naive guess is $\prod_n \p{1 - z/a_n}$, but this
+        does not always converge (see proposition from previous bullet point:
+        the $c_n$ built from this can diverge e.g.\ if $a_n$ grows like $1/n$).
+        Instead, we regularize these with \emph{canonical factors}
+        \begin{equation}
+            E_n(z) = \p{1 - z}\exp\s{\sum\limits_{k = 1}^nz^k/k}.
+        \end{equation}
+        Then the Weierstrass product is
+        \begin{equation}
+            f(z) = z^m \prod_{n = 1}^\infty E_n\p{z / a_n},
+        \end{equation}
+        where $m$ is the order of zero at $z = 0$. Note that the order of the
+        canonical factors grows.
+
+    \item \emph{Hadamard's factorization Theorem} argues that if the function is
+        of finite order ($\rho$, where $\abs{f(z)} \leq
+        A\exp\s{B\abs{z}^\rho}$), then the Weierstrass infinite product can be
+        rewritten
+        \begin{equation}
+            f(z) = e^{P(z)}z^m\sum\limits_{n = 1}^\infty E_k\p{z / a_n},
+        \end{equation}
+        where $k = \lfloor \rho \rfloor$ and $P$ is a polynomial of degree $\leq
+        k$.
+
+    \item Above, we showed that all entire functions are essentially
+        characterized by their zeros. The Gamma function, $\Gamma(s)$, is entire
+        and is such that $1 / \Gamma(s)$ has zeros at all non-positive integers,
+        and is defined
+        \begin{equation}
+            \Gamma(s) = \int\limits_0^\infty e^{-t}t^{s - 1}\;\mathrm{d}t.
+        \end{equation}
+        Note that $\Gamma(z)$ as defined is analytic for $\Re(s) > 0$. It can be
+        analytically continued (an analytic function that is equal to
+        $\Gamma(z)$ for $\Re(s) > 0$) by leveraging $\Gamma\p{s + 1} =
+        s\Gamma(s)$. This analytic continuation is unique and has simple poles
+        at $s = 0, -1,\dots$ with residues $\p{-1}^n/n!$ at $s = -n$, and is
+        hence meromorphic on $\mathbb{C}$.
+
+        An alternative idea is to split the integral for $\Gamma(s)$
+        \begin{align}
+            \Gamma(s) &= \int\limits_0^1 e^{-t}t^{s - 1}\;\mathrm{d}t
+                + \int\limits_1^\infty e^{-t}t^{s - 1}\;\mathrm{d}t,\\
+                &= \sum\limits_{n = 0}^\infty \frac{\p{-1}^n}{n!(n + s)}
+                    + \int\limits_1^\infty e^{-t}t^{s - 1}\;\mathrm{d}t.
+        \end{align}
+        Note that the integral is entire, while the series defines a meromorphic
+        function with poles at the negative integers and the correct residues.
+
+        $\Gamma(s)$ has a few more important properties:
+        \begin{itemize}
+            \item For all $s \in \mathbb{C}$, $\Gamma(s) \Gamma(1 - s) = \pi /
+                \sin(\pi s)$, i.e.\ $\Gamma$ has some symmetry about $\Re(s) =
+                1/2$. Intuitively, $\Gamma(1 - s)$ has poles at all positive
+                integers, so the LHS has poles at all integers, as does the
+                RHS\@.
+
+            \item $1 / \Gamma(s)$ has growth $\abs{1 / \Gamma(s)} \leq
+                c_1e^{c_2\abs{s}\log \abs{s}}$. In fact:
+                \begin{equation}
+                    \frac{1}{\Gamma(s)} = e^{\gamma s}s \prod_{n = 1}^\infty
+                        \p{1 + \frac{s}{n}} e^{-s/n},
+                \end{equation}
+                where $\gamma = \lim_{N \to \infty} \sum\limits_{n = 1}^N
+                \frac{1}{n} - \log N$ is \emph{Euler's Constant}. The proof is a
+                simple application of the Hadamard factorization theorem and
+                requiring $\Gamma(1) = 1$.
+        \end{itemize}
+
+    \item The Reimann zeta function is initially defined for real $s > 1$ by
+        \begin{equation}
+            \zeta(s) = \sum\limits_{n = 1}^\infty \frac{1}{n^s}.
+        \end{equation}
+        This can be analytically continued into $\mathbb{C}$, but it is slightly
+        tricky. It is easy to continue to $\Re(s) > 1$ by just taking $s$
+        complex. To proceed further, we must introduce the theta function as
+        well (discussed above),
+        \begin{equation}
+            \vartheta(t) = \sum\limits_{n = -\infty}^\infty
+                e^{-\pi n^2t} = t^{-1/2}\vartheta(1/t).
+        \end{equation}
+        If we then recall the identity
+        \begin{equation}
+            \pi^{-s/2}\Gamma\p{s/2} \zeta(s) = \frac{1}{2}\int\limits_0^\infty
+                u^{(s/2) - 1}\s{\vartheta(u) - 1}\;\mathrm{d}u,
+        \end{equation}
+        then a natural modification of the $\zeta$ function is the $\xi$
+        function, which is slightly more symmetric:
+        \begin{equation}
+            \xi(s) = \pi^{-s/2}\Gamma\p{s/2}\zeta(s).
+        \end{equation}
+        Note that $\xi$ can be analytically continued to be meromorphic with
+        simple poles at $s = 0, 1$, and $\xi(s) = \xi(1 - s)$, by simply
+        expanding the identity above. Then, dividing the above by $\Gamma\p{s /
+        2}$, we see that $\zeta(s)$ only has a simple pole at $s = 1$, since the
+        simple pole at $s = 0$ multiplies by the simple zero of $\Gamma^{-1}\p{s
+        / 2}$.
+
+        This is a lot of machinery, and doesn't give a lot of insight into the
+        actual behavior of $\zeta$. Instead, there are a few other analytic
+        continuations for $\zeta$ that prove useful:
+        \begin{itemize}
+            \item Given the family of functions $\z{\delta_n(s)}_{n =
+                1}^\infty$ by
+                \begin{equation}
+                    \delta_n(s) = \int\limits_{n}^{n + 1}
+                        \frac{1}{n^s} - \frac{1}{x^s}\;\mathrm{d}x,
+                \end{equation}
+                then
+                \begin{equation}
+                    \zeta(s) = \frac{1}{s - 1} + \sum\limits_{n = 1}^\infty
+                        \delta_n(s),
+                \end{equation}
+                where $\Re(s) > 0$ (breaking down at $s = 0$ because of the
+                $\delta_n(s)$) and the summation is holomorphic. This can be
+                analyzed to show that the growth of $\zeta$ near $\Re(s) = 1$ is
+                generally modest.
+
+            \item Note that $\zeta(s) = \frac{1}{\Gamma(s)}\int\limits_0^\infty
+                \frac{x^{s - 1}}{e^x - 1}\;\mathrm{d}x$, and separating the
+                integral into $[0, 1]$ and $(1,\infty)$ shows that the first
+                term has a simple pole at $s = 0$ and nowhere else.
+
+            \item Lastly,
+                \begin{equation}
+                    \zeta(s) = \frac{s}{s - 1} - s\int\limits_1^\infty
+                        \frac{\z{x}}{x^{s + 1}}\;\mathrm{d}x,
+                \end{equation}
+                where $\z{x}$ is the fractional part of $x$. This can be
+                analytically continued by introducing the periodic function
+                $Q(x) = \z{x} - 1/2$ and taking $k$ successive integrals of $Q$
+                to push the zero leftwards to $s = -k$.
+        \end{itemize}
+
+    \item The $\zeta$ function is of importance for the distribution of primes.
+        We recall that $\zeta(s) = \prod_p \p{1 - p^{-s}}^{-1}$ for prime $p$,
+        and furthermore it does not vanish if $\Re(s) > 1$, as none of its
+        product terms are zero. Furthermore, recall
+        \begin{equation}
+            \zeta(s) = \pi^{s- 1/2}\frac{\Gamma\p{(1 - s) / 2}}{\Gamma(s/2)}
+                \zeta(1 - s).
+        \end{equation}
+        If $\Re(s) < 0$, then $\zeta(1 - s)$ has no zeros, but $1 / (\Gamma(s /
+        2))$ has zeros at $s = -2, -4, -6,\dots$ (not zero due to domain
+        restriction). Thus, outside of the strip $\Re(s) \in [0, 1]$, the only
+        zeros are at the negative even numbers. These are called the
+        \emph{trivial zeros}.
+
+        Inside the \emph{critical strip}, $\Re(s) \in [0, 1]$, analysis is a bit
+        trickier. The \emph{Riemann hypothesis} claims that the zeros of
+        $\zeta(s)$ lie on the line $\Re(s) = 1/2$. We won't see a proof of the
+        RH in this book, but we can show that $\zeta$ has no zeros on the line
+        $\Re(s) = 1$, which by the functional equation above forces no zeros on
+        $\Re(s) = 0$. In particular for every $\epsilon > 0$, we can find $1 /
+        \abs{\zeta(s)} \leq c_\epsilon \abs{t}^\epsilon$ when $s = \sigma + it$,
+        where $\sigma \geq 1$ and $t \geq 1$.
+
+        Our ultimate goal is the function $\pi(x)$, the number of primes $\leq
+        x$ (we guesstimate this in tidbits, and is proven by Tchebychev, $\pi(x)
+        \approx x / \log x$). A key intermediate step is the Tchebychev
+        $\psi$-function and its integral $\psi_1$
+        \begin{align}
+            \psi(x) &= \sum\limits_{p, m \mid p^m \leq x}\log p,\\
+                &= \sum\limits_{p \leq x}\left\lfloor \frac{\log x}{\log p}
+                    \right\rfloor \log p,\\
+            \psi_1(x) &= \int\limits_1^x \psi(u)\;\mathrm{d}u.
+        \end{align}
+        The goal is to show $\psi_1(x) \sim x^2/2$ as $x \to \infty$, which
+        gives $\psi(x) \sim x$ and therefore that $\pi(x) \sim x / \log x$, all
+        as $x \to \infty$. To be precise, this requires
+        \begin{align}
+            1 &\leq \liminf_{x \to \infty}\pi(x) \frac{\log x}{x} &
+            \limsup_{x \to \infty} \pi(x) \frac{\log x}{x} \leq 1.
+        \end{align}
+        The key trick is that , if we define the function $\Lambda(n) = \log p$
+        if $n = p^m$ for some prime $p$, we can obtain
+        \begin{align}
+            \log \zeta(s) = \sum\limits_{p, m}\frac{p^{-ms}}{m},\\
+            \frac{\zeta'(s)}{\zeta(s)} = -\sum\limits_{n = 1}^\infty
+                \frac{\Lambda(n)}{n^s},
+        \end{align}
+        and then that, for all $c > 1, \Re(s) = c$
+        \begin{equation}
+            \psi_1(x) = \frac{1}{2\pi i}\int\limits_{c - i\infty}
+                ^{c + i\infty} \frac{x^{s + 1}}{s(s + 1)}
+                    \p{-\frac{\zeta'(s)}{\zeta(s)}}\;\mathrm{d}s.
+        \end{equation}
+        This can be verified with direct computation. But then, to compute the
+        integral on the RHS, we deform the contour to be an intended contour
+        with $\Re(s) = 1$ except for a small neighborhood about $s = 1$. The
+        residue is $x^2/2$, and the rest is mostly bookkeeping.
+\end{itemize}
+
+Elliptic Functions
+\begin{itemize}
+    \item The elliptic functions were introduced by Jacobi, and his sn/cn/dn
+        functions, but that is messy. Instead, consider the set of \emph{doubly
+        periodic} functions $f$ such that $f\p{z + w_1} = f\p{z + w_2} = f(z)$
+        for linearly independent $w_1$ and $w_2$, and consider $f$ meromorphic.
+        For convenience, rescale these to $1$ and $\tau$ with $\Im(\tau) > 0$.
+        We then consider the lattice
+        \begin{equation}
+            \Lambda = \z{n + m\tau: n, m \in \mathbb{Z}}.
+        \end{equation}
+        Thus, $f$ is constant up to translation by elements in $\Lambda$. The
+        \emph{fundamental parallelogram} of $\Lambda$ is the set of points $P_0
+        = \z{z = a + b\tau \mid 0 \leq a, b < 1}$. $f$ is completely determined
+        by its values on $P_0$, and in fact any translation of $P$ (called a
+        \emph{period parallelogram}).
+
+        Liouville's theorem says that any entire doubly periodic function is
+        constant.
+
+    \item A function is \emph{elliptic} if it is doubly periodic, meromorphic,
+        and non-constant. Moreover, it must have at least two poles (they can be
+        degenerate): integrate around $\partial P_0$, periodicity ensures this
+        integral is zero, so by the residue theorem the sum of enclosed residues
+        is zero as well. This cannot be the case with just one simple pole, and
+        we know there must be at least one pole, else the function is entire.
+
+    \item As an example of an elliptic function is to place a double pole at
+        every lattice point in $\Lambda$. To ensure convergence as $\abs{w} \to
+        \infty$, we consider the following series
+        \begin{equation}
+            \wp(z) = \frac{1}{z^2} + \sum\limits_{w \in \Lambda - \z{0}}
+                \s{\frac{1}{\p{z + w}^2} - \frac{1}{w^2}}.
+        \end{equation}
+        The sum converges for all $z$. It isn't immediately obviously periodic
+        (though can be shown by rearranging terms in the absolutely convergent
+        sum), but $\wp'(z)$ is very obviously periodic.
+
+        Note that $\wp'(z)$ vanishes at the three points $z = 1/2$, $z =
+        \tau/2$, and $z = (1 + \tau)/2$; these are the \emph{half-periods} of
+        $\wp$. It is useful to note further that
+        \begin{equation}
+            (\wp')^2 = 4\p{\wp - e_1}\p{\wp - e_2}\p{\wp - e_3}
+        \end{equation}
+        for $e_i$ these three half-periods. The importance of these two together
+        is that: every elliptic function $f$ with periods $1, \tau$ is a
+        rational function of $\wp$ (even) and $\wp'$ (odd).
+
+    \item Note that in general, if the periods $(1, \tau)$ generate $\Lambda$,
+        so too do $(1, 1 + \tau)$. Additionally, switching the two periods $w_1,
+        w_2$ gives $\tau \to -1/\tau$. Indeed, it turns out that $\wp(z; \tau) =
+        \wp\p{z; \tau + 1} = \wp\p{z; -1/\tau} / \tau^2$. These two operations
+        generate the \emph{modular group}, under which all functions related to
+        $\wp$ should obey similar transformation laws.
+
+        The \emph{Eisenstein series} of order $k$ is related to $\wp$, and is
+        written
+        \begin{equation}
+            E_k(\tau) = \sum\limits_{w \in \Lambda - \z{0}} \frac{1}{w^k},
+        \end{equation}
+        for $k \geq 3$ (recall $k = 2$, the $\wp$ case, is not convergent). In
+        general, $E_k(\tau + 1) = E_k(\tau) = \tau^{-k} E_k\p{-1/\tau}$. Note
+        also that if $k$ is odd, the Eisenstein series is identically zero. The
+        Eisenstein series are important because $\wp = 1/z^2 + 3E_4z^2 + 5E_6z^4
+        + \dots$.
+
+    \item The Eisenstein series are actually related to the divisor functions.
+        First, by the Poisson summation identity,
+        \begin{equation}
+            \sum\limits_{n = -\infty}^\infty \frac{1}{\p{n + \tau}^k}
+                = \frac{\p{-2\pi i}^k}{(k - 1)!} \sum\limits_{l = 1}^\infty
+                    l^{k - 1}e^{22\pi i \tau l}.
+        \end{equation}
+        Then, if $\sigma_l(r) \equiv \sum\limits_{d \mid r}d^l$, then
+        \begin{align}
+            E_k(\tau) &= \sum\limits_{n \neq 0}\frac{1}{n^k}
+                + \sum\limits_{m \neq 0}\sum\limits_{n = -\infty}^\infty
+                    \frac{1}{(n + m\tau)^k},\\
+                &= 2\zeta(k) + \frac{2(-2\pi i)^k}{(k - 1)!}
+                    \sum\limits_{m > 0}\sum\limits_{l = 1}^\infty l^{k - 1}
+                        e^{2\pi i \tau ml},\\
+                &= 2\zeta(k) + \frac{2(-2\pi i)^k}{(k - 1)!}
+                    \sum\limits_{r = 1}^\infty \sigma_{k - 1}(r) e^{2\pi i \tau
+                    r}.
+        \end{align}
+        The divisor function comes in to count the number of times each $ml$ is
+        encountered when summing over $m, l$.
+
+    \item The general $\Theta$ function is defined
+        \begin{equation}
+            \Theta\p{z ; \tau} = \sum\limits_{n = -\infty}^\infty
+                e^{\pi i n^2 \tau}e^{2\pi i n z}.
+        \end{equation}
+        Note that earlier in this book, we used $\vartheta(t) = \Theta\p{0;
+        it}$. In particular, $\Theta\p{z + 1; \tau} = \Theta(z; \tau)$ while
+        $\Theta\p{z + \tau; \tau} = \Theta\p{z;\tau}e^{-\pi i \tau} e^{-2\pi i
+        z}$, so it is quasi-elliptical. Surprisingly, the function
+        \begin{equation}
+            \Pi\p{z; \tau} = \prod\limits_{n = 1}^\infty
+                \p{1 - q^{2n}}
+                \p{1 + q^{2n - 1}e^{2\pi iz}}
+                \p{1 + q^{2n - 1}e^{-2\pi iz}},
+        \end{equation}
+        where $q = e^{\pi i \tau}$ is traditional, has almost the same
+        properties as $\Theta(z; \tau)$, and in fact for $z \in \mathbb{C}$ and
+        $\tau \in \mathbb{H}$ we have $\Theta\p{z; \tau} = \Pi\p{z; \tau}$! This
+        is the \emph{product formula} for $\Theta$.
+
+    \item The \emph{partition function} studies how many ways to partition a
+        number $n$. For instance, if $p(n)$ is the number of ways $n$ can be
+        written as a sum of positive integers,
+        \begin{equation}
+            \sum\limits_{n = 0}^\infty p(n) x^n = \prod\limits_{k = 1}^\infty
+                \frac{1}{1 - x^k}.
+        \end{equation}
+        This just gives us the generating function, and the proof qualitatively
+        is clear: $(1 - x^k)^{-1} = \sum\limits_m x^{km}$, and we multiply a
+        bunch of these together.
+
+        Interestingly, a much deeper result is in store. Call $p_e(n)$ and
+        $p_o(n)$ the number of partitions of $n$ into an even and odd number of
+        unequal parts respectively. It turns out that $p_{e}(n) - p_{o}(n) =
+        \p{-1}^k$ when $n = k(3k + 1) / 2$ otherwise $0$. These numbers are
+        called the \emph{pentagonal numbers}, the number of pieces when the
+        numbers are arranged in a pentagon (versus triangular numbers $k(k-1)/2$
+        and squares $k^2$). This profound result comes by observing from
+        generating functions
+        \begin{equation}
+            \sum\limits_{n = 1}^\infty\s{p_e(n) - p_o(n)}x^n
+                = \prod\limits_{m = 1}^\infty \p{1 - x^m}
+                = \sum\limits_{k = -\infty}^\infty \p{-1}^k x^{x(3k+1)/2}.
+        \end{equation}
+        The first equality comes by noting that the number of negative signs
+        gives the number of ways to combine a bunch of $x^m$ into an $x^n$. The
+        second equality comes from the $\Theta$ function: take $x = e^{2\pi
+        iu}$, $q = e^{3\pi iu}$ and $z = 1/2 + u/2$, then apply the product
+        formula.
+
+    \item The $\Theta$ function also comes into play when discussing the sum of
+        squares problems. I won't copy this down, but it's good to know. Call
+        $r_q(n)$ the number of ways to write $n$ as a sum of $q$ squares of
+        integers (including repetitions and signs), then we have:
+        \begin{itemize}
+            \item If $n \geq 1$, then $r_2(n) = 4\p{d_1(n) - d_3(n)}$, where
+                $d_j(n)$ is the number of divisors of $n$ of the form $4k + j$.
+                The proof relies on generating functions, or the identity
+                \begin{equation}
+                    \theta(t)^2 = \sum\limits_{n = 0}^\infty r_2(n) q^n,
+                \end{equation}
+                when $q = e^{\pi i t}$.
+
+            \item Every number is a sum of four squares, and it turns out that
+                $r_4(n) = 8\sigma_1^*(n)$ where $\sigma_1^*(n)$ is the sum of
+                divisors of $n$ that are not divisible by $4$. In fact, in
+                general,
+                \begin{equation}
+                    \theta(t)^4 = \sum\limits_{n = 0}^\infty r_4(n)q^n.
+                \end{equation}
+        \end{itemize}
+        These proofs look somewhat involved. But they are a testament to the
+        power of the product formula for $\Theta$ and generating functions (more
+        in exercises).
+\end{itemize}
+
+\subsection{Asymptotic Integrals}
+
+The guiding principle is the study of integrals
+\begin{equation}
+    I(s) = \int\limits_a^b e^{-s \Phi(x)}\;\mathrm{d}x.
+\end{equation}
+If $\Phi$ is complex, for large $s$ it is difficult to evaluate $I(s)$ since the
+integrand is highly oscillatory. We will study a few characteristic cases of
+evaluating such integrals.
+\begin{itemize}
+    \item Asymptotic behavior of Bessel functions and contour deformation: one
+        formula for the Bessel functions is
+        \begin{equation}
+            J_\nu(s) = \frac{(s/2)^\nu}{\Gamma\p{\nu + 1/2}\Gamma(1/2)}
+                \int\limits_{-1}^1 e^{isx}\p{1 - x^2}^{\nu - 1/2}
+                    \;\mathrm{d}x.
+        \end{equation}
+        This is hard to evaluate when $s \to \infty$. We are basically
+        interested in the function
+        \begin{equation}
+            I(s) = \int\limits_{-1}^1 e^{isx}\p{1 - x^2}^{\nu - 1/2}
+                \;\mathrm{d}x.
+        \end{equation}
+        If we raise the integrand to the complex plane $x \to z$ and consider
+        the contour integral defined by $1 \to 1 + i\infty \to -1 + i\infty \to
+        -1 \to 1$, we see that $I(s)$ is just the difference of the integral
+        along the imaginary legs. But along these legs, $x = \pm 1 + iy$ where
+        $0 \leq y < \infty$, so the integral rapidly converges, and we can
+        obtain the approximation $J_\nu(s) \approx \sqrt{2/\pi s} \cos\p{s - \pi
+        \nu/2 - \pi/4}$.
+
+    \item Another example of this is Laplace's Method / the stationary phase
+        approximation (when $s$ is large but real/imaginary, respectively, and
+        $\Phi$ attains a minimum on $a, b$).
+
+    \item The \emph{Airy} function has slow-to-converge integral
+        \begin{equation}
+            \mathrm{Ai}(s) = \frac{1}{2\pi}\int\limits_{-\infty}^\infty
+                e^{i\p{x^3/3 + sx}}\;\mathrm{d}x.
+        \end{equation}
+        It satisfies $\mathrm{Ai}''(s) = s\mathrm{Ai}(s)$. Again, we want to
+        understand the behavior for $s \to \pm \infty$. Making the
+        transformation $x \mapsto \sqrt{u}x$, we find that in the two limits
+        \begin{align}
+            \mathrm{Ai}\p{-u} &= \frac{u^{1/2}}{2\pi} \int\limits_{-\infty}
+                ^\infty e^{it\p{x^3/3 - x}}\;\mathrm{d}x,\\
+            \mathrm{Ai}\p{+u} &= \frac{u^{1/2}}{2\pi} \int\limits_{-\infty}
+                ^\infty e^{-t\p{-i(x^3/3 + x)}}\;\mathrm{d}x,
+        \end{align}
+        where $t = \abs{u}^{3/2}$. In the former case, the stationary phase
+        approximation gives the answer. In general, calling $F(z) = -i(z^3/3 +
+        x)$, we seek to deform the integration onto a contour $\Gamma$ such that
+        $\Im(F) = 0$ on $\Gamma$ and $\Re(F)$ has a minimum at some $z_0$ on
+        $\Gamma$; this is the \emph{method of steepest descent}.
+
+    \item A much more complex example, which I will note briefly, is the
+        derivation of the Hardy-Ramanujan asymptotic formula for the partition
+        function. The basic idea is as follows: suppose $\z{F_n}$ is some
+        sequence such that the generating function $F(w) = \sum\limits_{n =
+        0}^\infty F_nw^n$ converges on the unit disc but has a pole of order $r$
+        at $w = 1$. Then there is a polynomial $P$ of degree $r - 1$ such that
+        $F_n \approx P(n)$ for large $n$ and $\sum\limits_n P(n) w^n$ carries
+        the principal part of $F(w)$. This is the principle of the argument.
+
+        Recall the partition function $p(n)$ satisfies
+        \begin{equation}
+            \sum\limits_{n = 0}^\infty p(n) w^n = \prod\limits_{n = 1}^\infty
+                \frac{1}{1 - w^n}.
+        \end{equation}
+        This must be holomorphic on the unit disk, so we can map to $\mathbb{H}$
+        by $w = e^{2\pi i z}$, since it is easier to deform contours, and
+        \begin{equation}
+            \sum\limits_{n = 0}^\infty p(n) e^{2\pi inz} = f(z),
+        \end{equation}
+        where
+        \begin{align}
+            f(z) &= \prod_{n = 1}^\infty \frac{1}{1 - e^{2\pi i nz}},\\
+            p(n) &= \int\limits_\gamma f(z) e^{-2\pi i nz}\;\mathrm{d}z.
+        \end{align}
+        Note that $\gamma$ is the segment joining $-1/2 + i\delta$ to $1/2 +
+        i\delta$ with $\delta > 0$; this corresponds to a small circle about $w
+        = 0$ in the original coordinates. We will fix $\delta$ in terms of $n$.
+
+        It turns out that $f(z) = e^{i\pi z / 12} / \eta(z)$ where $\eta(z)$ is
+        the Dedekind eta function satisfying $\eta(-1/z) = \sqrt{z / i}\eta(z)$.
+        Since $f(-1/z)$ rapidly approaches $1$, we estimate that
+        \begin{equation}
+            p(n) \approx \int_\gamma \sqrt{z/i}e^{i\pi / 12z}e^{i\pi z / 12}
+                e^{-2\pi inz}\;\mathrm{d}z.
+        \end{equation}
+        The idea now is to rewrite the integral into form
+        \begin{equation}
+            p(n) = \mu^{3/2}\int\limits_\Gamma
+                e^{-sf(z)}\sqrt{z / i}\;\mathrm{d}z,
+        \end{equation}
+        where $F(z) = i(z - 1/z)$ and $s = \pi \sqrt{(n - 1/24) / 6}$, where the
+        endpoints of $\Gamma$ are now from $-a_n + i\delta'$ to $a_n +
+        i\delta'$, where $a_n = 1/2\mu$ and $\delta' = \delta / \mu$, where $\mu
+        = 1 / 2\sqrt{6(n - 1/24)}$.
+
+        Now, we again want to deform $\Gamma$ such that $F(z)$ is real on
+        $\Gamma$ and contains a critical point. The only two choices are the
+        imaginary axis and the unit circle, and we choose the latter. At this
+        point, we really want the endpoints on the real line, such that the
+        integration over the unit circle spans exactly $\theta \in [0, \pi]$, so
+        we will add little ``tails'' to $\Gamma$ that contribute negligibly to
+        the integral but move the endpoints onto the real number line. Finally,
+        this deformed $\Gamma$ has three parts, the unit semicircle and two
+        componetns on the real number line, and the latter two are small, so we
+        are finally left with just the integral on the unit semicircle. This
+        last is done via Laplace's method, and we obtain
+        \begin{equation}
+            p(n) \approx \frac{1}{4n\sqrt{3}}e^{k\sqrt{n}}.
+        \end{equation}
+        There is a much more precise result, the main improvement in accuracy
+        comes from handling the integral on the semicircle much more carefully
+        (instead of Laplace's method).
+\end{itemize}
+
+NB\@: we touch on asymptotic series above. One characteristic about these series
+is that they often diverge for fixed $x$ and increasingly many terms, but their
+accuracy improves at fixed terms and increasingly large $x$. This is because
+they are expansions about the point at infinity.
 
 \section{Book 3: Measure Theory, Integration \& Hilbert Spaces}
 
