@@ -43,7 +43,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
                 "lon" => infoDict.get("lon").format("%.6f"),
                 "appid" => appid,
                 "units" => "metric",
-                "exclude" => "hourly,minutely"
+                "exclude" => "hourly,minutely,alerts"
             },
             {
                 :method => Communications.HTTP_REQUEST_METHOD_GET,
@@ -122,7 +122,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
                 "lon" => infoDict.get("lon").format("%.6f"),
                 "appid" => appid,
                 "units" => "metric",
-                "exclude" => "daily,current,hourly"
+                "exclude" => "daily,current,hourly,alerts"
             },
             {
                 :method => Communications.HTTP_REQUEST_METHOD_GET,
