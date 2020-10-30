@@ -29,13 +29,30 @@ function textFromBg(bgInfoDict, propName, fmt) {
 }
 
 function setAndColorIfNegative(view, bgInfoDict, propName, fmt) {
-    var str = textFromBg(bgInfoDict, propName, fmt);
-    if (str.find("-") != null) { // color instead of negative sign
-        setText(view, str.substring(1, str.length()), "--");
-        view.setColor(Graphics.COLOR_RED);
+    var val;
+    if (bgInfoDict == null || bgInfoDict.get(propName) == null) {
+        val = 0;
     } else {
-        setText(view, str, "--");
+        val = bgInfoDict.get(propName);
     }
+    if (val < 0) {
+        view.setColor(Graphics.COLOR_RED);
+        val = -val;
+    }
+    setText(view, val.format(fmt), "--");
+}
+
+function min(a, b) {
+    if (a > b) {
+        return b;
+    }
+    return a;
+}
+function max(a, b) {
+    if (a < b) {
+        return b;
+    }
+    return a;
 }
 
 function bound(val, min, max) {
@@ -43,6 +60,7 @@ function bound(val, min, max) {
     if (val > max) { return max; }
     return val;
 }
+
 var precipMax = Math.ln(50.0); // max 50mm/hr
 var precipMin = Math.ln(0.1); // min 0.1mm/hr
 
@@ -242,6 +260,30 @@ class YuboWatchView extends WatchUi.WatchFace {
             var his = bgInfoDict.get("dhis");
             var dews = bgInfoDict.get("ddews");
             var numDays = lows.size();
+            var TEMP_MIN = lows[0];
+            var TEMP_MAX = his[0];
+            for (var i = 0; i < numDays; i++) {
+                TEMP_MIN = min(min(TEMP_MIN, lows[i]), dews[i]);
+                TEMP_MAX = max(max(TEMP_MIN, his[i]), dews[i]);
+            }
+            var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
+            
+            var linepy = Math.round((1.0 - (mid5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(left, linepy, dx, 1);
+
+            if (mid5 < 0) {
+                mid5 = -mid5;
+                dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+            }
+            dc.drawText(46, linepy - 10, Graphics.FONT_SMALL, mid5.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT);
+            
+            var line1py = Math.round((1.0 - (mid5 + 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(left, line1py, dx, 1);
+            
+            var line2py = Math.round((1.0 - (mid5 - 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+            dc.fillRectangle(left, line2py, dx, 1);
 
 	        for (var i = 0; i < numDays; i++) {
 	            // generate plots, assume temp in (-10, 30)
@@ -249,24 +291,18 @@ class YuboWatchView extends WatchUi.WatchFace {
 
                 // null check for backcompat
                 dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-                if (lows != null) {
-	               var low = bound(lows[i], -10.0, 35.0);
-	               var lowpy = Math.round((1.0 - (low + 12.0) / 49) * dy + top);
-	               dc.fillRectangle(px - 1, lowpy - 1, 3, 3);
-	            }
-	            
-	            if (his != null) {
-	               var hi = bound(his[i], -10.0, 35.0);
-	               var hipy = Math.round((1.0 - (hi + 12.0) / 49) * dy + top);
-	               dc.fillRectangle(px - 1, hipy - 1, 3, 3);
-	            }
+                var low = lows[i];
+                var lowpy = Math.round((1.0 - (low - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - 1, lowpy - 1, 3, 3);
+            
+                var hi = his[i];
+                var hipy = Math.round((1.0 - (hi - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - 1, hipy - 1, 3, 3);
 
 	            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-	            if (dews != null) {
-	               var dew = bound(dews[i], -10.0, 35.0);
-	               var dewpy = Math.round((1.0 - (dew + 12.0) / 49) * dy + top);
-	               dc.fillRectangle(px - 1, dewpy - 1, 3, 3);
-	            }
+                var dew = dews[i];
+                var dewpy = Math.round((1.0 - (dew - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - 1, dewpy - 1, 3, 3);
 	        }
 	    }
     }
@@ -283,8 +319,6 @@ class YuboWatchView extends WatchUi.WatchFace {
         setDebugView();
         
         drawGraphs(dc);
-        
-        // (iii) 2 plots, (iv) weather status (S, PS, etc.)
     }
 
     // Called when this View is removed from the screen. Save the
