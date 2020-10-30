@@ -973,7 +973,8 @@ Entire Functions, Theory and Examples
             \limsup_{x \to \infty} \pi(x) \frac{\log x}{x} \leq 1.
         \end{align}
         The key trick is that , if we define the function $\Lambda(n) = \log p$
-        if $n = p^m$ for some prime $p$, we can obtain
+        if $n = p^m$ for some prime $p$, we can obtain (series expansion of
+        Euler formula)
         \begin{align}
             \log \zeta(s) = \sum\limits_{p, m}\frac{p^{-ms}}{m},\\
             \frac{\zeta'(s)}{\zeta(s)} = -\sum\limits_{n = 1}^\infty
@@ -990,6 +991,9 @@ Entire Functions, Theory and Examples
         with $\Re(s) = 1$ except for a small neighborhood about $s = 1$. The
         residue is $x^2/2$, and the rest is mostly bookkeeping.
 \end{itemize}
+One major takeaway seems to be that these entire functions are entirely
+determined by their roots, so when their roots have some interesting structure,
+the functions themselves will often give information on their roots.
 
 Elliptic Functions
 \begin{itemize}
@@ -1154,6 +1158,12 @@ Elliptic Functions
         power of the product formula for $\Theta$ and generating functions (more
         in exercises).
 \end{itemize}
+The key step in a lot of these seems to be relating these special functions to
+number theoretic results via generating functions, which explains how they map
+from these complex functions into number theory. These seem to be the two major
+way number theoretic results are related to complex analysis, either via entire
+functions with zeros at those points or via appropriate generating functions and
+identities. Pretty clever.
 
 \subsection{Asymptotic Integrals}
 
@@ -1263,7 +1273,7 @@ evaluating such integrals.
         we will add little ``tails'' to $\Gamma$ that contribute negligibly to
         the integral but move the endpoints onto the real number line. Finally,
         this deformed $\Gamma$ has three parts, the unit semicircle and two
-        componetns on the real number line, and the latter two are small, so we
+        components on the real number line, and the latter two are small, so we
         are finally left with just the integral on the unit semicircle. This
         last is done via Laplace's method, and we obtain
         \begin{equation}
@@ -1289,6 +1299,143 @@ they are expansions about the point at infinity.
         However, $\ell^2(\mathbb{Z})$ is \emph{complete}, while $\mathcal{R}$ is
         not. The question is then: how do we complete $\mathcal{R}$, and how do
         we integrate these completed functions $f$?
+\end{itemize}
+
+\chapter{Morse \& Feshbach: Methods of Theoretical Physics, Part II}
+
+I don't have Part I lol. This ends up being mostly a PDEs methods book, I'll
+probably only have a few brief notes.
+
+Approximate Methods:
+\begin{itemize}
+    \item We discuss the \emph{Feenberg perturbation formula} and the
+        \emph{secular determinant}. We consider applying perturbation theory to
+        the general problem
+        \begin{equation}
+            \mathcal{L}(\psi) + k^2\psi = \lambda U \psi,
+        \end{equation}
+        where $\lambda$ is some small parameter. Call the orthonormal homogenous
+        solutions $\varphi_n$, then usually in the course of perturbation theory
+        we find that $\psi_m$ is perturbed by something like
+        $\bra{\varphi_m}U\ket{\varphi_n} \equiv U_{mn}$. Then, when going to
+        higher order, we have terms with multiple $U_{mn}$ multiplied together,
+        and congergence is slowed by the repeated terms $\abs{U_{mn}}^n$.
+
+        To avoid this, let's consider expanding in the orthonormal basis, so
+        $\psi = \sum\limits_p c_p\varphi_p$, then
+        \begin{align}
+            \sum\limits_p c_p\p{k^2 - k_p^2}\varphi_p &= \lambda \sum\limits_p
+                c_p U\varphi_p,\\
+            \p{k^2 - k_q^2}c_p &= \lambda \sum\limits_p c_p
+                \int\limits \bar{\varphi}_q U \varphi_p\;\mathrm{d}V
+                \equiv \lambda \sum\limits_p c_p U_{qp},\\
+                0 &= \sum\limits_p\s{\p{k^2 - k_q^2}\delta_{qp}
+                    - \lambda U_{qp}}c_p.
+        \end{align}
+        The goal is to solve for the $c_p$, so a solution can be found by
+        considering the prefactor as a matrix operator, and a solution can be
+        found if matrix operator has nonvanishing determinant, i.e.
+        \begin{equation}
+            \abs{\p{k^2 - k_q^2}\delta_{qp} - \lambda U_{qp}} = 0,
+        \end{equation}
+        This sets the values of $k^2$ that are permissible, and the determinant
+        is the \emph{secular determinant}. When expanding the secular
+        determinant, there is no repetition $U_{qp}$ in each individual term.
+
+        What happens when we do perturbation theory? Well, we can see that
+        perturbation to $N$th order will have cross terms $\z{U_{qp}}^N$, where
+        none of the individual $U_{pq}$ have the same indices. Indeed, we can
+        think of this perturbation theory as expanding the secular determinant
+        exactly to $N$ terms and approximating the remainder of the determinant.
+
+    \item The Feenberg perturbation formula has a finite radius of convergence
+        in $\lambda$ whenever the eigenvalues become degenerate. In theory, this
+        can be rectified by analytic continuaution, and that is what the
+        \emph{Fredholm Perturbation Formula} does.
+
+        Consider a general eigenvalue problem for eigenvalue/eigenvector pair
+        $\psi, E$:
+        \begin{equation}
+            \p{\bm{U} - E}\psi = \lambda \bm{B} \psi,
+        \end{equation}
+        where $\bm{U}, \bm{B}$ are Hermitian operators, with homogeneous
+        solutions $\varphi_n$. Furthermore, define $\bm{P}_n$ to be the
+        projection operator onto $\varphi_n$, i.e.\ $\bm{P}_n =
+        \ket{\varphi_n}\bra{\varphi_n}$, or, in dyadic form, $\bm{P}_n =
+        \varphi_n\varphi_n^*$. The general solution then has form
+        \begin{equation}
+            \psi = \varphi_n + \lambda\p{1 - \bm{P}_n}\p{\bm{U} - E}^{-1}
+                \bm{B} \psi.
+        \end{equation}
+        Let's call the big term on the RHS $\bm{R}$, then $\psi = \varphi_n +
+        \lambda \bm{R} \psi_n$, and we have symbolic solution
+        \begin{equation}
+            \psi = \frac{1}{1 - \lambda \bm{R}}\varphi_n
+                = \varphi_n + \lambda \bm{R}\varphi_n +
+                \lambda^2\p{\bm{R^2}\varphi_n} + \dots
+        \end{equation}
+        It is clear then that for particular $\lambda$ satisfying $f_r =
+        \lambda_r \bm{R}f_r$ for some $f_r$, that the above will not converge.
+
+        We can formulate a general trick to cancel these singularities.
+        Introduce a function $\chi(\lambda)$ such that
+        \begin{equation}
+            \psi = \s{\frac{\chi(\lambda) / (1 - \lambda \bm{R})}{\chi(\lambda)
+                }} \varphi_n.\label{eq:10/08/20.power_series}
+        \end{equation}
+        To choose $\chi(\lambda)$, we require: (i) it be an entire function of
+        $\lambda$, and (ii) it has zeros at all of the $\lambda_r$ with the
+        correct multiplicities. The simplest way to construct such a
+        $\chi(\lambda)$ is to just take
+        \begin{equation}
+            \frac{\chi'(\lambda)}{\chi(\lambda)} = \sum\limits_r
+                \frac{1}{\lambda - \lambda_r}.
+        \end{equation}
+        The details aren't that interesting at this point, but we can then
+        integrate this to obtain $\chi(\lambda)$, so that
+        Equation~\eqref{eq:10/08/20.power_series} is defined everywhere except
+        at the zeros of $\chi(\lambda)$ (and has no convergence problems). The
+        perturbation theory aspect of this entails expanding $\chi(\lambda)$ and
+        expand both $\chi(\lambda) / (1 - \lambda \bm{R})$ and $\chi(\lambda)$
+        as power series. This can be shown to be formally equivalent to the
+        Feenberg approach wherever it converges.
+
+    \item Above, we have studied techniques (honestly, probably pretty useless)
+        to obtain $E(\lambda)$ in a laborious form. However, in practice,
+        sometimes we are given $E$, from experiment, and we want to understand
+        what $\lambda$ produce the correct spectrum. This is the
+        \emph{variation-iteration method}. The idea is rather simple. Recall we
+        had equation for eigenvector $\psi$:
+        \begin{equation}
+            \psi = \lambda\p{\bm{U} - E}^{-1}\bm{B}\psi.
+        \end{equation}
+        We consider a successive series of approximations $\psi^{(i)}$ to
+        $\psi$. Suppose that when $\lambda = 0$, we have $\psi = \psi^{(0)}$,
+        then
+        \begin{equation}
+            \psi^{(1)} = \p{\bm{U} - E}^{-1}\bm{B}\psi^{(0)}.
+        \end{equation}
+        Crucial in this approach is the fact that $\lambda$ can be dropped when
+        iterating for the $\psi$, since the $\psi$ are only determined up to a
+        constant anyway. Then we obtain
+        \begin{align}
+            \psi^{(n)} &= \s{\p{\bm{U} - E}^{-1} \bm{B}}^n \psi^{(0)},\\
+            \lambda &\equiv \frac{\psi^*\p{\bm{U} - E}\psi}{\psi^* \bm{B}\psi}
+                    ,\\
+            \lambda^{(n)} &= \frac{\p{\psi^{(n)}}^* \p{\bm{U} - E}
+                    \psi^{(n)}}{\p{\psi^{(n)}}^* \bm{B}\psi^{(n)}},\\
+                &= \frac{\p{\psi^{(n)}}^*\bm{B}
+                    \psi^{(n - 1)}}{\p{\psi^{(n)}}^* \bm{B}\psi^{(n)}}.
+        \end{align}
+        A classic example of this is the Born approximation that we learned in
+        quantum mechanical scattering, where the total wavefunction is replaced
+        with the incident wavefunction in a few places.
+\end{itemize}
+
+Other PDEs:
+\begin{itemize}
+    \item In solving Laplace's equation $\nabla^2 = 0$ in 2D, it is obvious
+        complex variables may be useful.
 \end{itemize}
 
 \end{document}
