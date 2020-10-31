@@ -277,17 +277,20 @@ class YuboWatchView extends WatchUi.WatchFace {
             dc.drawText(46, linepy - 10, Graphics.FONT_SMALL, mid5.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT);
  
             dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(left, linepy, dx, 1);            
-
-            if (mid5 + 5 < TEMP_MAX) {
-                var line1py = Math.round((1.0 - (mid5 + 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(left, line1py, dx, 1);
+            dc.drawRectangle(left, linepy, dx, 2);
+            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            for (var i = 1; mid5 + 5 * i < TEMP_MAX; i++) {
+	            if (mid5 + 5 * i < TEMP_MAX) {
+	                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+	                dc.drawLine(left, line1py, left+dx, line1py);
+	            }
             }
-            
-            if (mid5 - 5 > TEMP_MIN) {
-                var line2py = Math.round((1.0 - (mid5 - 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(left, line2py, dx, 1);
-            }
+            for (var i = 1; mid5 - 5 * i > TEMP_MIN; i++) {
+	            if (mid5 - 5 > TEMP_MIN) {
+	                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+	                dc.drawLine(left, line2py, left+dx, line2py);
+	            }
+	        }
 
             var r = 2;
             var d = 2 * r + 1;
