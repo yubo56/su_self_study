@@ -270,39 +270,45 @@ class YuboWatchView extends WatchUi.WatchFace {
             
             var linepy = Math.round((1.0 - (mid5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
             dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(left, linepy, dx, 1);
-
             if (mid5 < 0) {
                 mid5 = -mid5;
                 dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
             }
             dc.drawText(46, linepy - 10, Graphics.FONT_SMALL, mid5.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT);
-            
-            var line1py = Math.round((1.0 - (mid5 + 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+ 
             dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(left, line1py, dx, 1);
-            
-            var line2py = Math.round((1.0 - (mid5 - 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-            dc.fillRectangle(left, line2py, dx, 1);
+            dc.fillRectangle(left, linepy, dx, 1);            
 
+            if (mid5 + 5 < TEMP_MAX) {
+                var line1py = Math.round((1.0 - (mid5 + 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(left, line1py, dx, 1);
+            }
+            
+            if (mid5 - 5 > TEMP_MIN) {
+                var line2py = Math.round((1.0 - (mid5 - 5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(left, line2py, dx, 1);
+            }
+
+            var r = 2;
+            var d = 2 * r + 1;
 	        for (var i = 0; i < numDays; i++) {
 	            // generate plots, assume temp in (-10, 30)
 	            var px = Math.round(1.0 * (i + 1) / (numDays + 1) * dx + left);
 
-                // null check for backcompat
-                dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
                 var low = lows[i];
                 var lowpy = Math.round((1.0 - (low - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(px - 1, lowpy - 1, 3, 3);
+                dc.fillRectangle(px - r, lowpy - r, d, d);
             
+                dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
                 var hi = his[i];
                 var hipy = Math.round((1.0 - (hi - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(px - 1, hipy - 1, 3, 3);
+                dc.fillRectangle(px - r, hipy - r, d, d);
 
 	            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
                 var dew = dews[i];
                 var dewpy = Math.round((1.0 - (dew - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(px - 1, dewpy - 1, 3, 3);
+                dc.fillRectangle(px - r, dewpy - r, d, d);
 	        }
 	    }
     }
