@@ -258,7 +258,7 @@ class YuboWatchView extends WatchUi.WatchFace {
         }
         
         // hi/lo graph
-        var r = 2;
+        var r = 2.0;
         var d = 2 * r + 1;
         if (bgInfoDict != null && bgInfoDict.get("dhis") != null && bgInfoDict.get("dlos") != null) {
             var lows = bgInfoDict.get("dlos");
@@ -269,7 +269,7 @@ class YuboWatchView extends WatchUi.WatchFace {
             var TEMP_MAX = his[0];
             for (var i = 0; i < numDays; i++) {
                 TEMP_MIN = min(min(TEMP_MIN, lows[i]), dews[i]);
-                TEMP_MAX = max(max(TEMP_MIN, his[i]), dews[i]);
+                TEMP_MAX = max(max(TEMP_MAX, his[i]), dews[i]);
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
             
