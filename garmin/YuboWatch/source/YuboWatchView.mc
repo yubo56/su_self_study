@@ -28,7 +28,7 @@ function textFromBg(bgInfoDict, propName, fmt) {
     }
 }
 
-function setAndColorIfNegative(view, bgInfoDict, propName, fmt) {
+function setAndColorIfNegative(view, bgInfoDict, propName, fmt, colorPos, colorNeg) {
     var val;
     if (bgInfoDict == null || bgInfoDict.get(propName) == null) {
         val = 0;
@@ -36,8 +36,10 @@ function setAndColorIfNegative(view, bgInfoDict, propName, fmt) {
         val = bgInfoDict.get(propName);
     }
     if (val < 0) {
-        view.setColor(Graphics.COLOR_RED);
+        view.setColor(colorNeg);
         val = -val;
+    } else {
+        view.setColor(colorPos);
     }
     setText(view, val.format(fmt), "--");
 }
@@ -158,13 +160,13 @@ class YuboWatchView extends WatchUi.WatchFace {
            bgInfoDict = {};
         }
 
-        setAndColorIfNegative(View.findDrawableById("TempLabel"), bgInfoDict, "temp", "%04.1f"); // 4 total digits
-        setAndColorIfNegative(View.findDrawableById("TempLoLabel"), bgInfoDict, "tlo", "%02d");
-        setAndColorIfNegative(View.findDrawableById("TempDewLabel"), bgInfoDict, "tdewp", "%02d");
-        setAndColorIfNegative(View.findDrawableById("TempHiLabel"), bgInfoDict, "thi", "%02d");
-        setAndColorIfNegative(View.findDrawableById("TempTommLoLabel"), bgInfoDict, "ttlo", "%02d");
-        setAndColorIfNegative(View.findDrawableById("TempTommDewLabel"), bgInfoDict, "ttdewp", "%02d");
-        setAndColorIfNegative(View.findDrawableById("TempTommHiLabel"), bgInfoDict, "tthi", "%02d");
+        setAndColorIfNegative(View.findDrawableById("TempLabel"), bgInfoDict, "temp", "%04.1f", Graphics.COLOR_WHITE, Graphics.COLOR_RED); // 4 total digits
+        setAndColorIfNegative(View.findDrawableById("TempLoLabel"), bgInfoDict, "tlo", "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED);
+        setAndColorIfNegative(View.findDrawableById("TempDewLabel"), bgInfoDict, "tdewp", "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE);
+        setAndColorIfNegative(View.findDrawableById("TempHiLabel"), bgInfoDict, "thi", "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED);
+        setAndColorIfNegative(View.findDrawableById("TempTommLoLabel"), bgInfoDict, "ttlo", "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED);
+        setAndColorIfNegative(View.findDrawableById("TempTommDewLabel"), bgInfoDict, "ttdewp", "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE);
+        setAndColorIfNegative(View.findDrawableById("TempTommHiLabel"), bgInfoDict, "tthi", "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED);
         setText(View.findDrawableById("WindLabel"), textFromBg(bgInfoDict, "wspeed", "%02d"), "--");
         setText(View.findDrawableById("HumidLabel"), textFromBg(bgInfoDict, "humid", "%02d") + "%", "--%");
         setText(View.findDrawableById("UVLabel"), textFromBg(bgInfoDict, "uvi", "%02d"), "--");
@@ -175,6 +177,7 @@ class YuboWatchView extends WatchUi.WatchFace {
         
         setText(View.findDrawableById("TodayWeather"), bgInfoDict.get("wtoday"), "C00");
         setText(View.findDrawableById("TommWeather"), bgInfoDict.get("wtomm"), "C00");
+        setText(View.findDrawableById("OvmmWeather"), bgInfoDict.get("wovmm"), "C00");
         
         var bglat = bgInfoDict.get("lat");
         if (bglat == null) {
@@ -255,6 +258,8 @@ class YuboWatchView extends WatchUi.WatchFace {
         }
         
         // hi/lo graph
+        var r = 2;
+        var d = 2 * r + 1;
         if (bgInfoDict != null && bgInfoDict.get("dhis") != null && bgInfoDict.get("dlos") != null) {
             var lows = bgInfoDict.get("dlos");
             var his = bgInfoDict.get("dhis");
@@ -281,26 +286,24 @@ class YuboWatchView extends WatchUi.WatchFace {
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
             for (var i = 1; mid5 + 5 * i < TEMP_MAX; i++) {
 	            if (mid5 + 5 * i < TEMP_MAX) {
-	                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-	                dc.drawLine(left, line1py, left+dx, line1py);
+	                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+	                dc.drawLine(left + 1, line1py, left+dx - 2, line1py);
 	            }
             }
             for (var i = 1; mid5 - 5 * i > TEMP_MIN; i++) {
 	            if (mid5 - 5 > TEMP_MIN) {
-	                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-	                dc.drawLine(left, line2py, left+dx, line2py);
+	                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+	                dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
 	            }
 	        }
 
-            var r = 2;
-            var d = 2 * r + 1;
 	        for (var i = 0; i < numDays; i++) {
 	            // generate plots, assume temp in (-10, 30)
 	            var px = Math.round(1.0 * (i + 1) / (numDays + 1) * dx + left);
 
                 dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
                 var low = lows[i];
-                var lowpy = Math.round((1.0 - (low - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                var lowpy = Math.round((1.0 - (low - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
                 dc.fillRectangle(px - r, lowpy - r, d, d);
             
                 dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);

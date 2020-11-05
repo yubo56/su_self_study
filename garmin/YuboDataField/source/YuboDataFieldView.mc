@@ -72,7 +72,7 @@ class YuboDataFieldView extends WatchUi.DataField {
             }
             var timeSplit = ((info.elapsedTime - lastSplitTime) / 1000).toNumber();
             infoDict.put("tsplit", Lang.format("$1$:$2$", [
-                ((timeSplit / 60) % 100).toNumber().format("%02d"),
+                ((timeSplit / 60) % 100).toNumber().format("%01d"),
                 (timeSplit % 60).format("%02d")
             ]));
         }

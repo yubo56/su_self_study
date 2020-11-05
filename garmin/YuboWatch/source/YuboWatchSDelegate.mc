@@ -101,6 +101,11 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         infoDict.put("wtomm", Lang.format("$1$$2$", [
             wtommId == 800 ? "O" : wtomm.get("main").substring(0, 1),
             (wtommId % 100).format("%02d")]));
+        var wovmm = daily[2].get("weather")[0];
+        var wovmmId = wovmm.get("id");
+        infoDict.put("wovmm", Lang.format("$1$$2$", [
+            wovmmId == 800 ? "O" : wovmm.get("main").substring(0, 1),
+            (wovmmId % 100).format("%02d")]));
 
         var numDays = daily.size();
         var his = new [numDays];
