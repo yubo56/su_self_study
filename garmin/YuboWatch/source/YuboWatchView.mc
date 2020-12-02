@@ -114,6 +114,10 @@ class YuboWatchView extends WatchUi.WatchFace {
             battView.setColor(Graphics.COLOR_GREEN);
         }
         battView.setText(battStr);
+        
+        var memView = View.findDrawableById("Mem");
+        var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
+        memView.setText(Lang.format("($1$%)", [memPerc]));
     }
 
     function setStepView() {
@@ -179,17 +183,16 @@ class YuboWatchView extends WatchUi.WatchFace {
         setText(View.findDrawableById("TommWeather"), bgInfoDict.get("wtomm"), "C00");
         setText(View.findDrawableById("OvmmWeather"), bgInfoDict.get("wovmm"), "C00");
         
-        var bglat = bgInfoDict.get("lat");
-        if (bglat == null) {
-            bglat = lat;
+        var positionInfo = Position.getInfo();
+        var bglat = lat;
+        var bglon = lon;
+        var alt = 0;
+        if (positionInfo has :position && positionInfo.position != null) {
+            bglat = positionInfo.position.toDegrees()[0];
+            bglon = positionInfo.position.toDegrees()[1];
         }
-        var bglon = bgInfoDict.get("lon");
-        if (bglon == null) {
-            bglon = lon;
-        }
-        var alt = bgInfoDict.get("alt");
-        if (alt == null) {
-            alt = 0;
+        if (positionInfo has :altitude && positionInfo.altitude != null) {
+            alt = positionInfo.altitude;
         }
         var latLonStr = Lang.format("$1$/$2$/$3$", [bglat.format("%.2f"), bglon.format("%.2f"), alt.format("%04d")]);
         setText(View.findDrawableById("LatLabel"), latLonStr, "-----/-----/----");
