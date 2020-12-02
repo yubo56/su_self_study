@@ -52,18 +52,18 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	                "lon" => infoDict.get("lon").format("%.6f"),
 	                "appid" => appid,
 	                "units" => "metric",
-	                "exclude" => "hourly,minutely,alerts"
+	                "exclude" => "daily,hourly,minutely,alerts"
 	            },
 	            {
 	                :method => Communications.HTTP_REQUEST_METHOD_GET,
 	                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 	            },
-	            method(:dailyCurrentCb)
+	            method(:currentCb)
 	        );
         }
     }
-
-    function dailyCurrentCb(responseCode, data) {
+    
+    function currentCb(responseCode, data) {
         if (responseCode != 200) {
             var myStats = System.getSystemStats();
             var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
@@ -77,16 +77,10 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             return;
         }
         var current = data.get("current");
-        var daily = data.get("daily");
         infoDict.put("temp", current.get("temp"));
         infoDict.put("wspeed", current.get("wind_speed") * 3.6);
         infoDict.put("humid", current.get("humidity"));
-        infoDict.put("tlo", Math.round(daily[0].get("temp").get("min")));
-        infoDict.put("thi", Math.round(daily[0].get("temp").get("max")));
         infoDict.put("tdewp", Math.round(current.get("dew_point")));
-        infoDict.put("ttlo", Math.round(daily[1].get("temp").get("min")));
-        infoDict.put("tthi", Math.round(daily[1].get("temp").get("max")));
-        infoDict.put("ttdewp", Math.round(daily[1].get("dew_point")));
         infoDict.put("sunrise", timeToHHMM(current.get("sunrise")));
         infoDict.put("sunset", timeToHHMM(current.get("sunset")));
         infoDict.put("uvi", Math.round(current.get("uvi")));
@@ -99,6 +93,45 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             infoDict.put("wsymb", weather.get("main").substring(0, 1));
         }
         infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));
+
+        Communications.makeWebRequest(
+            "https://api.openweathermap.org/data/2.5/onecall",
+            {
+                "lat" => infoDict.get("lat").format("%.6f"),
+                "lon" => infoDict.get("lon").format("%.6f"),
+                "appid" => appid,
+                "units" => "metric",
+                "exclude" => "current,hourly,minutely,alerts"
+            },
+            {
+                :method => Communications.HTTP_REQUEST_METHOD_GET,
+                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+            },
+            method(:dailyCb)
+        );
+    }
+
+    function dailyCb(responseCode, data) {
+        if (responseCode != 200) {
+            var myStats = System.getSystemStats();
+            var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+            var clockTime = System.getClockTime();
+            System.println(Lang.format(
+                "DailyCurrentCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
+                [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
+                    now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
+            ));
+            Background.exit([infoDict, false]);
+            return;
+        }
+        var daily = data.get("daily");
+        infoDict.put("tlo", Math.round(daily[0].get("temp").get("min")));
+        infoDict.put("thi", Math.round(daily[0].get("temp").get("max")));
+        infoDict.put("ttlo", Math.round(daily[1].get("temp").get("min")));
+        infoDict.put("tthi", Math.round(daily[1].get("temp").get("max")));
+        infoDict.put("ttdewp", Math.round(daily[1].get("dew_point")));
+
+        // parse weather into "TDRSAOC" (thunderstorm, drizzle, rain, snow, "atmosphere", clear, cloudy) + code
         var wtoday = daily[0].get("weather")[0];
         var wtodayId = wtoday.get("id");
         infoDict.put("wtoday", Lang.format("$1$$2$", [
