@@ -4,9 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 
-/* #define DISPLAY_AUTO */
-
-void autoplay_rand(GameState* game)
+void autoplay_rand(GameState* game, int to_display)
 {
     int num_legals, move;
     int directions[4];
@@ -17,12 +15,13 @@ void autoplay_rand(GameState* game)
         move = directions[arc4random_uniform(num_legals)];
         move_board(game, move);
         num_legals = get_legal_moves(game, directions);
-#ifdef DISPLAY_AUTO
-        print_board(game);
-        printw("Playing %c\n", DIRECTIONS[move]);
-        refresh();
-        usleep(100000);
-#endif
+        if (to_display == 1)
+        {
+            print_board(game);
+            printw("Playing %c\n", DIRECTIONS[move]);
+            refresh();
+            usleep(100000);
+        }
     }
 }
 
@@ -59,7 +58,7 @@ void play()
         }
         else if (ch == 'p')
         {
-            autoplay_rand(&game);
+            autoplay_rand(&game, 1);
             continue;
         }
         clear();
@@ -104,7 +103,7 @@ void run_many_rand()
     for (i = 0; i < num_runs; i++)
     {
         reset_game(&game);
-        autoplay_rand(&game);
+        autoplay_rand(&game, 0);
 
         max = 0;
         for (j = 0; j < LEN * LEN; j++)
@@ -135,7 +134,7 @@ void print_help(const char* name)
 }
 int main(int argc, const char *argv[])
 {
-    if (argc == 0 || strcmp(argv[1], "--help") == 0)
+    if (argc == 1 || strcmp(argv[1], "--help") == 0)
     {
         print_help(argv[0]);
     }
