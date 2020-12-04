@@ -69,6 +69,7 @@ var precipMin = Math.ln(0.1); // min 0.1mm/hr
 class YuboWatchView extends WatchUi.WatchFace {
 
     function initialize() {
+        // Application.getApp().clearProperties();
         WatchFace.initialize();
     }
 

@@ -69,7 +69,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
             var clockTime = System.getClockTime();
             System.println(Lang.format(
-                "DailyCurrentCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
+                "CurrentCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
                 [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
                     now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
             ));
@@ -94,6 +94,14 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         }
         infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));
 
+//        var myStats = System.getSystemStats();
+//        var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+//        var clockTime = System.getClockTime();
+//        System.println(Lang.format(
+//            "BeforeDaily ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
+//            [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
+//                now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
+//        ));
         Communications.makeWebRequest(
             "https://api.openweathermap.org/data/2.5/onecall",
             {
@@ -117,7 +125,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
             var clockTime = System.getClockTime();
             System.println(Lang.format(
-                "DailyCurrentCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
+                "DailyCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
                 [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
                     now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
             ));
