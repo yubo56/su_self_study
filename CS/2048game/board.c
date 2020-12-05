@@ -29,6 +29,11 @@ void reset_game(GameState* game)
     game->last_direction = 4;
 }
 
+void copy_game(const GameState* src, GameState* dest)
+{
+    memcpy(dest, src, sizeof(GameState));
+}
+
 void print_board(GameState* game)
 {
     int i, j;
@@ -60,7 +65,7 @@ void print_legals(GameState* game)
 {
     int num_legals, i;
     int directions[4];
-    num_legals = get_legal_moves(game, directions);
+    num_legals = get_legal_moves(game->board, directions);
     printw("%d legal moves", num_legals);
     if (num_legals == 0)
     {
@@ -141,7 +146,8 @@ int get_empties(Board board, char** empties)
     }
     return empty_idx;
 }
-char merge_board(GameState* game, int direction)
+/* pass game_score = NULL to avoid updating */
+char merge_board(Board board, int direction, int* game_score)
 {
     char moved = false;
     int row_score;
@@ -154,7 +160,7 @@ char merge_board(GameState* game, int direction)
         {
             for (col = 0; col < LEN; col++)
             {
-                prow[col] = game->board + (row * LEN + col);
+                prow[col] = board + (row * LEN + col);
             }
             row_score = merge_row(prow);
             moved = moved || row_score >= 0;
@@ -167,7 +173,7 @@ char merge_board(GameState* game, int direction)
         {
             for (col = LEN - 1; col >= 0; col--)
             {
-                prow[LEN - col - 1] = game->board + (row * LEN + col);
+                prow[LEN - col - 1] = board + (row * LEN + col);
             }
             row_score = merge_row(prow);
             moved = moved || row_score >= 0;
@@ -180,7 +186,7 @@ char merge_board(GameState* game, int direction)
         {
             for (row = 0; row < LEN; row++)
             {
-                prow[row] = game->board + (row * LEN + col);
+                prow[row] = board + (row * LEN + col);
             }
             row_score = merge_row(prow);
             moved = moved || row_score >= 0;
@@ -193,7 +199,7 @@ char merge_board(GameState* game, int direction)
         {
             for (row = LEN - 1; row >= 0; row--)
             {
-                prow[LEN - row - 1] = game->board + (row * LEN + col);
+                prow[LEN - row - 1] = board + (row * LEN + col);
             }
             row_score = merge_row(prow);
             moved = moved || row_score >= 0;
@@ -201,7 +207,10 @@ char merge_board(GameState* game, int direction)
         }
     }
 
-    game->score += score;
+    if (game_score != NULL)
+    {
+        (*game_score) += score;
+    }
     return moved;
 }
 void add_piece(Board board)
@@ -212,17 +221,16 @@ void add_piece(Board board)
     (*empties[i]) = 1;
 }
 
-int get_legal_moves(GameState* game, int* directions)
+int get_legal_moves(const Board board, int* directions)
 {
+    Board temp;
     char moved;
     int i;
     int directions_idx = 0;
     for (i = 0; i < 4; i++)
     {
-        if (i == game->last_direction) { continue; }
-
-        memcpy(game->temp, game->board, sizeof(Board));
-        moved = merge_board(game, i);
+        memcpy(temp, board, sizeof(Board));
+        moved = merge_board(temp, i, NULL);
         if (moved)
         {
             directions[directions_idx] = i;
@@ -234,7 +242,7 @@ int get_legal_moves(GameState* game, int* directions)
 
 void move_board(GameState* game, int direction)
 {
-    char moved = merge_board(game, direction);
+    char moved = merge_board(game->board, direction, &game->score);
     if (moved) /* add a piece if moved */
     {
         add_piece(game->board);
