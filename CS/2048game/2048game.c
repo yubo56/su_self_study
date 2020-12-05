@@ -1,5 +1,3 @@
-/* gcc board.c 2048game.c -Ofast -lcurses -o 2048game
- * */
 #include "board.h"
 #include "players.h"
 #include <string.h>
@@ -28,7 +26,8 @@ void play()
         {
             printw("(q) to quit\n");
             printw("(p) for autoplay_rand\n");
-            printw("(b) for autoplay_basic\n");
+            printw("(b) for autoplay_basic (2ply)\n");
+            printw("(B) for autoplay_basic (3ply)\n");
             printw("(r) to restart\n");
             printw("(l) for legal moves\n");
             printw("(h) to close this menu\n");
@@ -42,12 +41,17 @@ void play()
         }
         else if (ch == 'p')
         {
-            autoplay_rand(&game, 1);
+            autoplay_rand(&game, 1, 0);
             continue;
         }
         else if (ch == 'b')
         {
-            autoplay_basic(&game, 0);
+            autoplay_basic(&game, 1, 2);
+            continue;
+        }
+        else if (ch == 'B')
+        {
+            autoplay_basic(&game, 1, 3);
             continue;
         }
         clear();
@@ -79,9 +83,14 @@ void play()
     endwin();
 }
 
-void run_many(void (*runner)(GameState* game, int to_display))
+void run_many
+    (
+        void (*runner)(GameState* game, int to_display, int lookahead),
+        int num_runs,
+        int lookahead,
+        int to_display
+    )
 {
-    int num_runs = 10000;
     int i, j, max, max_all;
     int counts[LEN * LEN];
     GameState game;
@@ -92,7 +101,7 @@ void run_many(void (*runner)(GameState* game, int to_display))
     for (i = 0; i < num_runs; i++)
     {
         reset_game(&game);
-        runner(&game, 0);
+        runner(&game, 0, lookahead);
 
         max = 0;
         for (j = 0; j < LEN * LEN; j++)
@@ -100,6 +109,10 @@ void run_many(void (*runner)(GameState* game, int to_display))
             max = MAX(max, game.board[j]);
         }
         counts[max - 1]++;
+        if (to_display)
+        {
+            printf("Ran %d, got max %d\n", i, (int) pow(2, max));
+        }
         max_all = MAX(max_all, max - 1);
     }
 
@@ -134,11 +147,15 @@ void run_main(int argc, const char *argv[])
     }
     else if (strcmp(argv[1], "--run-many-rand") == 0)
     {
-        run_many(autoplay_rand);
+        run_many(autoplay_rand, 10000, 0, 0);
     }
-    else if (strcmp(argv[1], "--run-many-basic") == 0)
+    else if (strcmp(argv[1], "--run-many-basic-2") == 0)
     {
-        run_many(autoplay_basic);
+        run_many(autoplay_basic, 1000, 2, 0);
+    }
+    else if (strcmp(argv[1], "--run-many-basic-3") == 0)
+    {
+        run_many(autoplay_basic, 100, 3, 1);
     }
     else
     {
@@ -161,7 +178,7 @@ void run_test()
     reset_game(&game);
     print_board(&game);
     num_legals = get_legal_moves(game.board, directions);
-    best_move = get_best_move(&game, directions, num_legals);
+    best_move = get_best_move(&game, directions, num_legals, 2);
     printw("%c\n", DIRECTIONS[directions[best_move]]);
     refresh();
     getch();
