@@ -13,16 +13,11 @@ var appid = "";
 (:background)
 class YuboWatchSDelegate extends System.ServiceDelegate {
 
-    var infoDict;
+    var infoDict = {};
+    var bglat = lat;
+    var bglon = lon;
 
     function initialize() {
-        infoDict = Application.getApp().getProperty(BGDATA); // don't override old state if watch restart (edge case)
-        if (infoDict == null) {
-            infoDict = {
-                lat => lat,
-                lon => lon,
-            };
-        }
         System.ServiceDelegate.initialize();
     }
     
@@ -38,8 +33,8 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     function onTemporalEvent() {
         var positionInfo = Position.getInfo();
         if (positionInfo has :position && positionInfo.position != null) {
-            infoDict.put("lat", positionInfo.position.toDegrees()[0]);
-            infoDict.put("lon", positionInfo.position.toDegrees()[1]);
+            bglat = positionInfo.position.toDegrees()[0];
+            bglon = positionInfo.position.toDegrees()[1];
         }
         if (!System.getDeviceSettings().phoneConnected) {
             Background.exit([infoDict, false]);
@@ -48,11 +43,11 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	        Communications.makeWebRequest(
 	            "https://api.openweathermap.org/data/2.5/onecall",
 	            {
-	                "lat" => infoDict.get("lat").format("%.6f"),
-	                "lon" => infoDict.get("lon").format("%.6f"),
+	                "lat" => bglat,
+	                "lon" => bglon,
 	                "appid" => appid,
 	                "units" => "metric",
-	                "exclude" => "daily,hourly,minutely,alerts"
+	                "exclude" => "hourly,minutely,alerts"
 	            },
 	            {
 	                :method => Communications.HTTP_REQUEST_METHOD_GET,
@@ -92,46 +87,8 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         } else {
             infoDict.put("wsymb", weather.get("main").substring(0, 1));
         }
-        infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));
+        infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));        
 
-//        var myStats = System.getSystemStats();
-//        var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-//        var clockTime = System.getClockTime();
-//        System.println(Lang.format(
-//            "BeforeDaily ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
-//            [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
-//                now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
-//        ));
-        Communications.makeWebRequest(
-            "https://api.openweathermap.org/data/2.5/onecall",
-            {
-                "lat" => infoDict.get("lat").format("%.6f"),
-                "lon" => infoDict.get("lon").format("%.6f"),
-                "appid" => appid,
-                "units" => "metric",
-                "exclude" => "current,hourly,minutely,alerts"
-            },
-            {
-                :method => Communications.HTTP_REQUEST_METHOD_GET,
-                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-            },
-            method(:dailyCb)
-        );
-    }
-
-    function dailyCb(responseCode, data) {
-        if (responseCode != 200) {
-            var myStats = System.getSystemStats();
-            var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-            var clockTime = System.getClockTime();
-            System.println(Lang.format(
-                "DailyCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
-                [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
-                    now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
-            ));
-            Background.exit([infoDict, false]);
-            return;
-        }
         var daily = data.get("daily");
         infoDict.put("tlo", Math.round(daily[0].get("temp").get("min")));
         infoDict.put("thi", Math.round(daily[0].get("temp").get("max")));
@@ -171,12 +128,15 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         infoDict.put("dhis", his);
         infoDict.put("dlos", lows);
         infoDict.put("ddews", dews);
+        System.println(infoDict);
+        
+//        Background.exit([infoDict, true]);
 
         Communications.makeWebRequest(
             "https://api.openweathermap.org/data/2.5/onecall",
             {
-                "lat" => infoDict.get("lat").format("%.6f"),
-                "lon" => infoDict.get("lon").format("%.6f"),
+                "lat" => bglat,
+                "lon" => bglon,
                 "appid" => appid,
                 "units" => "metric",
                 "exclude" => "daily,current,hourly,alerts"
