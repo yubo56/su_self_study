@@ -4,7 +4,18 @@
  */
 #include "players.h"
 #define MAX_SCORE 1e9
-#define DISP_DELAY 10000
+#define DISP_DELAY 200000
+
+#define W1 3
+#define W2 1
+#define W3 -2
+#define W_FRAC 4
+const int WEIGHTS[LEN * LEN] = {
+    W1, W2, W2, W1,
+    W2, W3, W3, W2,
+    W2, W3, W3, W2,
+    W1, W2, W2, W1
+};
 
 void autoplay_rand(GameState* game, int to_display, int _lookahead)
 {
@@ -53,20 +64,38 @@ int get_score(GameState* game, int num_ply, int (*scorer)(GameState* game))
         for (j = 0; j < num_empties; j++)
         {
             (*empties[j]) = 1;
-            score2 = MIN(get_score_basic(&child, num_ply - 1), score2);
+            score2 = MIN(get_score(&child, num_ply - 1, scorer), score2);
             (*empties[j]) = 0;
         }
         score = MAX(score, score2);
     }
     return score;
 }
-int get_score_from_game(GameState* game) { return game->score; }
 
-int get_score_basic(GameState* game, int num_ply)
+int get_score_from_game(GameState* game)
 {
-    return get_score(game, num_ply, get_score_from_game);
+    return game->score;
 }
-int get_best_move(GameState* game, int* directions, int num_legals, int lookahead)
+
+int get_score_heuristic(GameState* game)
+{
+    int i;
+    int heuristic = 0;
+    for (i = 0; i < LEN * LEN; i++)
+    {
+        heuristic += game->board[i] * WEIGHTS[i];
+    }
+    return game->score + heuristic / W_FRAC;
+}
+
+int get_best_move
+(
+        GameState* game,
+        int* directions,
+        int num_legals,
+        int lookahead,
+        int (*scorer)(GameState* game)
+)
 {
     GameState child;
     int i, j, best_move, best_score, score2, num_empties;
@@ -85,7 +114,7 @@ int get_best_move(GameState* game, int* directions, int num_legals, int lookahea
         for (j = 0; j < num_empties; j++)
         {
             (*empties[j]) = 1;
-            score2 = MAX(get_score_basic(&child, lookahead - 1), score2);
+            score2 = MAX(get_score(&child, lookahead - 1, scorer), score2);
             (*empties[j]) = 0;
         }
         if (score2 > best_score)
@@ -96,7 +125,13 @@ int get_best_move(GameState* game, int* directions, int num_legals, int lookahea
     }
     return best_move;
 }
-void autoplay_basic(GameState* game, int to_display, int lookahead)
+void autoplay
+(
+        GameState* game,
+        int to_display,
+        int lookahead,
+        int (*scorer)(GameState* game)
+)
 {
     int num_legals, best_move;
     int directions[4];
@@ -104,7 +139,8 @@ void autoplay_basic(GameState* game, int to_display, int lookahead)
     num_legals = get_legal_moves(game->board, directions);
     while (num_legals > 0)
     {
-        best_move = get_best_move(game, directions, num_legals, lookahead);
+        best_move = get_best_move
+            (game, directions, num_legals, lookahead, scorer);
         move_board(game, directions[best_move]);
         if (to_display == 1)
         {
@@ -117,6 +153,16 @@ void autoplay_basic(GameState* game, int to_display, int lookahead)
 
         num_legals = get_legal_moves(game->board, directions);
     }
+}
+
+void autoplay_basic(GameState* game, int to_display, int lookahead)
+{
+    autoplay(game, to_display, lookahead, get_score_from_game);
+}
+
+void autoplay_heuristic(GameState* game, int to_display, int lookahead)
+{
+    autoplay(game, to_display, lookahead, get_score_heuristic);
 }
 
 /**
@@ -144,5 +190,10 @@ For 3-ply basic (~40s)
 29 runs with max cell 512 (29.00%)
 57 runs with max cell 1024 (57.00%)
 14 runs with max cell 2048 (14.00%)
+
+For 3-ply heuristic ((3, -1, 2, 4), just square weights)
+5 runs with max cell 512 (5.00%)
+60 runs with max cell 1024 (60.00%)
+35 runs with max cell 2048 (35.00%)
 
 **/

@@ -25,11 +25,13 @@ void play()
         else if (ch == 'h')
         {
             printw("(q) to quit\n");
+            printw("(r) to restart\n");
+            printw("(l) for legal moves\n");
             printw("(p) for autoplay_rand\n");
             printw("(b) for autoplay_basic (2ply)\n");
             printw("(B) for autoplay_basic (3ply)\n");
-            printw("(r) to restart\n");
-            printw("(l) for legal moves\n");
+            printw("(a) for autoplay_heuristic (2ply)\n");
+            printw("(A) for autoplay_heuristic (3ply)\n");
             printw("(h) to close this menu\n");
             continue;
         }
@@ -52,6 +54,16 @@ void play()
         else if (ch == 'B')
         {
             autoplay_basic(&game, 1, 3);
+            continue;
+        }
+        else if (ch == 'a')
+        {
+            autoplay_heuristic(&game, 1, 2);
+            continue;
+        }
+        else if (ch == 'A')
+        {
+            autoplay_heuristic(&game, 1, 3);
             continue;
         }
         clear();
@@ -151,11 +163,19 @@ void run_main(int argc, const char *argv[])
     }
     else if (strcmp(argv[1], "--run-many-basic-2") == 0)
     {
-        run_many(autoplay_basic, 1000, 2, 0);
+        run_many(autoplay_basic, 300, 2, 0);
     }
     else if (strcmp(argv[1], "--run-many-basic-3") == 0)
     {
         run_many(autoplay_basic, 100, 3, 1);
+    }
+    else if (strcmp(argv[1], "--run-many-heuristic-2") == 0)
+    {
+        run_many(autoplay_heuristic, 300, 2, 0);
+    }
+    else if (strcmp(argv[1], "--run-many-heuristic-3") == 0)
+    {
+        run_many(autoplay_heuristic, 100, 3, 1);
     }
     else
     {
@@ -163,31 +183,9 @@ void run_main(int argc, const char *argv[])
         print_help(argv[0]);
     }
 }
-void run_test()
-{
-    int num_legals, best_move;
-    int directions[4];
-    GameState game;
-
-    initscr();
-    cbreak();
-    noecho();
-    nonl();
-    keypad(stdscr, TRUE);
-
-    reset_game(&game);
-    print_board(&game);
-    num_legals = get_legal_moves(game.board, directions);
-    best_move = get_best_move(&game, directions, num_legals, 2);
-    printw("%c\n", DIRECTIONS[directions[best_move]]);
-    refresh();
-    getch();
-    endwin();
-}
 
 int main(int argc, const char *argv[])
 {
     run_main(argc, argv);
-    /* run_test(); */
     return 0;
 }
