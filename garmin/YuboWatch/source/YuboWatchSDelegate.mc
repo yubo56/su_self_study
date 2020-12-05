@@ -40,34 +40,64 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             Background.exit([infoDict, false]);
         }
         else {
-	        Communications.makeWebRequest(
+            Communications.makeWebRequest(
 	            "https://api.openweathermap.org/data/2.5/onecall",
 	            {
 	                "lat" => bglat,
 	                "lon" => bglon,
 	                "appid" => appid,
 	                "units" => "metric",
-	                "exclude" => "hourly,minutely,alerts"
+	                "exclude" => "daily,current,hourly,alerts"
 	            },
 	            {
 	                :method => Communications.HTTP_REQUEST_METHOD_GET,
 	                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 	            },
-	            method(:currentCb)
+	            method(:minutelyCb)
 	        );
+	    }
+    }
+
+    // 1hr precipitation amounts
+    function minutelyCb(responseCode, data) {
+        if (responseCode != 200) {
+            Background.exit([infoDict, false]);
+            return;
         }
+        if (data.hasKey("minutely")) {
+            infoDict.remove("precips");
+            var minutely = data.get("minutely");
+            var numMinutes = minutely.size();
+            var precips = new [numMinutes];
+            for (var i = 0; i < numMinutes; i++) {
+                if (minutely == null) {
+                    precips[i] = precipMin - 1;
+                    continue;
+                }
+                precips[i] = Math.ln(minutely[i].get("precipitation"));
+            }
+
+            infoDict.put("precips", precips);
+        }
+        Communications.makeWebRequest(
+            "https://api.openweathermap.org/data/2.5/onecall",
+            {
+                "lat" => bglat,
+                "lon" => bglon,
+                "appid" => appid,
+                "units" => "metric",
+                "exclude" => "hourly,minutely,alerts"
+            },
+            {
+                :method => Communications.HTTP_REQUEST_METHOD_GET,
+                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+            },
+            method(:currentCb)
+        );
     }
     
     function currentCb(responseCode, data) {
         if (responseCode != 200) {
-            var myStats = System.getSystemStats();
-            var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-            var clockTime = System.getClockTime();
-            System.println(Lang.format(
-                "CurrentCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
-                [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
-                    now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
-            ));
             Background.exit([infoDict, false]);
             return;
         }
@@ -128,56 +158,6 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         infoDict.put("dhis", his);
         infoDict.put("dlos", lows);
         infoDict.put("ddews", dews);
-        System.println(infoDict);
-        
-//        Background.exit([infoDict, true]);
-
-        Communications.makeWebRequest(
-            "https://api.openweathermap.org/data/2.5/onecall",
-            {
-                "lat" => bglat,
-                "lon" => bglon,
-                "appid" => appid,
-                "units" => "metric",
-                "exclude" => "daily,current,hourly,alerts"
-            },
-            {
-                :method => Communications.HTTP_REQUEST_METHOD_GET,
-                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-            },
-            method(:minutelyCb)
-        );
-    }
-
-    // 1hr precipitation amounts
-    function minutelyCb(responseCode, data) {
-        if (responseCode != 200) {
-            var myStats = System.getSystemStats();
-            var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-            var clockTime = System.getClockTime();
-            System.println(Lang.format(
-                "MinutelyCode ($1$). Free/Used/Tot (B): ($2$/$3$/$4$). [$5$ $6$, $7$:$8$:$9$]",
-                [responseCode, myStats.freeMemory, myStats.usedMemory, myStats.totalMemory,
-                    now.month,now.day.format("%02d"), clockTime.hour.format("%02d"), clockTime.min.format("%02d"), clockTime.sec.format("%02d")]
-            ));
-            Background.exit([infoDict, false]);
-            return;
-        }
-        if (data.hasKey("minutely")) {
-            infoDict.remove("precips");
-            var minutely = data.get("minutely");
-            var numMinutes = minutely.size();
-            var precips = new [numMinutes];
-            for (var i = 0; i < numMinutes; i++) {
-                if (minutely == null) {
-                    precips[i] = precipMin - 1;
-                    continue;
-                }
-                precips[i] = Math.ln(minutely[i].get("precipitation"));
-            }
-            infoDict.put("precips", precips);
-        }
-
         Background.exit([infoDict, true]);
     }
 }

@@ -40,7 +40,12 @@ class YuboWatchApp extends Application.AppBase {
 
     function onBackgroundData(data) {   
         if (data[0] != null) {
-            Application.getApp().setProperty(BGDATA, data[0]);
+            var oldData = Application.getApp().getProperty(BGDATA);
+            var newDataKeys = data[0].keys();
+            for (var i = 0; i < newDataKeys.size(); i++) {
+                oldData.put(newDataKeys[i], data[0][newDataKeys[i]]);
+            }
+            Application.getApp().setProperty(BGDATA, oldData);
         }
         if (data[1]) {
             Application.getApp().setProperty(NUMFAILED, 0);

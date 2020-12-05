@@ -195,7 +195,7 @@ class YuboWatchView extends WatchUi.WatchFace {
         if (positionInfo has :altitude && positionInfo.altitude != null) {
             alt = positionInfo.altitude;
         }
-        var latLonStr = Lang.format("$1$/$2$/$3$", [bglat.format("%.2f"), bglon.format("%.2f"), alt.format("%04d")]);
+        var latLonStr = Lang.format("$1$/$2$/$3$", [bglat.format("%05.2f"), bglon.format("%05.2f"), alt.format("%04d")]);
         setText(View.findDrawableById("LatLabel"), latLonStr, "-----/-----/----");
     }
 
