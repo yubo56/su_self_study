@@ -48,7 +48,7 @@ class YuboWatchApp extends Application.AppBase {
             Application.getApp().setProperty(BGDATA, oldData);
         }
         if (data[1]) {
-            Application.getApp().setProperty(NUMFAILED, 0);
+            Application.getApp().deleteProperty(NUMFAILED);
         } else {
             var numFailed = Application.getApp().getProperty(NUMFAILED);
             if (numFailed == null) {

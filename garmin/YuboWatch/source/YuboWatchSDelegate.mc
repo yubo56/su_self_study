@@ -61,6 +61,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     // 1hr precipitation amounts
     function minutelyCb(responseCode, data) {
         if (responseCode != 200) {
+            System.println(Lang.format("Minutely, $1$", [System.getSystemStats().freeMemory]));
             Background.exit([infoDict, false]);
             return;
         }
@@ -98,6 +99,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     
     function currentCb(responseCode, data) {
         if (responseCode != 200) {
+            System.println(Lang.format("Current, $1$", [System.getSystemStats().freeMemory]));
             Background.exit([infoDict, false]);
             return;
         }

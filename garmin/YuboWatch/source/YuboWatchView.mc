@@ -1,6 +1,3 @@
-// add weather status for today/tomm (right of graph), not just current
-// consider log scaling precipitation graph? 0.1mm/h = very light drizzle
-// Could plot daily forecast instead of hourly for now
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.System;
@@ -11,16 +8,13 @@ using Toybox.Time;
 using Toybox.Background;
 using Toybox.Math;
 
-function setText(view, text, defaultText) {
-    if (text == null) {
-        view.setText(defaultText);
-    } else {
-        view.setText(text);
-    }
+function setText(dc, x, y, text, defaultText, color) {
+    dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+    dc.drawText(x, y, Graphics.FONT_SMALL, text ? text : defaultText, Graphics.TEXT_JUSTIFY_LEFT);
 }
 
 function textFromBg(bgInfoDict, propName, fmt) {
-    if (bgInfoDict == null || bgInfoDict.get(propName) == null) {
+    if (bgInfoDict.get(propName) == null) {
         return 0.format(fmt);
     } else {
         var val = bgInfoDict.get(propName);
@@ -28,7 +22,7 @@ function textFromBg(bgInfoDict, propName, fmt) {
     }
 }
 
-function setAndColorIfNegative(view, bgInfoDict, propName, fmt, colorPos, colorNeg) {
+function setAndColorIfNegativeGen(dc, x, y, bgInfoDict, propName, fmt, colorPos, colorNeg, size) {
     var val;
     if (bgInfoDict == null || bgInfoDict.get(propName) == null) {
         val = 0;
@@ -36,12 +30,15 @@ function setAndColorIfNegative(view, bgInfoDict, propName, fmt, colorPos, colorN
         val = bgInfoDict.get(propName);
     }
     if (val < 0) {
-        view.setColor(colorNeg);
+        dc.setColor(colorNeg, Graphics.COLOR_TRANSPARENT);
         val = -val;
     } else {
-        view.setColor(colorPos);
+        dc.setColor(colorPos, Graphics.COLOR_TRANSPARENT);
     }
-    setText(view, val.format(fmt), "--");
+    dc.drawText(x, y, size, val.format(fmt), Graphics.TEXT_JUSTIFY_LEFT);
+}
+function setAndColorIfNegative(dc, x, y, bgInfoDict, propName, fmt, colorPos, colorNeg) {
+    setAndColorIfNegativeGen(dc, x, y,  bgInfoDict, propName, fmt, colorPos, colorNeg, Graphics.FONT_SMALL);
 }
 
 function min(a, b) {
@@ -67,16 +64,12 @@ var precipMax = Math.ln(50.0); // max 50mm/hr
 var precipMin = Math.ln(0.1); // min 0.1mm/hr
 
 class YuboWatchView extends WatchUi.WatchFace {
-
     function initialize() {
-        // Application.getApp().clearProperties();
         WatchFace.initialize();
     }
 
     // Load your resources here
-    function onLayout(dc) {
-        setLayout(Rez.Layouts.WatchFace(dc));
-    }
+    function onLayout(dc) {}
 
     // Called when this View is brought to the foreground. Restore
     // the state of this View and prepare it to be shown. This includes
@@ -84,156 +77,6 @@ class YuboWatchView extends WatchUi.WatchFace {
     function onShow() {
     }
 
-    function setTimeView() {
-        var timeView = View.findDrawableById("TimeLabel");
-        var timeFormat = "$1$$2$";
-        var clockTime = System.getClockTime();
-        var timeString = Lang.format(
-            timeFormat,
-            [clockTime.hour.format("%02d"), clockTime.min.format("%02d")]
-        );
-        timeView.setText(timeString);
-
-        var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-        var dateView = View.findDrawableById("DateLabel");
-        var dateFormat = "$1$, $2$ $3$";
-        var dateString = Lang.format(
-            dateFormat,
-            [now.day_of_week, now.month, now.day.format("%02d")]
-        );
-        dateView.setText(dateString);
-    }
-
-    function setBattView() {
-        var myStats = System.getSystemStats();
-        var battPerc = myStats.battery;
-        var battStr = battPerc.format("%.1f");
-        var battView = View.findDrawableById("BattLabel");
-        if (battPerc < 20) {
-            battView.setColor(Graphics.COLOR_RED);
-        } else {
-            battView.setColor(Graphics.COLOR_GREEN);
-        }
-        battView.setText(battStr);
-        
-        var memView = View.findDrawableById("Mem");
-        var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
-        memView.setText(Lang.format("($1$%)", [memPerc]));
-    }
-
-    function setStepView() {
-        var stepView = View.findDrawableById("StepLabel");
-        var calView = View.findDrawableById("CalLabel");
-
-        var info = ActivityMonitor.getInfo();
-        var steps = info.steps;
-        var stepGoal = info.stepGoal;
-        var calories = info.calories;
-        if (steps == null) {
-            stepView.setText("-----");
-            return;
-        } else {
-            if (steps < stepGoal) {
-                stepView.setColor(Graphics.COLOR_WHITE);
-            } else {
-                stepView.setColor(Graphics.COLOR_GREEN);
-            }
-            stepView.setText(steps.format("%05d"));
-        }
-
-        if (calories == null) {
-            calView.setText("----");
-        } else {
-            calView.setText(calories.format("%04d"));
-        }
-    }
-
-    function setHRView() {
-        var hrView = View.findDrawableById("HRLabel");
-        var lastHRSample = ActivityMonitor.getHeartRateHistory(1, true).next();
-        if (lastHRSample == null) {
-            hrView.setText("N/A");
-        } else {
-            var hrate = lastHRSample.heartRate;
-            hrView.setText(hrate.format("%03d"));
-        }
-    }
-
-    function setWeatherView() {
-        var bgInfoDict = Application.getApp().getProperty(BGDATA);
-        if (bgInfoDict == null) {
-           bgInfoDict = {};
-        }
-
-        setAndColorIfNegative(View.findDrawableById("TempLabel"), bgInfoDict, "temp", "%04.1f", Graphics.COLOR_WHITE, Graphics.COLOR_RED); // 4 total digits
-        setAndColorIfNegative(View.findDrawableById("TempLoLabel"), bgInfoDict, "tlo", "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED);
-        setAndColorIfNegative(View.findDrawableById("TempDewLabel"), bgInfoDict, "tdewp", "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE);
-        setAndColorIfNegative(View.findDrawableById("TempHiLabel"), bgInfoDict, "thi", "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED);
-        setAndColorIfNegative(View.findDrawableById("TempTommLoLabel"), bgInfoDict, "ttlo", "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED);
-        setAndColorIfNegative(View.findDrawableById("TempTommDewLabel"), bgInfoDict, "ttdewp", "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE);
-        setAndColorIfNegative(View.findDrawableById("TempTommHiLabel"), bgInfoDict, "tthi", "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED);
-        setText(View.findDrawableById("WindLabel"), textFromBg(bgInfoDict, "wspeed", "%02d"), "--");
-        setText(View.findDrawableById("HumidLabel"), textFromBg(bgInfoDict, "humid", "%02d") + "%", "--%");
-        setText(View.findDrawableById("UVLabel"), textFromBg(bgInfoDict, "uvi", "%02d"), "--");
-        setText(View.findDrawableById("SunriseLabel"), bgInfoDict.get("sunrise"), "----");
-        setText(View.findDrawableById("SunsetLabel"), bgInfoDict.get("sunset"), "----");
-        setText(View.findDrawableById("WeatherSymbol"), bgInfoDict.get("wsymb"), "-");
-        setText(View.findDrawableById("WeatherCode"), bgInfoDict.get("wcode"), "--");
-        
-        setText(View.findDrawableById("TodayWeather"), bgInfoDict.get("wtoday"), "C00");
-        setText(View.findDrawableById("TommWeather"), bgInfoDict.get("wtomm"), "C00");
-        setText(View.findDrawableById("OvmmWeather"), bgInfoDict.get("wovmm"), "C00");
-        
-        var positionInfo = Position.getInfo();
-        var bglat = lat;
-        var bglon = lon;
-        var alt = 0;
-        if (positionInfo has :position && positionInfo.position != null) {
-            bglat = positionInfo.position.toDegrees()[0];
-            bglon = positionInfo.position.toDegrees()[1];
-        }
-        if (positionInfo has :altitude && positionInfo.altitude != null) {
-            alt = positionInfo.altitude;
-        }
-        var latLonStr = Lang.format("$1$/$2$/$3$", [bglat.format("%05.2f"), bglon.format("%05.2f"), alt.format("%04d")]);
-        setText(View.findDrawableById("LatLabel"), latLonStr, "-----/-----/----");
-    }
-
-    function setBluetooth() {
-        var btView = View.findDrawableById("BTLabel");
-        if (System.getDeviceSettings().phoneConnected) {
-            btView.setText("(B)");
-            btView.setColor(Graphics.COLOR_BLUE);
-        } else {
-            btView.setText("(X)");
-            btView.setColor(Graphics.COLOR_DK_GRAY);
-        }
-    }
-    
-    function setSuccessLabel() {
-        var successView = View.findDrawableById("SuccessLabel");
-        var numFailures = Application.getApp().getProperty(NUMFAILED);
-        if (numFailures == null) {
-            successView.setText("O");
-            successView.setColor(Graphics.COLOR_DK_GRAY);
-        } else if (numFailures == 0) {
-            successView.setText("Y");
-            successView.setColor(Graphics.COLOR_GREEN);
-        } else {
-            successView.setText(numFailures.toString());
-            successView.setColor(Graphics.COLOR_RED);
-        }
-    }
-    
-    function setDebugView() {
-        var last = Background.getLastTemporalEventTime();
-        var timeSinceLast = 999;
-        if (last != null) {
-            timeSinceLast = Time.now().value() - last.value();
-        }
-        View.findDrawableById("DebugLabel").setText(timeSinceLast.format("%03d"));
-    }
-    
     function drawGraphs(dc) {
         // 214 x 180 according to simulator?
         var xmax = 214;
@@ -325,15 +168,131 @@ class YuboWatchView extends WatchUi.WatchFace {
 
     function onUpdate(dc) {
         View.onUpdate(dc);
-        setTimeView();
-        setBattView();
-        setStepView();
-        setHRView();
-        setWeatherView();
-        setBluetooth();
-        setSuccessLabel();
-        setDebugView();
         
+        // set time view
+        var timeFormat = "$1$$2$";
+        var clockTime = System.getClockTime();
+        var timeString = Lang.format(
+            timeFormat,
+            [clockTime.hour.format("%02d"), clockTime.min.format("%02d")]
+        );
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(10, 62, Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_LEFT);
+
+        var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+        var dateView = View.findDrawableById("DateLabel");
+        var dateFormat = "$1$, $2$ $3$";
+        var dateString = Lang.format(
+            dateFormat,
+            [now.day_of_week, now.month, now.day.format("%02d")]
+        );
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(10, 46, Graphics.FONT_MEDIUM, dateString, Graphics.TEXT_JUSTIFY_LEFT);
+        
+        // set battery
+        var myStats = System.getSystemStats();
+        var battPerc = myStats.battery;
+        var battStr = battPerc.format("%.1f");
+        var battView = View.findDrawableById("BattLabel");
+        dc.setColor(battPerc > 20 ? Graphics.COLOR_GREEN : Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(164, 9, Graphics.FONT_MEDIUM, battStr, Graphics.TEXT_JUSTIFY_RIGHT);
+
+        // set memory
+        var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(45, 116, Graphics.FONT_SMALL, Lang.format("($1$%)", [memPerc]), Graphics.TEXT_JUSTIFY_RIGHT);
+        
+        // set steps & cals
+        var info = ActivityMonitor.getInfo();
+        var steps = info.steps;
+        var stepGoal = info.stepGoal;
+        var calories = info.calories;
+        dc.setColor(steps > stepGoal ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(96, 9, Graphics.FONT_MEDIUM, steps.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(32, 28, Graphics.FONT_MEDIUM, steps.format("%04d"), Graphics.TEXT_JUSTIFY_LEFT);
+
+        // set HR view
+        var lastHRSample = ActivityMonitor.getHeartRateHistory(1, true).next();
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(32, 9, Graphics.FONT_MEDIUM, 
+            lastHRSample == null ? "N/A" : lastHRSample.heartRate.format("%03d"),
+            Graphics.TEXT_JUSTIFY_LEFT);
+        
+        // set bluetooth view
+        if (System.getDeviceSettings().phoneConnected) {
+            dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(104, 46, Graphics.FONT_SMALL, "(B)", Graphics.TEXT_JUSTIFY_LEFT);
+        } else {
+            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(104, 46, Graphics.FONT_SMALL, "(X)", Graphics.TEXT_JUSTIFY_LEFT);
+        }
+        
+        // set success view
+        var numFailures = Application.getApp().getProperty(NUMFAILED);
+        numFailures = numFailures ? numFailures : -1;
+        if (numFailures >= 0) {
+            dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(124, 46, Graphics.FONT_SMALL, numFailures.toString(), Graphics.TEXT_JUSTIFY_LEFT);
+        } else {
+            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(124, 46, Graphics.FONT_SMALL, "Y", Graphics.TEXT_JUSTIFY_LEFT);
+        }
+        
+        // set debug view
+        var last = Background.getLastTemporalEventTime();
+        var timeSinceLast = 999;
+        if (last != null) {
+            timeSinceLast = Time.now().value() - last.value();
+        }
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(102, 82, Graphics.FONT_SMALL, timeSinceLast.format("%03d"), Graphics.TEXT_JUSTIFY_LEFT);
+
+        // set all weather
+        var bgInfoDict = Application.getApp().getProperty(BGDATA);
+        if (bgInfoDict == null) {
+           bgInfoDict = {};
+        }
+
+        setAndColorIfNegativeGen(dc, 139, 75, bgInfoDict, "temp", "%04.1f",
+            Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_LARGE); // 4 total digits
+        setAndColorIfNegative(dc, 139, 61, bgInfoDict, "tlo", "%02d",
+            Graphics.COLOR_WHITE, Graphics.COLOR_RED);
+        setAndColorIfNegative(dc, 158, 61, bgInfoDict, "tdewp", "%02d",
+            Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE);
+        setAndColorIfNegative(dc, 177, 61, bgInfoDict, "thi", "%02d",
+            Graphics.COLOR_WHITE, Graphics.COLOR_RED);
+        setAndColorIfNegative(dc, 139, 47, bgInfoDict, "ttlo", "%02d",
+            Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED);
+        setAndColorIfNegative(dc, 158, 47, bgInfoDict, "ttdewp", "%02d",
+            Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE);
+        setAndColorIfNegative(dc, 177, 47, bgInfoDict, "tthi", "%02d",
+            Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED);
+        setText(dc, 139, 101, textFromBg(bgInfoDict, "wspeed", "%02d"), "--", Graphics.COLOR_GREEN);
+        setText(dc, 171, 101, textFromBg(bgInfoDict, "humid", "%02d") + "%", "--%", Graphics.COLOR_BLUE);
+        setText(dc, 156, 101, textFromBg(bgInfoDict, "uvi", "%02d"), "--", Graphics.COLOR_RED);
+        setText(dc, 103, 67, bgInfoDict.get("sunrise"), "----", Graphics.COLOR_YELLOW);
+        setText(dc, 103, 100, bgInfoDict.get("sunset"), "----", Graphics.COLOR_YELLOW);
+        setText(dc, 187, 75, bgInfoDict.get("wsymb"), "-", Graphics.COLOR_WHITE);
+        setText(dc, 187, 87, bgInfoDict.get("wcode"), "--", Graphics.COLOR_WHITE);
+        
+        setText(dc, 168, 118, bgInfoDict.get("wtoday"), "CFF", Graphics.COLOR_WHITE);
+        setText(dc, 160, 130, bgInfoDict.get("wtomm"), "CFF", Graphics.COLOR_WHITE);
+        setText(dc, 168, 142, bgInfoDict.get("wovmm"), "CFF", Graphics.COLOR_WHITE);
+        
+        var positionInfo = Position.getInfo();
+        var bglat = lat;
+        var bglon = lon;
+        var alt = 0;
+        if (positionInfo has :position && positionInfo.position != null) {
+            bglat = positionInfo.position.toDegrees()[0];
+            bglon = positionInfo.position.toDegrees()[1];
+        }
+        if (positionInfo has :altitude && positionInfo.altitude != null) {
+            alt = positionInfo.altitude;
+        }
+        var latLonStr = Lang.format("$1$/$2$/$3$", [bglat.format("%05.2f"), bglon.format("%05.2f"), alt.format("%04d")]);
+        setText(dc, 73, 31, latLonStr, "-----/-----/----", Graphics.COLOR_WHITE);
         drawGraphs(dc);
     }
 
