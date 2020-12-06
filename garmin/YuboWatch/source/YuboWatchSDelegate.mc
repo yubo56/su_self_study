@@ -20,7 +20,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     function initialize() {
         System.ServiceDelegate.initialize();
     }
-    
+
 	function timeToHHMM(ts) {
 	    var m = new Time.Moment(ts);
 	    var tinfo = Time.Gregorian.info(m, Time.FORMAT_SHORT);
@@ -29,6 +29,13 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	        [tinfo.hour.format("%02d"), tinfo.min.format("%02d")]
 	    );
 	}
+
+    function weatherStr(w) {
+        var id = w.get("id");
+        return Lang.format("$1$$2$", [
+	        id == 800 ? "O" : w.get("main").substring(0, 1),
+	        (id % 100).format("%02d")]);
+    }
 
     function onTemporalEvent() {
         var positionInfo = Position.getInfo();
@@ -51,35 +58,39 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	            },
 	            {
 	                :method => Communications.HTTP_REQUEST_METHOD_GET,
-	                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+	                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_TEXT_PLAIN
 	            },
 	            method(:minutelyCb)
 	        );
 	    }
     }
 
-    // 1hr precipitation amounts
+    // 1hr precipitation amounts; parse by hand instead of JSON to save memory
     function minutelyCb(responseCode, data) {
         if (responseCode != 200) {
-            System.println(Lang.format("Minutely, $1$", [System.getSystemStats().freeMemory]));
             Background.exit([infoDict, false]);
             return;
         }
-        if (data.hasKey("minutely")) {
-            infoDict.remove("precips");
-            var minutely = data.get("minutely");
-            var numMinutes = minutely.size();
-            var precips = new [numMinutes];
-            for (var i = 0; i < numMinutes; i++) {
-                if (minutely == null) {
+        var precipStr = "precipitation\":";
+        var str2 = "";
+        var start_idx = data.find(precipStr);
+        if (start_idx) {
+            var precips = new [31];
+            for (var i = 0; i < 61; i++) {
+                if (start_idx == null) {
                     precips[i] = precipMin - 1;
-                    continue;
                 }
-                precips[i] = Math.ln(minutely[i].get("precipitation"));
-            }
-
-            infoDict.put("precips", precips);
-        }
+	            str2 = data.substring(start_idx + precipStr.length(), data.length());
+	            var offset = str2.find("}");
+	            if (i % 2 == 0) {
+	               precips[Math.round(i / 2)] = Math.ln(str2.substring(0, offset).toFloat());
+	            }
+	            data = str2.substring(offset, str2.length());
+	            start_idx = data.find(precipStr);
+	        }
+	        infoDict.put("precips", precips);
+	    }
+        System.println(Lang.format("pre-other, $1$", [System.getSystemStats().freeMemory]));
         Communications.makeWebRequest(
             "https://api.openweathermap.org/data/2.5/onecall",
             {
@@ -96,10 +107,10 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             method(:currentCb)
         );
     }
-    
+
     function currentCb(responseCode, data) {
+        System.println(Lang.format("Current, $1$, $2$", [responseCode, System.getSystemStats().freeMemory]));
         if (responseCode != 200) {
-            System.println(Lang.format("Current, $1$", [System.getSystemStats().freeMemory]));
             Background.exit([infoDict, false]);
             return;
         }
@@ -119,7 +130,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         } else {
             infoDict.put("wsymb", weather.get("main").substring(0, 1));
         }
-        infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));        
+        infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));
 
         var daily = data.get("daily");
         infoDict.put("tlo", Math.round(daily[0].get("temp").get("min")));
@@ -130,24 +141,12 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 
         // parse weather into "TDRSAOC" (thunderstorm, drizzle, rain, snow, "atmosphere", clear, cloudy) + code
         var wtoday = daily[0].get("weather")[0];
-        var wtodayId = wtoday.get("id");
-        infoDict.put("wtoday", Lang.format("$1$$2$", [
-            wtodayId == 800 ? "O" : wtoday.get("main").substring(0, 1),
-            (wtodayId % 100).format("%02d")]));
+        infoDict.put("wtoday", weatherStr(wtoday));
         var wtomm = daily[1].get("weather")[0];
-        var wtommId = wtomm.get("id");
-        infoDict.put("wtomm", Lang.format("$1$$2$", [
-            wtommId == 800 ? "O" : wtomm.get("main").substring(0, 1),
-            (wtommId % 100).format("%02d")]));
+        infoDict.put("wtomm", weatherStr(wtomm));
         var wovmm = daily[2].get("weather")[0];
-        var wovmmId = wovmm.get("id");
-        infoDict.put("wovmm", Lang.format("$1$$2$", [
-            wovmmId == 800 ? "O" : wovmm.get("main").substring(0, 1),
-            (wovmmId % 100).format("%02d")]));
-        
-        infoDict.remove("dhis");
-        infoDict.remove("dlos");
-        infoDict.remove("ddews");
+        infoDict.put("wovmm", weatherStr(wovmm));
+
         var numDays = daily.size();
         var his = new [numDays];
         var lows = new [numDays];

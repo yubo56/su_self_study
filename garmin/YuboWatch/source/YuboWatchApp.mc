@@ -24,7 +24,7 @@ class YuboWatchApp extends Application.AppBase {
     }
 
     // 15m recurring background
-    function getInitialView() { 
+    function getInitialView() {
         Background.registerForTemporalEvent(new Time.Duration(BKGD_MINS * 60));
         return [ new YuboWatchView() ];
     }
@@ -38,14 +38,18 @@ class YuboWatchApp extends Application.AppBase {
         return [ new YuboWatchSDelegate() ];
     }
 
-    function onBackgroundData(data) {   
+    function onBackgroundData(data) {
         if (data[0] != null) {
             var oldData = Application.getApp().getProperty(BGDATA);
-            var newDataKeys = data[0].keys();
-            for (var i = 0; i < newDataKeys.size(); i++) {
-                oldData.put(newDataKeys[i], data[0][newDataKeys[i]]);
-            }
-            Application.getApp().setProperty(BGDATA, oldData);
+            if (oldData == null) {
+                Application.getApp().setProperty(BGDATA, data[0]);
+            } else {
+	            var newDataKeys = data[0].keys();
+	            for (var i = 0; i < newDataKeys.size(); i++) {
+	                oldData.put(newDataKeys[i], data[0][newDataKeys[i]]);
+	            }
+	            Application.getApp().setProperty(BGDATA, oldData);
+	        }
         }
         if (data[1]) {
             Application.getApp().deleteProperty(NUMFAILED);
@@ -53,7 +57,7 @@ class YuboWatchApp extends Application.AppBase {
             var numFailed = Application.getApp().getProperty(NUMFAILED);
             if (numFailed == null) {
                 numFailed = 0;
-            } 
+            }
             Application.getApp().setProperty(NUMFAILED, numFailed + 1);
         }
     }
