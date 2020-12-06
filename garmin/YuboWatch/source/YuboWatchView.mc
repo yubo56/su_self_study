@@ -8,20 +8,27 @@ using Toybox.Time;
 using Toybox.Background;
 using Toybox.Math;
 
-function textFromBg(bgInfoDict, propName, fmt) {
-    if (bgInfoDict.get(propName) == null) {
+function textFromBg(dat, idx, fmt) {
+    if (idx >= dat.size()) {
         return "--";
     } else {
-        return bgInfoDict.get(propName).format(fmt);
+        return dat[idx].format(fmt);
+    }
+}
+function getFromBg(dat, idx) {
+    if (idx >= dat.size()) {
+        return "--";
+    } else {
+        return dat[idx];
     }
 }
 
-function colorDraw(dc, x, y, bgInfoDict, propName, fmt, colorPos, colorNeg, size) {
+function colorDraw(dc, x, y, dat, idx, fmt, colorPos, colorNeg, size) {
     var val;
-    if (bgInfoDict == null || bgInfoDict.get(propName) == null) {
+    if (idx >= dat.size()) {
         val = 0;
     } else {
-        val = bgInfoDict.get(propName);
+        val = dat[idx];
     }
     if (val < 0) {
         dc.setColor(colorNeg, Graphics.COLOR_TRANSPARENT);
@@ -44,7 +51,10 @@ var precipMin = Math.ln(0.1); // min 0.1mm/hr
 
 class YuboWatchView extends WatchUi.WatchFace {
     function initialize() {
-        // Application.getApp().deleteProperty(BGDATA);
+        // below used to reset data for live-migrateability
+//        Application.getApp().deleteProperty(BGDATA);
+//        Application.getApp().setProperty(BGDATA, []);
+//        Application.getApp().setProperty(PRECIPS, new [61]);
         WatchFace.initialize();
     }
 
@@ -73,24 +83,24 @@ class YuboWatchView extends WatchUi.WatchFace {
 
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
         // precipitation graph
-        var bgInfoDict = Application.getApp().getProperty(BGDATA);
-        if (bgInfoDict != null && bgInfoDict.get("precips") != null) {
-            var precips = bgInfoDict.get("precips");
+        var precips = Application.getApp().getProperty(PRECIPS);
+        if (precips[0] != null) {
             var len = precips.size();
             for (var i = 0; i < len; i++) {
                 if (precips[i] < precipMin) { continue; }
                 var precip = min(precips[i], precipMax);
                 var px = Math.round(1.0 * (i + 1) / (len + 1) * dx + left);
                 var py = Math.round((1.0 - (precip - precipMin) / (precipMax - precipMin)) * dy + top); // y=0 is top of screen
-                dc.fillRectangle(px - r, py - r, d, d);
+                dc.fillRectangle(px - 1, py - 1, 2, 2);
             }
         }
 
+        var bgdat = Application.getApp().getProperty(BGDATA);
         // hi/lo graph
-        if (bgInfoDict != null && bgInfoDict.get("dhis") != null && bgInfoDict.get("dlos") != null) {
-            var lows = bgInfoDict.get("dlos");
-            var his = bgInfoDict.get("dhis");
-            var dews = bgInfoDict.get("ddews");
+        if (bgdat.size() > 19) {
+            var his = bgdat[17];
+	        var lows = bgdat[18];
+	        var dews = bgdat[19];
             var numDays = lows.size();
             var TEMP_MIN = lows[0];
             var TEMP_MAX = his[0];
@@ -202,10 +212,10 @@ class YuboWatchView extends WatchUi.WatchFace {
         // set bluetooth view
         if (System.getDeviceSettings().phoneConnected) {
             dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(104, 48, Graphics.FONT_SMALL, "(B)", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(102, 48, Graphics.FONT_SMALL, "(B)", Graphics.TEXT_JUSTIFY_LEFT);
         } else {
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(104, 48, Graphics.FONT_SMALL, "(X)", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(102, 48, Graphics.FONT_SMALL, "(X)", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         // set success view
@@ -213,10 +223,10 @@ class YuboWatchView extends WatchUi.WatchFace {
         numFailures = numFailures ? numFailures : -1;
         if (numFailures >= 0) {
             dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(124, 48, Graphics.FONT_SMALL, numFailures.toString(), Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(121, 48, Graphics.FONT_SMALL, numFailures.toString(), Graphics.TEXT_JUSTIFY_LEFT);
         } else {
             dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(124, 48, Graphics.FONT_SMALL, "Y", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(121, 48, Graphics.FONT_SMALL, "Y", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         // set debug view
@@ -229,35 +239,32 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.drawText(102, 82, Graphics.FONT_SMALL, timeSinceLast.format("%03d"), Graphics.TEXT_JUSTIFY_LEFT);
 
         // set all weather
-        var bgInfoDict = Application.getApp().getProperty(BGDATA);
-        if (bgInfoDict == null) {
-           bgInfoDict = {};
-        }
+        var bgdat = Application.getApp().getProperty(BGDATA);
 
-        colorDraw(dc, 139, 75, bgInfoDict, "temp", "%04.1f", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_LARGE);
-        colorDraw(dc, 139, 61, bgInfoDict, "tlo", "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
-        colorDraw(dc, 158, 61, bgInfoDict, "tdewp", "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
-        colorDraw(dc, 177, 61, bgInfoDict, "thi", "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
-        colorDraw(dc, 139, 47, bgInfoDict, "ttlo", "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
-        colorDraw(dc, 158, 47, bgInfoDict, "ttdewp", "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
-        colorDraw(dc, 177, 47, bgInfoDict, "tthi", "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 139, 75, bgdat, 0, "%04.1f", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_LARGE);
+        colorDraw(dc, 139, 61, bgdat, 7, "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 158, 61, bgdat, 3, "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
+        colorDraw(dc, 177, 61, bgdat, 8, "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 139, 47, bgdat, 9, "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 158, 47, bgdat, 11, "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
+        colorDraw(dc, 177, 47, bgdat, 10, "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
 
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(139, 101, Graphics.FONT_SMALL, textFromBg(bgInfoDict, "wspeed", "%02d"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(139, 101, Graphics.FONT_SMALL, textFromBg(bgdat, 1, "%02d"), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(171, 101, Graphics.FONT_SMALL, textFromBg(bgInfoDict, "humid", "%02d") + "%", Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(171, 101, Graphics.FONT_SMALL, textFromBg(bgdat, 2, "%02d") + "%", Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(156, 101, Graphics.FONT_SMALL, textFromBg(bgInfoDict, "uvi", "%02d"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(156, 101, Graphics.FONT_SMALL, textFromBg(bgdat, 6, "%02d"), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(103, 67, Graphics.FONT_SMALL, bgInfoDict.get("sunrise"), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(103, 100, Graphics.FONT_SMALL, bgInfoDict.get("sunset"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(103, 67, Graphics.FONT_SMALL, getFromBg(bgdat, 4), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(103, 100, Graphics.FONT_SMALL, getFromBg(bgdat, 5), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(187, 75, Graphics.FONT_SMALL, bgInfoDict.get("wsymb"), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(187, 87, Graphics.FONT_SMALL, bgInfoDict.get("wcode"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(187, 75, Graphics.FONT_SMALL, getFromBg(bgdat, 15), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(187, 87, Graphics.FONT_SMALL, getFromBg(bgdat, 16), Graphics.TEXT_JUSTIFY_LEFT);
 
-        dc.drawText(168, 118, Graphics.FONT_SMALL, bgInfoDict.get("wtoday"), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(168, 130, Graphics.FONT_SMALL, bgInfoDict.get("wtomm"), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(168, 142, Graphics.FONT_SMALL, bgInfoDict.get("wovmm"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(168, 118, Graphics.FONT_SMALL, getFromBg(bgdat, 12), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(168, 130, Graphics.FONT_SMALL, getFromBg(bgdat, 13), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(168, 142, Graphics.FONT_SMALL, getFromBg(bgdat, 14), Graphics.TEXT_JUSTIFY_LEFT);
 
         var positionInfo = Position.getInfo();
         var bglat = lat;

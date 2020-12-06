@@ -5,6 +5,7 @@ using Toybox.Time;
 using Toybox.System;
 
 var BGDATA = "bgdata";
+var PRECIPS = "precips";
 var NUMFAILED = "numfailed";
 var BKGD_MINS = 5;
 
@@ -40,16 +41,10 @@ class YuboWatchApp extends Application.AppBase {
 
     function onBackgroundData(data) {
         if (data[0] != null) {
-            var oldData = Application.getApp().getProperty(BGDATA);
-            if (oldData == null) {
-                Application.getApp().setProperty(BGDATA, data[0]);
-            } else {
-	            var newDataKeys = data[0].keys();
-	            for (var i = 0; i < newDataKeys.size(); i++) {
-	                oldData.put(newDataKeys[i], data[0][newDataKeys[i]]);
-	            }
-	            Application.getApp().setProperty(BGDATA, oldData);
-	        }
+            Application.getApp().setProperty(BGDATA, data[0]);
+        }
+        if (data[2] != null) {
+            Application.getApp().setProperty(PRECIPS, data[2]);
         }
         if (data[1]) {
             Application.getApp().deleteProperty(NUMFAILED);
