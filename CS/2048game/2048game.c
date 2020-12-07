@@ -1,8 +1,8 @@
+#include <string.h>
 #include "board.h"
 #include "players.h"
-#include <string.h>
 
-void play()
+void play(void)
 {
     int ch;
     GameState game;

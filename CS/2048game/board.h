@@ -1,10 +1,10 @@
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef BOARD_H_abcabc
+#define BOARD_H_abcabc
 
 #include <math.h>
 #include <ncurses.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define LEN 4
 #define MAX(a, b) (a) > (b) ? (a) : (b)

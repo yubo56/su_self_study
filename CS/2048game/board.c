@@ -2,7 +2,7 @@
 
 const char DIRECTIONS[5] = {'L', 'R', 'U', 'D', 'X'};
 
-int new_square()
+int new_square(void)
 {
     if (arc4random_uniform(10) == 0)
     {
