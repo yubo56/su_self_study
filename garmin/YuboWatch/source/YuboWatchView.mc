@@ -51,10 +51,12 @@ var precipMin = Math.ln(0.1); // min 0.1mm/hr
 
 class YuboWatchView extends WatchUi.WatchFace {
     function initialize() {
-        // below used to reset data for live-migrateability
-//        Application.getApp().deleteProperty(BGDATA);
-//        Application.getApp().setProperty(BGDATA, []);
-//        Application.getApp().setProperty(PRECIPS, new [61]);
+        if (Application.getApp().getProperty(BGDATA) == null) {
+            Application.getApp().setProperty(BGDATA, []);
+        }
+        if (Application.getApp().getProperty(PRECIPS) == null) {
+            Application.getApp().setProperty(PRECIPS, []);
+        }
         WatchFace.initialize();
     }
 
@@ -84,7 +86,7 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
         // precipitation graph
         var precips = Application.getApp().getProperty(PRECIPS);
-        if (precips[0] != null) {
+        if (precips.size() > 0) {
             var len = precips.size();
             for (var i = 0; i < len; i++) {
                 if (precips[i] < precipMin) { continue; }
@@ -106,7 +108,7 @@ class YuboWatchView extends WatchUi.WatchFace {
             var TEMP_MAX = his[0];
             for (var i = 0; i < numDays; i++) {
                 TEMP_MIN = min(min(TEMP_MIN, lows[i]), dews[i]);
-                TEMP_MAX = max(max(TEMP_MAX, his[i]), dews[i]);
+                TEMP_MAX = max(TEMP_MAX, his[i]);
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
 

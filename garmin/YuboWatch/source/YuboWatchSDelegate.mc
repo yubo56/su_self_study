@@ -2,7 +2,6 @@ using Toybox.Background;
 using Toybox.System;
 using Toybox.Communications;
 using Toybox.Math;
-using Toybox.Timer;
 using Toybox.Position;
 using Toybox.Sensor;
 
@@ -12,7 +11,7 @@ var appid = "";
 
 (:background)
 class YuboWatchSDelegate extends System.ServiceDelegate {
-    var precips = new [61];
+    var precips = [];
     var dat = [];
     var bglat = lat;
     var bglon = lon;
@@ -70,12 +69,9 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             return;
         }
         if (data.hasKey("minutely")) {
+            precips = new [61];
             var minutely = data.get("minutely");
             for (var i = 0; i < 61; i++) {
-                if (minutely == null) {
-                    precips[i] = precipMin - 1;
-                    continue;
-                }
                 precips[i] = Math.ln(minutely[i].get("precipitation"));
             }
         }
