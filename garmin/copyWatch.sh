@@ -1,2 +1,2 @@
 #!/bin/bash
-cp /tmp/Yubo*.prg /Volumes/GARMIN/GARMIN/APPS
+cp /tmp/*.prg /Volumes/GARMIN/GARMIN/APPS

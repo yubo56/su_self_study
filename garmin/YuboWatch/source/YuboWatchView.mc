@@ -80,7 +80,8 @@ class YuboWatchView extends WatchUi.WatchFace {
         var r = 2.0;
         var d = 2 * r + 1;
 
-        dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_BLACK);
+        dc.clear();
         dc.drawRectangle(left, top, dx, dy);
 
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
