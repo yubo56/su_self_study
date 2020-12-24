@@ -159,8 +159,6 @@ class YuboWatchView extends WatchUi.WatchFace {
     }
 
     function onUpdate(dc) {
-        View.onUpdate(dc);
-
         // set time view
         var timeFormat = "$1$$2$";
         var clockTime = System.getClockTime();

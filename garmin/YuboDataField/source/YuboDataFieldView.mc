@@ -1,3 +1,4 @@
+// TODO add color for GPS quality
 using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.AntPlus;
