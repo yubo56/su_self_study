@@ -1,16 +1,10 @@
 using Toybox.Application;
-using Toybox.Background;
-using Toybox.WatchUi;
-using Toybox.Time;
-using Toybox.System;
 
 var BGDATA = "bgdata";
-var PRECIPS = "precips";
 var NUMFAILED = "numfailed";
 var BKGD_MINS = 5;
 
-(:background)
-class YuboWatchApp extends Application.AppBase {
+class HourlyWeathersApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
@@ -24,27 +18,14 @@ class YuboWatchApp extends Application.AppBase {
     function onStop(state) {
     }
 
-    // 15m recurring background
+    // Return the initial view of your application here
     function getInitialView() {
-        Background.registerForTemporalEvent(new Time.Duration(BKGD_MINS * 60));
-        return [ new YuboWatchView() ];
-    }
-
-    // New app settings have been received so trigger a UI update
-    function onSettingsChanged() {
-        WatchUi.requestUpdate();
-    }
-
-    function getServiceDelegate() {
-        return [ new YuboWatchSDelegate() ];
+        return [ new HourlyWeathersView() ];
     }
 
     function onBackgroundData(data) {
         if (data[0].size() > 0) {
             Application.getApp().setProperty(BGDATA, data[0]);
-        }
-        if (data[2].size() > 0) {
-            Application.getApp().setProperty(PRECIPS, data[2]);
         }
         if (data[1]) {
             Application.getApp().deleteProperty(NUMFAILED);

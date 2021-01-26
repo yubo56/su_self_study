@@ -2,7 +2,6 @@ using Toybox.Background;
 using Toybox.System;
 using Toybox.Communications;
 using Toybox.Math;
-using Toybox.Timer;
 using Toybox.Position;
 using Toybox.Sensor;
 
@@ -12,35 +11,75 @@ var appid = "";
 
 (:background)
 class YuboWatchSDelegate extends System.ServiceDelegate {
-
-    var infoDict;
+    var precips = [];
+    var dat = [];
+    var bglat = lat;
+    var bglon = lon;
 
     function initialize() {
-        infoDict = Application.getApp().getProperty(BGDATA); // don't override old state if watch restart (edge case)
-        if (infoDict == null) {
-            infoDict = {
-                "lat" => lat,
-                "lon" => lon,
-                "alt" => 0
-            };
-        }
         System.ServiceDelegate.initialize();
+    }
+
+	function timeToHHMM(ts) {
+	    var m = new Time.Moment(ts);
+	    var tinfo = Time.Gregorian.info(m, Time.FORMAT_SHORT);
+	    return Lang.format(
+	        "$1$$2$",
+	        [tinfo.hour.format("%02d"), tinfo.min.format("%02d")]
+	    );
+	}
+
+    function weatherStr(w) {
+        var id = w.get("id");
+        return Lang.format("$1$$2$", [
+	        id == 800 ? "O" : w.get("main").substring(0, 1),
+	        (id % 100).format("%02d")]);
     }
 
     function onTemporalEvent() {
         var positionInfo = Position.getInfo();
         if (positionInfo has :position && positionInfo.position != null) {
-            infoDict.put("lat", positionInfo.position.toDegrees()[0]);
-            infoDict.put("lon", positionInfo.position.toDegrees()[1]);
+            bglat = positionInfo.position.toDegrees()[0];
+            bglon = positionInfo.position.toDegrees()[1];
         }
-        if (positionInfo has :altitude && positionInfo.altitude != null) {
-            infoDict.put("alt", positionInfo.altitude);
+        if (!System.getDeviceSettings().phoneConnected) {
+            Background.exit([dat, false, precips]);
+        }
+        else {
+            Communications.makeWebRequest(
+	            "https://api.openweathermap.org/data/2.5/onecall",
+	            {
+	                "lat" => bglat,
+	                "lon" => bglon,
+	                "appid" => appid,
+	                "units" => "metric",
+	                "exclude" => "daily,current,hourly,alerts"
+	            },
+	            {
+	                :method => Communications.HTTP_REQUEST_METHOD_GET,
+	                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+	            },
+	            method(:minutelyCb)
+	        );
+	    }
+    }
+    function minutelyCb(responseCode, data) {
+        if (responseCode != 200) {
+            Background.exit([dat, false, precips]);
+            return;
+        }
+        if (data.hasKey("minutely")) {
+            precips = new [61];
+            var minutely = data.get("minutely");
+            for (var i = 0; i < 61; i++) {
+                precips[i] = Math.ln(minutely[i].get("precipitation"));
+            }
         }
         Communications.makeWebRequest(
             "https://api.openweathermap.org/data/2.5/onecall",
             {
-                "lat" => infoDict.get("lat").format("%.6f"),
-                "lon" => infoDict.get("lon").format("%.6f"),
+                "lat" => bglat,
+                "lon" => bglon,
                 "appid" => appid,
                 "units" => "metric",
                 "exclude" => "hourly,minutely,alerts"
@@ -49,58 +88,25 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
                 :method => Communications.HTTP_REQUEST_METHOD_GET,
                 :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
             },
-            method(:dailyCurrentCb)
+            method(:currentCb)
         );
     }
 
-    function timeToHHMM(ts) {
-        var m = new Time.Moment(ts);
-        var tinfo = Time.Gregorian.info(m, Time.FORMAT_SHORT);
-        return Lang.format(
-            "$1$$2$",
-            [tinfo.hour.format("%02d"), tinfo.min.format("%02d")]
-        );
-    }
-
-    function dailyCurrentCb(responseCode, data) {
+    function currentCb(responseCode, data) {
         if (responseCode != 200) {
-            System.println("DailyCurrentCode " + responseCode);
-            Background.exit([infoDict, false]);
+            Background.exit([dat, false, precips]);
             return;
         }
         var current = data.get("current");
-        var daily = data.get("daily");
-        infoDict.put("temp", current.get("temp"));
-        infoDict.put("wspeed", current.get("wind_speed") * 3.6);
-        infoDict.put("humid", current.get("humidity"));
-        infoDict.put("tlo", Math.round(daily[0].get("temp").get("min")));
-        infoDict.put("thi", Math.round(daily[0].get("temp").get("max")));
-        infoDict.put("tdewp", Math.round(current.get("dew_point")));
-        infoDict.put("ttlo", Math.round(daily[1].get("temp").get("min")));
-        infoDict.put("tthi", Math.round(daily[1].get("temp").get("max")));
-        infoDict.put("ttdewp", Math.round(daily[1].get("dew_point")));
-        infoDict.put("sunrise", timeToHHMM(current.get("sunrise")));
-        infoDict.put("sunset", timeToHHMM(current.get("sunset")));
-        infoDict.put("uvi", Math.round(current.get("uvi")));
 
         // parse weather into "TDRSAOC" (thunderstorm, drizzle, rain, snow, "atmosphere", clear, cloudy) + code
         var weather = current.get("weather")[0];
-        if (weather.get("id") == 800) {
-            infoDict.put("wsymb", "O");
-        } else {
-            infoDict.put("wsymb", weather.get("main").substring(0, 1));
+        var wsymb = "O";
+        if (weather.get("id") != 800) {
+            wsymb = weather.get("main").substring(0, 1);
         }
-        infoDict.put("wcode", (weather.get("id") % 100).format("%02d"));
-        var wtoday = daily[0].get("weather")[0];
-        var wtodayId = wtoday.get("id");
-        infoDict.put("wtoday", Lang.format("$1$$2$", [
-            wtodayId == 800 ? "O" : wtoday.get("main").substring(0, 1),
-            (wtodayId % 100).format("%02d")]));
-        var wtomm = daily[1].get("weather")[0];
-        var wtommId = wtomm.get("id");
-        infoDict.put("wtomm", Lang.format("$1$$2$", [
-            wtommId == 800 ? "O" : wtomm.get("main").substring(0, 1),
-            (wtommId % 100).format("%02d")]));
+
+        var daily = data.get("daily");
 
         var numDays = daily.size();
         var his = new [numDays];
@@ -111,49 +117,48 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             his[i] = daily[i].get("temp").get("max");
             dews[i] = daily[i].get("dew_point");
         }
-        infoDict.put("dhis", his);
-        infoDict.put("dlos", lows);
-        infoDict.put("ddews", dews);
-
-        Communications.makeWebRequest(
-            "https://api.openweathermap.org/data/2.5/onecall",
-            {
-                "lat" => infoDict.get("lat").format("%.6f"),
-                "lon" => infoDict.get("lon").format("%.6f"),
-                "appid" => appid,
-                "units" => "metric",
-                "exclude" => "daily,current,hourly,alerts"
-            },
-            {
-                :method => Communications.HTTP_REQUEST_METHOD_GET,
-                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-            },
-            method(:minutelyCb)
-        );
-    }
-
-    // 1hr precipitation amounts
-    function minutelyCb(responseCode, data) {
-        if (responseCode != 200) {
-            System.println("Minutely code " + responseCode);
-            Background.exit([infoDict, false]);
-            return;
-        }
-        if (data.hasKey("minutely")) {
-            var minutely = data.get("minutely");
-            var numMinutes = minutely.size();
-            var precips = new [numMinutes];
-            for (var i = 0; i < numMinutes; i++) {
-                if (minutely == null) {
-                    precips[i] = precipMin - 1;
-                    continue;
-                }
-                precips[i] = Math.ln(minutely[i].get("precipitation"));
-//                precips[i] = Math.ln(0.2 * 20 * i / 60);
-            }
-            infoDict.put("precips", precips);
-        }
-
-        Background.exit([infoDict, true]);
+//  0 temp
+//  1 wspeed
+//  2 humid
+//  3 tdewp
+//  4 sunrise
+//  5 sunset
+//  6 uvi
+//  7 tlo
+//  8 thi
+//  9 ttlo
+// 10 tthi
+// 11 ttdewp
+// 12 wtoday
+// 13 wtomm
+// 14 wovmm
+// 15 wsymb
+// 16 wcode
+// 17 dhis
+// 18 dlos
+// 19 ddews
+        dat = [
+            current.get("temp"),
+            current.get("wind_speed") * 3.6,
+            current.get("humidity"),
+            Math.round(current.get("dew_point")),
+            timeToHHMM(current.get("sunrise")),
+            timeToHHMM(current.get("sunset")),
+            Math.round(current.get("uvi")),
+            Math.round(daily[0].get("temp").get("min")),
+            Math.round(daily[0].get("temp").get("max")),
+            Math.round(daily[1].get("temp").get("min")),
+            Math.round(daily[1].get("temp").get("max")),
+            Math.round(daily[1].get("dew_point")),
+            weatherStr(daily[0].get("weather")[0]),
+            weatherStr(daily[1].get("weather")[0]),
+            weatherStr(daily[2].get("weather")[0]),
+            wsymb,
+            (weather.get("id") % 100).format("%02d"),
+            his,
+            lows,
+            dews,
+        ];
+        Background.exit([dat, true, precips]);
     }
 }
