@@ -81,14 +81,14 @@
 - Almonds: 280F, 40m (single layer). oil before, toppings after
 
 - Cookies (TODO grams):
-    - 3/8 cup applesauce
-    - 3/16 cup white sugar
-    - 3/8 cup brown sugar
-    - 1 cup all-purp flour
-    - 1/8 cup cocoa powder
-    - 1/2 tsp salt
+    - 3/8 cup applesauce (80g)
+    - 3/16 cup white sugar (40g)
+    - 3/8 cup brown sugar (80g)
+    - 1 cup all-purp flour (150-160g?)
+    - 1/8 cup cocoa powder (15g)
+    - 1/2 tsp salt (6g)
     - 3/8 cup butter
-    - 1/2 tsp vanilla
+    - 1/2 tsp vanilla (2g)
     - 1 egg
 
     1) combine, bake 375 11 min (TODO 10m?)
@@ -127,3 +127,26 @@
 
 - Pressure cooker chicken
     - 25m low pressure for ~3lb chicken
+
+- Croissants
+    - 300g flour
+    - 30g butter (quarter stick)
+    - 1tbsp yeast
+    - 10g salt
+    - water (200g?)
+
+    - 2 sticks butter
+
+    Mix dough, roll out, do folds, shape, prove for ~1-1.5h, egg [white] wash,
+    bake @ 375 for ~16-20m. Can put some filling inside the roll!
+
+- Paulene Porridge
+    - 2 onions, 6 cloves garlic, thumb of ginger
+    - 1 tbsp fish sauce, 2 bouillon cubes (salt, msg; or just stock?)
+    - 2 cups rice, 5 cups water
+    - ~4 chicken thighs
+
+    - sautee oil & onions/garlic/ginger
+    - brown chicken & fish sauce
+    - bouillon cubes & rice & water, simmer for ~30m-1.5h (depending on white vs
+      brown rice)
