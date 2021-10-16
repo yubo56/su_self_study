@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+g++ -Wall --std=gnu++11 -Ofast $1.cpp -o $1.out
+./$1.out
+rm -f $1.out
