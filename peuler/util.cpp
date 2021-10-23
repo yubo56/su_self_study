@@ -10,8 +10,8 @@ int main(int argc, const char *argv[])
     // int pow = 2;
     // printf("%d\n", my_pow<int>(a, pow));
 
-    // printf("%f, %f\n", my_root<int>(23, 2, 4), pow(23, 1./2));
-    // printf("%f, %f\n", my_root<int>(23, 3, 4), pow(23, 1./3));
+    printf("%.15f, %.15f\n", my_root<int>(23, 2, 4), pow(23, 1./2));
+    printf("%.15f, %.15f\n", my_root<int>(23, 3, 4), pow(23, 1./3));
 
     // bool is_prime[100];
     // populate_primes(is_prime, 100);

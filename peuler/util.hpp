@@ -10,7 +10,7 @@ T my_pow(T a, int pow)
 }
 
 // take root-th order root (e.g. root=2 => sqrt), for fun
-const double ROOT_TOL = 1e-10;
+const double ROOT_TOL = 1e-15;
 template <typename T>
 double my_root(T a, int root, double guess)
 {
@@ -37,21 +37,10 @@ double my_root(T a, int root, double guess)
         }
     }
 
-    // linearly extrapolate for next guess
-    int trials = 0;
+    // binary search seems most performant...
     while ((right - left) > ROOT_TOL)
     {
-        if (trials < 10)
-        {
-            guess_new = (
-                (a - my_pow(left, root)) / (my_pow(right, root) - my_pow(left, root))
-                * (right - left)
-            ) + left + (trials % 2 == 0) ? ROOT_TOL * 10 : -ROOT_TOL * 10;
-        }
-        else
-        {
-            guess_new = (right + left) / 2;
-        }
+        guess_new = (right + left) / 2;
         if (my_pow(guess_new, root) > a)
         {
             right = guess_new;
@@ -60,9 +49,8 @@ double my_root(T a, int root, double guess)
         {
             left = guess_new;
         }
-        trials++;
     }
-    return right;
+    return (left + right) / 2;
 }
 
 // get primes up through N + 2 (is_prime[i] = whether (i + 2) is prime)
