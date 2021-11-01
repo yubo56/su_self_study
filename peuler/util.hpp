@@ -68,3 +68,32 @@ void populate_primes(bool *is_prime, int N)
         }
     }
 }
+
+void add_longnum(const int *a, const int *b, int *c, const int n_digits)
+{
+    int carry = 0;
+    int new_val;
+    for (int j = 0; j < n_digits; j++)
+    {
+        new_val = a[j] + b[j] + carry;
+        c[j] = new_val % 10;
+        carry = new_val / 10;
+    }
+}
+void print_longnum(const int *digits, const int n_digits)
+{
+    bool to_print = false;
+    for (int i = n_digits - 1; i >= 0; i--)
+    {
+        if (digits[i] > 0) { to_print = true; }
+        if (to_print)
+        {
+            printf("%d", digits[i]);
+        }
+    }
+    if (!to_print)
+    {
+        printf("0");
+    }
+    printf("\n");
+}

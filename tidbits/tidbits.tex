@@ -2433,4 +2433,126 @@ reasonably accurate. The objective is then to find the time that you take away
 the most, i.e.\ the maximum of $a_k - a_{k - 1}$. In the continuum limit, this
 is just the zero of $\rdil{a_k}{k}$, which occurs where $k = \sqrt{N}$.
 
+\chapter{11/01/21---Mean Waiting Times}
+
+I've screwed this problem up a lot on these quant interviews by now, so let's
+work through it methodically.
+
+\section{Independent Sequences}
+
+Archetypal problem: You throw a die until you get a 2. Expected number of
+throws? Is just 1/6, but why?
+
+I learned this trick from Stack Overflow recently, let me try to use it. Let $T$
+be the terminating event, then the expected wait time $\E[T]$ satisfies
+\begin{equation}
+    \E[T] = \frac{5}{6} \E[T] + 1.
+\end{equation}
+Here, this is just because $5/6$ of the time, our wait time is equal to the
+expected wait time but one longer. Thus, we find that $\E[T] = 1/6$, as
+expected.
+
+What about for a non-repeating sequence of throws, like $2, 4$? Well, let $A$
+and $B$ be the event of seeing a $2$ and the event of seeing a $4$ after the
+$2$, then the expected waiting times satisfy (I will denote $\E[A]$ by $a$ for
+simplicity)
+\begin{align}
+    a &= \frac{5}{6}a + \frac{1}{6}b + 1,\nonumber\\
+    b &= \frac{4}{6}a + \frac{1}{6}b + 1.
+\end{align}
+These probabilities correspond to the cases of: (not 2 $\to$ not 2),
+(not 2 $\to$ 2), (2 $\to$ neither), ($2 \to 2$). Then, solving, we get
+\begin{align}
+    \frac{5}{6}b &= \frac{2a}{3} + 1,\\
+    a &= \frac{5}{6}a + \frac{2a}{15} + \frac{1}{5} + 1,\\
+    \frac{a}{30} &= \frac{6}{5},\\
+    a &= 36.
+\end{align}
+This is expected as well: if the sequence never repeats, then the probability is
+just $(1/6)^k$, since you need to draw everything in succession.
+
+\section{Dependent Sequences}
+
+What about for repeating sequences of throws, like two sixes? Well, let $A$ and
+$B$ be the events of seeing each of the two sixes, then the expected waiting
+times satisfy
+\begin{align}
+    a &= \frac{5}{6}a + \frac{1}{6}b + 1,\nonumber\\
+    b &= \frac{5}{6}a + 1.
+\end{align}
+The probabilities correspond to the cases of (not 6 $\to$ not 6), (not 6 $\to
+6$), and ($6 \to$ not 6). Solving, this is just
+\begin{align}
+    a &= \frac{5}{6}a + \frac{5}{36}a + \frac{1}{6} + 1,\\
+    a &= 42.
+\end{align}
+
+This can also be solved via generating functions: let $5x/6$ be the term
+representing two non-sixes, $5x^2/36$ be the term representing a six and a
+non-six, and $x^2/36$ represent two sixes. Then the generating function
+\begin{align}
+    f(x) &= \prod_{k = 0}^\infty
+            \p{\frac{5}{6}x + \frac{5}{36}x^2}^k\frac{x^2}{36},\\
+        &= \frac{x^2/36}{1 - \p{5x/6 + 5x^2/36}}
+\end{align}
+is such that the coefficient of $x^n$ is the probability of ending on the $n$th
+term. The expected number of rolls is then just $f'(x)$ evaluated at $x = 1$,
+which can be trivially evaluated to be $42$ (apparently, I didn't check). The
+variance can be computed as well, using that
+\begin{align}
+    \Var[N] &= \E[N^2] - \E[N]^2,\nonumber\\
+    \E[N^2] = \s{xf'(x)}'_{x = 1}.
+\end{align}
+This turns out to be $3414 - 1764 = 1650$.
+
+In general, this can be shown as well. Consider a repeating event with
+probability $p$, and we want it to repeat $k$ times. Let $T$ be the terminal
+event, and let $L$ be the first indexx of a failing event. Then
+\begin{align*}
+    \E[T] &= \sum_k^n \E[T | L = k] P(L = k) + \E[T | L > n]P(L > n)\\
+% (probability of a fail after k events) + (probability of win)
+        &= \sum_k^n (k + \E[T]) P(L = k) + n * P(L > n)\\
+% (expected win fail @k = \E[T] + k)
+        &= \sum_k^n (k + \E[T]) p^{k - 1}(1-p) + n \times p^n\\
+    \E[T](1 - (1-p) \times \sum_k^n p^{k - 1}) &= (1 - p) \times \sum_k^n k p^{k - 1}\\
+    \E[T] \times p^{n} &= n p^n + \frac{n p^{n + 1} - (n + 1) p^n + 1}
+        {1 - p}\\
+    \E[T] &= n + \frac{n p - (n + 1) + p^{-n}}{1 - p}\\
+        &= \frac{p^{-n} - 1}{1 - p}.
+\end{align*}
+We have used the identity shown below:
+\begin{align*}
+    \sum_k^n kp^{k - 1}
+        &= \sum_k^n p^{k - 1} + p \times \sum_k^{n - 2} p^k + \dots\\
+        &= [(1 - p^{n}) + p (1 - p^{n - 1}) + \dots] \frac{1}{1 - p}\\
+        &= [-n p^{n} + (1 + p + \dots + p^{n - 1})] \frac{1}{1 - p}\\
+        &= [-n p^{n} + (1 - p^{n}) / (1 - p)] \frac{1}{1 - p}\\
+        &= [-n p^n + n p^{n + 1} + 1 - p^n] \frac{1}{(1 - p)^2}\\
+        &= [np^{n + 1} - (n - 1) p^n + 1] \frac{1}{(1 - p)^2}.
+\end{align*}
+This indeed gives $36 / (1 - 1/6) = 42$ for the problem given above.
+
+\section{Mixture of Sequences}
+
+Consider now that we end either when we roll either a single one or two twos.
+What is the expected number of rolls? I numerically found that this is $5.25 =
+21/4 = 1 / \p{1 / 42 + 1 / 6}$, but why?
+
+Well, now, let's write down the same expected wait times. Then
+\begin{align}
+    a &= \frac{4}{6}a + \frac{1}{6}b + 1,\nonumber\\
+    b &= \frac{4}{6}a + 1.
+\end{align}
+Here, $a$ is the probability of being at neither a one or two, and $b$ is the
+probability of currently having one two. The transitions are: (neither $\to$
+neither), (neither $\to 2$), and ($2 \to$ neither). Note that the missing $1/6$
+in the first row and the missing $2/6$ in the second row are the probabilities
+of rolling either a one, or either a one or two, respectively. Solving, we find:
+\begin{align}
+    a &= \frac{2}{3}a + \frac{a}{9} + 1 + \frac{1}{6},\nonumber\\
+    \frac{2}{9}a &= \frac{7}{6},\\
+    a &= \frac{21}{4}.
+\end{align}
+Yay!
+
 \end{document}
