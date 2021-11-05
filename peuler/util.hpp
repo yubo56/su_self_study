@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#define MAX(a, b) ((a) > (b)) ? (a) : (b)
 template <typename T>
 T my_pow(T a, int pow)
 {
