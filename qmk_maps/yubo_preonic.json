@@ -7,7 +7,7 @@
   "layout": "LAYOUT_ortho_5x12",
   "layers": [
     [
-      "KC_GRV",
+      "KC_ESC",
       "KC_1",
       "KC_2",
       "KC_3",
@@ -97,7 +97,7 @@
       "KC_HOME",
       "KC_F11",
       "KC_END",
-      "KC_ESC",
+      "KC_GRV",
       "KC_PGUP",
       "KC_DEL",
       "KC_BSPC",
