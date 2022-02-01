@@ -69,10 +69,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /*== enabled animations ==*/
 #    define ENABLE_RGB_MATRIX_BREATHING
 #    define ENABLE_RGB_MATRIX_CYCLE_SPIRAL
-#    define ENABLE_RGB_MATRIX_RAINDROPS
 #    define ENABLE_RGB_MATRIX_PIXEL_RAIN
-#    define ENABLE_RGB_MATRIX_DIGITAL_RAIN
 #    define ENABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
+#    define ENABLE_RGB_MATRIX_TYPING_HEATMAP
 #    define RGBLIGHT_DEFAULT_VAL 120
 #    define RGBLIGHT_DEFAULT_MODE (RGBLIGHT_MODE_RAINBOW_SWIRL + 2)
 // RGB Matrix
