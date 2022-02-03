@@ -36,9 +36,13 @@ void run()
     /* for each potential first guess, store the number of candidates it permits
      * on the next guess */
     int n_cands[N];
+    /* for each potential word, store the number of candidates remaining after
+     * each potential first guess */
+    int n_targetcands[N];
 
     memset(words, 0, sizeof(words));
     memset(n_cands, 0, sizeof(n_cands));
+    memset(n_targetcands, 0, sizeof(n_targetcands));
 
     /* read in all words */
     fptr = fopen(fn, "r");
@@ -81,6 +85,7 @@ void run()
                 num_cands += check_guess(guess, corrects, contains, missings);
             }
             n_cands[word1] += num_cands;
+            n_targetcands[target_idx] += num_cands;
             if (best_cands < 0 || num_cands < best_cands)
             {
                 best_word = word1;
@@ -104,6 +109,21 @@ void run()
         }
     }
     printf("Best word is %s with %f average cands\n",
+            words + (best_word * (M + 1)), best_cands * 1.0 / n_words);
+    /* search for hardest word */
+    best_word = -1;
+    best_cands = -1;
+    for (i = 0; i < n_words; i++)
+    {
+        printf("%f, %s\n", n_targetcands[i] * 1.0 / n_words,
+                words + (i * (M + 1)));
+        if (best_cands < 0 || n_targetcands[i] > best_cands)
+        {
+            best_word = i;
+            best_cands = n_cands[i];
+        }
+    }
+    printf("Hardest word is %s with %f average remaining cands\n",
             words + (best_word * (M + 1)), best_cands * 1.0 / n_words);
 }
 /**
@@ -250,8 +270,94 @@ int check_guess(char *guess, char *corrects, char *contains,
     }
     return 1;
 }
+int test_word2(char *target, char *guesses)
+{
+    char words[N * (M + 1)];
+    FILE *fptr;
+    const char *fn = "wordle_list.txt";
+    char corrects[M + 1];
+    char contains[A + 1];
+    char missings[A + 1];
+    int i, is_guess, n_words, n_cands;
+    char *guess;
+
+    memset(words, 0, sizeof(words));
+    memset(corrects, 0, sizeof(corrects));
+    memset(contains, 0, sizeof(contains));
+    memset(missings, 0, sizeof(missings));
+
+    /* read in all words */
+    fptr = fopen(fn, "r");
+    for (n_words = 0; !feof(fptr); n_words++)
+    {
+        fscanf(fptr, "%s", words + (n_words * (M + 1)));
+    }
+    n_words--;
+
+    n_cands = 0;
+    pop_constraints(target, guesses, 1, corrects, contains, missings);
+    for (i = 0; i < n_words; i++)
+    {
+        guess = words + (i * (M + 1));
+        is_guess = check_guess(guess, corrects, contains, missings);
+        n_cands += is_guess;
+        if (is_guess)
+        {
+            printf("%s\n", guess);
+        }
+    }
+    printf("Guessing %s with (%s) leaves %d guesses\n",
+            target, guesses, n_cands);
+    return n_cands;
+}
+int test_word3(char *target, char *word1, char *word2)
+{
+    char words[N * (M + 1)];
+    FILE *fptr;
+    const char *fn = "wordle_list.txt";
+    char guesses[2 * M + 2];
+    char corrects[M + 1];
+    char contains[A + 1];
+    char missings[A + 1];
+    int i, is_guess, n_words, n_cands;
+    char *guess;
+
+    memset(words, 0, sizeof(words));
+    memset(guesses, 0, sizeof(guesses));
+    memset(corrects, 0, sizeof(corrects));
+    memset(contains, 0, sizeof(contains));
+    memset(missings, 0, sizeof(missings));
+    memcpy(guesses, word1, M * sizeof(char));
+    memcpy(guesses + M + 1, word2, M * sizeof(char));
+
+    /* read in all words */
+    fptr = fopen(fn, "r");
+    for (n_words = 0; !feof(fptr); n_words++)
+    {
+        fscanf(fptr, "%s", words + (n_words * (M + 1)));
+    }
+    n_words--;
+
+    n_cands = 0;
+    pop_constraints(target, guesses, 2, corrects, contains, missings);
+    for (i = 0; i < n_words; i++)
+    {
+        guess = words + (i * (M + 1));
+        is_guess = check_guess(guess, corrects, contains, missings);
+        n_cands += is_guess;
+        if (is_guess)
+        {
+            printf("%s\n", guess);
+        }
+    }
+    printf("Guessing %s with (%s, %s) leaves %d guesses\n",
+            target, word1, word2, n_cands);
+    return n_cands;
+}
 int main(int argc, const char *argv[])
 {
-    run();
+    /* run(); */
+    test_word2("shard", "raise");
+    test_word3("shard", "raise", "solar");
     return 0;
 }
