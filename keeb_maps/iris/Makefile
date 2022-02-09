@@ -8,3 +8,6 @@ main:
 	cp $(IRISDIR)/keymaps/default/keymap.c $(IRISDIR)/keymaps/yubo/keymap.c
 	ln -s $$(pwd)/yubo_iris6_config.h $(IRISDIR)/rev6/config.h
 	ln -s $$(pwd)/yubo_iris6_rules.mk $(IRISDIR)/rev6/rules.mk
+
+flash:
+	qmk flash -kb keebio/iris/rev6 -km yubo
