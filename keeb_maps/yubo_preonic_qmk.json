@@ -63,7 +63,7 @@
       "KC_SPC",
       "KC_SPC",
       "KC_RCTL",
-      "KC_RALT",
+      "KC_LALT",
       "KC_VOLD",
       "KC_VOLU",
       "TG(2)"
@@ -125,7 +125,7 @@
       "KC_NO",
       "KC_NO",
       "KC_RCTL",
-      "KC_RALT",
+      "KC_LALT",
       "KC_NO",
       "KC_NO",
       "KC_NO"
@@ -187,7 +187,7 @@
       "KC_SPC",
       "KC_SPC",
       "KC_RCTL",
-      "KC_RALT",
+      "KC_LALT",
       "KC_VOLD",
       "KC_VOLU",
       "KC_TRNS"
@@ -249,7 +249,7 @@
       "KC_NO",
       "KC_NO",
       "KC_RCTL",
-      "KC_RALT",
+      "KC_LALT",
       "KC_NO",
       "KC_NO",
       "KC_NO"
@@ -311,7 +311,7 @@
       "KC_NO",
       "KC_NO",
       "KC_RCTL",
-      "KC_RALT",
+      "KC_LALT",
       "KC_NO",
       "KC_NO",
       "KC_TRNS"
