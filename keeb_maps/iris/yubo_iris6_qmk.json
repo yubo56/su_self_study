@@ -61,8 +61,8 @@
       "KC_LGUI",
       "KC_SPC",
       "MO(3)",
-      "KC_RCTL",
-      "KC_RALT"
+      "KC_LCTL",
+      "KC_LALT"
     ],
     [
       "KC_NO",
@@ -183,8 +183,8 @@
     [
       "KC_NO",
       "RGB_TOG",
-      "RGB_MODE_REVERSE",
-      "RGB_MODE_FORWARD",
+      "RGB_RMOD",
+      "RGB_MOD",
       "RGB_SPD",
       "RGB_SPI",
       "RGB_SAD",
