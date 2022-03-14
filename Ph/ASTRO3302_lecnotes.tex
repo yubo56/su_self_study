@@ -1,0 +1,391 @@
+    \documentclass[11pt,
+        usenames, % allows access to some tikz colors
+        dvipsnames % more colors: https://en.wikibooks.org/wiki/LaTeX/Colors
+    ]{article}
+    \usepackage{
+        amsmath,
+        amssymb,
+        fouriernc, % fourier font w/ new century book
+        fancyhdr, % page styling
+        lastpage, % footer fanciness
+        hyperref, % various links
+        setspace, % line spacing
+        amsthm, % newtheorem and proof environment
+        mathtools, % \Aboxed for boxing inside aligns, among others
+        float, % Allow [H] figure env alignment
+        enumerate, % Allow custom enumerate numbering
+        graphicx, % allow includegraphics with more filetypes
+        wasysym, % \smiley!
+        upgreek, % \upmu for \mum macro
+        listings, % writing TrueType fonts and including code prettily
+        tikz, % drawing things
+        booktabs, % \bottomrule instead of hline apparently
+        xcolor, % colored text
+        cancel % can cancel things out!
+    }
+    \usepackage[margin=1in]{geometry} % page geometry
+    \usepackage[
+        labelfont=bf, % caption names are labeled in bold
+        font=scriptsize % smaller font for captions
+    ]{caption}
+    \usepackage[font=scriptsize]{subcaption} % subfigures
+
+    \newcommand*{\scinot}[2]{#1\times10^{#2}}
+    \newcommand*{\dotp}[2]{\left<#1\,\middle|\,#2\right>}
+    \newcommand*{\rd}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+    \newcommand*{\pd}[2]{\frac{\partial#1}{\partial#2}}
+    \newcommand*{\rdil}[2]{\mathrm{d}#1 / \mathrm{d}#2}
+    \newcommand*{\pdil}[2]{\partial#1 / \partial#2}
+    \newcommand*{\rtd}[2]{\frac{\mathrm{d}^2#1}{\mathrm{d}#2^2}}
+    \newcommand*{\ptd}[2]{\frac{\partial^2 #1}{\partial#2^2}}
+    \newcommand*{\md}[2]{\frac{\mathrm{D}#1}{\mathrm{D}#2}}
+    \newcommand*{\pvec}[1]{\vec{#1}^{\,\prime}}
+    \newcommand*{\svec}[1]{\vec{#1}\;\!}
+    \newcommand*{\bm}[1]{\boldsymbol{\mathbf{#1}}}
+    \newcommand*{\uv}[1]{\hat{\bm{#1}}}
+    \newcommand*{\ang}[0]{\;\text{\AA}}
+    \newcommand*{\mum}[0]{\;\upmu \mathrm{m}}
+    \newcommand*{\at}[1]{\left.#1\right|}
+    \newcommand*{\bra}[1]{\left<#1\right|}
+    \newcommand*{\ket}[1]{\left|#1\right>}
+    \newcommand*{\abs}[1]{\left|#1\right|}
+    \newcommand*{\ev}[1]{\left\langle#1\right\rangle}
+    \newcommand*{\p}[1]{\left(#1\right)}
+    \newcommand*{\s}[1]{\left[#1\right]}
+    \newcommand*{\z}[1]{\left\{#1\right\}}
+
+    \newtheorem{theorem}{Theorem}[section]
+
+    \let\Re\undefined
+    \let\Im\undefined
+    \DeclareMathOperator{\Res}{Res}
+    \DeclareMathOperator{\Re}{Re}
+    \DeclareMathOperator{\Im}{Im}
+    \DeclareMathOperator{\Log}{Log}
+    \DeclareMathOperator{\Arg}{Arg}
+    \DeclareMathOperator{\Tr}{Tr}
+    \DeclareMathOperator{\E}{E}
+    \DeclareMathOperator{\Var}{Var}
+    \DeclareMathOperator*{\argmin}{argmin}
+    \DeclareMathOperator*{\argmax}{argmax}
+    \DeclareMathOperator{\sgn}{sgn}
+    \DeclareMathOperator{\diag}{diag\;}
+
+    \colorlet{Corr}{red}
+
+    % \everymath{\displaystyle} % biggify limits of inline sums and integrals
+    \tikzstyle{circ} % usage: \node[circ, placement] (label) {text};
+        = [draw, circle, fill=white, node distance=3cm, minimum height=2em]
+    \definecolor{commentgreen}{rgb}{0,0.6,0}
+    \lstset{
+        basicstyle=\ttfamily\footnotesize,
+        frame=single,
+        numbers=left,
+        showstringspaces=false,
+        keywordstyle=\color{blue},
+        stringstyle=\color{purple},
+        commentstyle=\color{commentgreen},
+        morecomment=[l][\color{magenta}]{\#}
+    }
+
+\begin{document}
+
+\section{Mar 14, 2022---Stellar Structure on the Main Sequence}
+
+\begin{itemize}
+    \item Have learned that stars are powered by nuclear burning, but this only
+        occurs in the core. What sets the structure outside of the core? Need to
+        understand the energy transfer processes, including: conduction,
+        convection, radiation. Last class, said conduction is unimportant.
+        Today, we will talk about radiation, and possibly a little bit of
+        convection. A way to rephrase our goal today is to answer: \emph{why do
+        stars shine?} Ira's favorite question.
+
+        First, stars must be mostly opaque: when we stare at the Sun, we cannot
+        see the core. So let's understand what happens to radiation being
+        emitted at the core, since it obviously doesn't make it to the surface.
+        Understanding this will let us understand how energy gets transferred
+        via radiation from the core to the surface.
+
+    \item How does a photon interact with matter? Two ways: scattering,
+        absorption.
+
+        Scattering, Thomson scattering. If photon ``hits'' electron, then will
+        change direction. But electrons are tiny, roughly point particles; how
+        does it hit? EM scattering,
+        \begin{equation}
+            \sigma_{\rm T} \sim \scinot{6.65}{-25}\;\mathrm{cm^2}.
+        \end{equation}
+
+        Absorption/emission [of photons]: free-free emission/absorption, $e + p
+        \to e + p + \gamma$ or vice versa. Bound-free/bound-bound, change energy
+        levels of atom.
+
+        Often, define an \emph{opacity}, which is just the cross-section/gram.
+        For instance, for Thomson:
+        \begin{align}
+            \kappa_{\rm T} &= \frac{n_{\rm e}\sigma_{\rm T}}{\rho},\\
+                &= \frac{\sigma_{\rm T}}{m_{\rm p}}\frac{Z}{A},\\
+                &= 0.4\;\mathrm{cm^2/g}\frac{Z}{A}.
+        \end{align}
+        Note: independent of density and temperature! And for those curious,
+        free-free and bound-free \emph{do} depend on density and temperature,
+        $\kappa_{\rm ff} \propto \rho T^{-7/2}$. Thus, for higher temperatures,
+        Thomson scattering is what sets opacity, and for lower temperatures,
+        absorption/emission!
+
+    \item Okay, so the picture is that photons get jostled as they radiate
+        outwards from the core; how often do they interact? \emph{Mean free
+        path}; we should expect $\ell \ll R_{\odot}$, else we would see the
+        photons from the core (and the star would not be opaque).
+
+        In general, think of a circle moving through a medium with number
+        density $n$; how far to move before cylinder contains $\sim 1$ particle.
+        $\ell \sigma_{\rm T} = 1 / n$, or $\ell = 1 / \p{\rho \kappa}$. Near the
+        solar core, $\ell \sim 0.017\;\mathrm{cm}(Z/A)^2$, dominated by
+        scattering. In the solar atmosphere, $\ell \sim 0.5\;\mathrm{cm}$
+        (dominated by $H^-$ bound-free, $\kappa_{\rm H-}\propto \rho^{1/2}T^9$,
+        it turns out, for $T \in [4000, 8000]\;\mathrm{K}$ if H- exists).
+
+    \item Now, we know that photons travel on average $0.5\;\mathrm{cm}$ before
+        encountering something in the solar atmosphere. Can we now show that the
+        Sun is opaque? Photons obey a \emph{random walk} (evolve
+        \emph{diffusively}). Lots of examples and analogies, \emph{drunkard's
+        walk}.
+
+        To get some intuition, let's consider the proporties of this behavior:
+        you flip a coin, and H/T $\to$ L/R step by $\ell$. Then:
+        \begin{itemize}
+            \item What is the average displacement? $0$
+            \item However, if you take a million steps, and end up exactly at
+                $0$, you would be very surprised, right?
+
+            \item Calculate mean and \emph{variance} (related to stdev).
+                \begin{align}
+                    \ev{\sum\limits x_i} &= 0,\\
+                    \ev{(\sum\limits x_i)^2} &= N\ell^2.
+                \end{align}
+                Thus, central limit theorem, mean $0$ but stdev $\ell \sqrt{N}$.
+        \end{itemize}
+        In the Sun's case, we need $\ell \sqrt{N} = R$, setting some scale on
+        the number of times a photon will bounce. Then, the time for a photon to
+        exist the Sun is:
+        \begin{align}
+            t_{\rm diff} = N\frac{\ell}{c} = \frac{R^2}{\ell c} \sim
+                10^4\;\mathrm{yr}.
+        \end{align}
+        This implies that if the Sun stopped fusion right now, it would take
+        $10^4 \;\mathrm{yr}$ for there to be substantially fewer photons
+        reaching the surface, and the Sun would take $\sim 10^4\;\mathrm{yr}$ to
+        collapse!
+
+        Let's also perform a quick estimate: if the core is cooling over
+        timescales of $10^4\;\mathrm{yr}$, then what is the luminosity?
+        \begin{equation}
+            L \sim \frac{\p{\sigma T_{\rm c}^4}\p{4\pi R_{\rm c}^3/3}}{
+                R^2 / \ell c} \sim \scinot{2}{33}\;\mathrm{erg/s}.
+        \end{equation}
+        In reality, $L_{\odot} \sim \scinot{4}{33}\;\mathrm{erg/s}$. This must
+        be balanced by $\dot{E}_{\rm nuc} = L$.
+
+        Interestingly, how do we know that the Sun hasn't already stopped
+        fusion? \emph{Neutrinos} are emitted at the center of the Sun, and the
+        Sun is transparent to these ($a \sim 10^{-44}\;\mathrm{cm^2}$,
+        or $\ell \sim 10^{20}\;\mathrm{cm}$), and we can measure them.
+
+    \item Now, we see that the structure of the stellar atmosphere is set by
+        $\dot{E}_{\rm nuc}$, but $\dot{E}_{\rm nuc}$ is set by $T_{\rm c}$ which
+        is set by the stellar structure. Thus, these two are both linked, so we
+        can solve for them to understand the general relation:
+        \begin{align}
+            L &\sim \frac{a T_{\rm c}^4 (4\pi R_{\rm c}^3/3)}{R^2/\ell c}
+                \propto \frac{T_{\rm c}^4 R_{\rm c}^3}{R^2 \rho \kappa}.
+        \end{align}
+        Recall though that $kT_{\rm c} \sim \frac{GMm_{\rm p}}{R}$ is fixed and
+        set by nuclear burning, so $M \propto R$ and $L \propto M^3/\kappa$.
+
+        For $\kappa \propto \rho^0$ (Thomson), we obtain $L \propto M^3$. For
+        $\kappa \propto \rho \sim M^{-2}$ (free-free), we obtain $L \propto
+        M^5$. In practice, $L \propto M^{3.5}$ is often found, but we'll use $L
+        \propto M^4$.
+
+        We can also calculate the scaling of stellar lifetimes,
+        \begin{align}
+            t_{\rm lifetime} &\sim \frac{0.007 M_{\rm c}c^2}{L},\\
+                &\propto \frac{1}{M^3}.\\
+            t_{\odot} &= \frac{0.007\p{0.1M_{\odot}}c^2}{L_{\odot}}
+                = 10\;\mathrm{Gyr}.
+        \end{align}
+
+    \item Thus, we can answer how stars shine: black body radiation at the
+        surface, due to [slow] radiative transfer out of the nuclear-burning
+        core.
+
+    \item Convection? TODO
+
+    \item Today, we've covered: photon-matter interactions, how this leads to
+        energy transfer out of the core (random walk), and how this leads to the
+        stellar structure.
+
+        In summary, stellar structure is set by:
+        \begin{itemize}
+            \item Hydrostatic equilibrium: force on each each element must
+                vanish, balancing gravity and pressure: $\rdil{P}{r} =
+                -Gm(r)/r^2 \times \rho(r)$.
+
+                In particular, the central pressure $P_{\rm c} \sim GM^2/R^4$.
+                Since, for an ideal gas $P_{\rm gas} = nkT$, and $P_{\rm rad} =
+                aT^4/3$. For stars $\sim M_{\odot}$, they are pressure-dominated
+                and $kT_{\rm c} \sim GMm_{\rm p} / R$
+
+            \item Energy transfer out from the core: diffusively $t_{\rm diff}
+                \sim R^2 / \ell c$, and possibly convectively if too large.
+
+            \item Energy source is nuclear burning.
+        \end{itemize}
+        Combining all of these, we get the LMR relation!
+
+        More precisely, we have $P$, $M$, $L$, $T$ dynamical variables, with
+        $\kappa$, $\rho$, $Z$ prescribed variables, and they are all coupled to
+        determine the structure of a star!
+\end{itemize}
+
+\section{Mar 16, 2022---Beyond the Main Sequence}
+
+Late stellar evolution
+\begin{itemize}
+    \item At some point, cores become mostly Helium, what next? Off the
+        \emph{main sequence}. This is necessary: after Big Bang, roughly $75\%$
+        hydrogen, $25\%$ helium, trace amounts rest. We need heavier elements!
+        Must come from stars, but how?
+
+    \item As cores run out of H, they lose pressure support, contract, releasing
+        energy and $T_{\rm c}$ increases. Causes \emph{hydrogen shell burning}.
+
+        Unlike core burning, shell burning is \emph{unstable}. In core burning,
+        any increase in burning rate decreases pressure which cools the core. In
+        shell burning, burning increases core mass which increases pressure
+        which increases burning rate! Red giants, expand by $\sim 100\times$.
+        This terminates when $T_{\rm c} \sim 10^8\;\mathrm{K}$, at which point
+        Helium fusion begins.
+
+    \item \textbf{The Triple Alpha Reaction: 1953, Salpeter \& Hoyle}However,
+        how does He fusion work? He-4 is so stable that any Be-8 formed rapidly
+        decays back into He-4! Big puzzle.
+
+        Resolution: at equilibrium, some small amount of Be-8 with short
+        lifetime. However, C-12 is very stable; would be nice if Be-8 + He-4
+        into C-12, but in typical stellar conditions, such collisions are far
+        too rare (typical atomic cross sections).
+
+        Hoyle suggests: maybe can pump up cross section via some sort of
+        \emph{resonance}. To understand this, recall that photons can be
+        absorbed efficiently when $E_\gamma + E_1 = E_2$, for ground state $1$
+        and excited state $2$. Similarly for atoms. However, evaluating the
+        energies for ground-state He-4, Be-8, C-12, we find no such resonance.
+        Hoyle says that there must exist an excited C-12$^*$!
+
+        In particular, He-4 + Be-8 $-$ C-12 = $7.4\;\mathrm{MeV}$, and kinetic
+        energy is about $0.2\;\mathrm{MeV}$, so Hoyle claimed there must be an
+        excited state with about $7.6\;\mathrm{MeV}$ above ground. Later
+        experimentally verified.
+
+    \item Once C-12 is made, O-16 is easy to make, gives rise to the
+        \emph{cosmic abundances} of H, He, C, O, Ne-20,\dots all the way through
+        Fe-56. Thus, continued nuclear burning, continued core contraction and
+        shell burning leads to envelope exxpansion and mass ejection. How far a
+        star goes depends on its mass, but once it stops, the star must
+        collapse. Always happens, finite fuel.
+
+    \item What are their end states? They are:
+        \begin{itemize}
+            \item WD\@: $M \sim 0.7 M_{\odot}$, $R \sim 10^9 \;\mathrm{cm} \sim
+                R_{\odot} / 100 \sim R_{\oplus} \sim
+                \scinot{6}{8}\;\mathrm{cm}$. For $M_{\rm MS} \lesssim
+                8M_{\odot}$ (e.g.\ the Sun).
+
+            \item NS\@: $M \sim 1.4M_{\odot}$, $R \sim 10\;\mathrm{km} \sim
+                10^6\;\mathrm{cm}$ for $M_{\rm MS} \lesssim 40M_{\odot}$.
+
+            \item BH\@: $M \gtrsim 3M_{\odot}$, $R = 2GM/c^2 \sim 3\;\mathrm{km}
+                \p{M / M_{\odot}}$, for $M_{\rm MS} \gtrsim 40 M_{\odot}$.
+        \end{itemize}
+        We will start by understanding these objects, then we will understand
+        how MS stars get here.
+\end{itemize}
+
+WDs:
+\begin{itemize}
+    \item Sounds like a crazy object: mass of the Sun in the radius of the
+        Earth (density $10^6 \;\mathrm{g/cm^3}$, so the weight of a car in the
+        size of a sugar cube)? However, observed! Sirus B, companion to Sirius A
+        ($2M_{\odot}$). Opik in 1916 analyzed the spectrum, found surface
+        temperature $T_{\rm s} \sim 6000\;\mathrm{K}$, but $L \lesssim 0.0003
+        L_{\odot}$ (distance via paralla probably?). This suggests that its
+        volume must be small, and $\bar{\rho} \sim \scinot{2}{5}\rho_{\odot}$!
+        Opik concludes ``this impossible result indicates that our assumptions
+        are wrong.''
+
+    \item QM was developed in 1920s, \emph{after} Opik. Uncertainty principle,
+        particles cannot both be stationary and unmoving, thus zero-point
+        pressure even at zero temp. WD is supported by this zero-point pressure,
+        \emph{degeneracy pressure}.
+
+    \item Recall hydrostatic equilibrium $P/R \sim g\rho$, so $P_{\rm c} \sim
+        GM^2 / R^4 \sim GM \rho / R$. If $P_{\rm c}$ is provided thermally
+        (i.e.\ $P = nkT$), then
+        \begin{equation}
+            kT_{\rm c} \sim \frac{GMm_{\rm p}}{R}
+        \end{equation}
+        For $R = R_{\odot}$, $T_{\rm c} \sim 10^7\;\mathrm{K}$, but for $R \sim
+        R_{\odot} / 100$, $T_{\rm c} \sim 10^9\;\mathrm{K}$. This is unlikely:
+        steep temperature gradient to the surface, and would result in nuclear
+        burning (but unstable! And would be explosive due to large $\rho$).
+
+    \item Thus, need something else. Let's ignore temperatuer for now, then
+        uncertainty
+        \begin{align}
+            \Delta p &\sim \hbar / \Delta x,\\
+                &\sim \hbar n_{\rm e}^{1/3}
+                    \sim \hbar \p{\frac{ZM}{R^3m_{\rm p}}}^{1/3},
+        \end{align}
+        so the mean kinetic energy per electron is
+        \begin{equation}
+            \epsilon_{\rm k} \equiv \frac{p_e^2}{2m_e}
+                \sim \frac{\hbar^2}{m_{\rm e}} n_{\rm e}^{2/3}.
+        \end{equation}
+        The energy density is then $u = n_e \epsilon_{\rm k}$, which is also
+        similar to the pressure $P \sim 2u/3 \sim u$. Thus, we finally find that
+        the pressure should be equated as
+        \begin{align}
+            \frac{GM^2}{R^4} &\sim \frac{\hbar^2}{m_{\rm e}}
+                \p{\frac{ZM}{R^3 Am_{\rm p}}}^{5/3},\\
+            R &\sim \frac{\hbar^2}{Gm_{\rm e}}
+                \frac{(Z/A)^{5/3}}{m_{\rm p}^{5/3}}
+                \frac{1}{M^{1/3}} \propto M^{-1/3}.
+        \end{align}
+        Often denote $Y = Z / A$. A precise calculation gives a prefactor of
+        $4.8$, and we find that
+        \begin{equation}
+            R \simeq \frac{R_{\odot}}{74}
+                \p{\frac{M_{\odot}}{M}}^{1/3}
+                \p{\frac{Z/A}{0.5}}^{5/3}.
+        \end{equation}
+        Note that:
+        \begin{itemize}
+            \item Smaller $R$ gives smaller $L$
+            \item Larger $M$ gives smaller $R$, which \emph{increases} density.
+            \item $v_{\rm e} \sim p_{\rm e} / m_{\rm e} \sim n_{\rm e}^{1/3}$.
+                Thus, as density increases, so too does the electron momentum /
+                velocity.
+        \end{itemize}
+        Of course, $v_{\rm e} \lesssim c$ is required, so this sets a maxximum
+        mass. This is the \emph{Chandrasekar mass}, $\sim 1.4M_{\odot}$ for $Z /
+        A = 0.5$.
+
+    \item To get the Chandrasekar mass rigorously, consider \emph{relativistic}
+        electrons.
+\end{itemize}
+
+\end{document}
+
