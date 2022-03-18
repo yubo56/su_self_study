@@ -357,7 +357,7 @@ int test_word3(char *target, char *word1, char *word2)
 int main(int argc, const char *argv[])
 {
     /* run(); */
-    test_word2("shard", "raise");
-    test_word3("shard", "raise", "solar");
+    test_word2("smelt", "dream");
+    /* test_word3("shard", "raise", "solar"); */
     return 0;
 }
