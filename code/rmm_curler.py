@@ -6,6 +6,7 @@ import time
 from select import select
 
 REFRESH_INTERVAL = 3 # seconds
+NUM_LISTINGS = 50
 
 ALERT_WORDS = ['darling']
 ALREADY_NOTIFIED = []
@@ -50,12 +51,15 @@ def parse_listing(listing):
         # 'text': data['selftext'],
         'title': data['title'],
         'author': data['author'],
+        'num_comments': data['num_comments'],
         'id': data['id']
     }
 def fetch_listings_from_mm():
     headers = get_headers()
     resp_obj = requests.get(
-        'https://oauth.reddit.com/r/mechmarket/new', headers=headers).json()
+        'https://oauth.reddit.com/r/mechmarket/new?limit=%d' % NUM_LISTINGS,
+        headers=headers,
+    ).json()
 
     posts = [parse_listing(l) for l in resp_obj['data']['children']]
     return posts
@@ -79,9 +83,10 @@ def print_listings(listings):
     os.system('clear')
     print('****************************************************************')
     for idx, l in enumerate(listings):
-        print('#%02d [%d%s]{%s ago) %s {/u/%s}' % (
+        print('#%02d [%d/%d%s]{%s ago) %s {/u/%s}' % (
             idx,
             l['score'],
+            l['num_comments'],
             '*' * l['nawards'],
             format_time(l['created']),
             l['title'],
