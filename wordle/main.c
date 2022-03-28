@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #define M 5 /* word length */
-#define N 3000 /* upper bound on number of words */
+#define N 2350 /* upper bound on number of possible solutions */
+#define N2 10700 /* upper bound on number of non-solution guesses */
 #define A 26 /* total number of alphabetic chars */
 #define N_GUESSES 1
 #define MAX_GUESSES 6
 #define FLIPALL -1 /* all bits are 1 */
 #define FN "wordle_list.txt"
+#define FN2 "wordle_others.txt"
 
 /* constr = [cands for letter 0, 1, 2, 3, 4, MUST_EXISTS] */
-int read_words(int *words);
+void read_words(int *words, int *other_guesses, int *nwords, int *nwords2);
 int pop_constraints(
         int *target, int *guesses, int n_guesses,
         int *constr);
@@ -30,24 +32,34 @@ void check_allwords(void);
 int to_int(char a) { return a - 97; }
 char to_char(int a) { return a + 97; }
 
-int read_words(int *words)
+void read_words(int *words, int *other_guesses, int *nwords, int *nwords2)
 {
     /* (M + 1) chars to give each string a null-terminator */
     FILE *fptr;
     char word[M + 1];
     int idx = 0;
-    int n_words;
+    *nwords = 0;
+    *nwords2 = 0;
 
     /* read in all words */
     fptr = fopen(FN, "r");
-    for (n_words = 0; !feof(fptr); n_words++)
+    for (; !feof(fptr); (*nwords)++)
     {
         fscanf(fptr, "%s", word);
         pop_bitmask(word, words + idx, M);
         idx += M;
     }
-    n_words--; /* fix off-by-one error, last word is empty */
-    return n_words;
+    (*nwords)--; /* fix off-by-one error, last word is empty */
+
+    idx = 0;
+    fptr = fopen(FN2, "r");
+    for (; !feof(fptr); (*nwords2)++)
+    {
+        fscanf(fptr, "%s", word);
+        pop_bitmask(word, other_guesses + idx, M);
+        idx += M;
+    }
+    (*nwords2)--; /* fix off-by-one error, last word is empty */
 }
 /**
  * Given a target word & guesses, populates all constraints
@@ -248,15 +260,16 @@ void process_guess(int argc, char *argv[])
     char guesses_str[MAX_GUESSES * M];
     int guesses[MAX_GUESSES * M];
     int all_words[M * N];
+    int other_guesses[M * N2];
     int n_guesses = argc - 2;
-    int i, n_words;
+    int i, n_words, n_words2;
 
     for (i = 0; i < n_guesses; i++)
     {
         memcpy(guesses_str + i * M, argv[i + 2], M);
     }
 
-    n_words = read_words(all_words);
+    read_words(all_words, other_guesses, &n_words, &n_words2);
 
     pop_bitmask(argv[1], target, M);
     pop_bitmask(guesses_str, guesses, n_guesses * M);
@@ -267,11 +280,12 @@ void best_guesses(char *target_str, int num_print)
 {
     int target[M];
     int all_words[M * N];
-    int i, n_words;
-    int scores[N], score_idxs[N];
+    int other_guesses[M * N2];
+    int i, n_words, n_words2;
+    int scores[N + N2], score_idxs[N + N2];
 
     pop_bitmask(target_str, target, M);
-    n_words = read_words(all_words);
+    read_words(all_words, other_guesses, &n_words, &n_words2);
 
     for (i = 0; i < n_words; i++)
     {
@@ -279,17 +293,30 @@ void best_guesses(char *target_str, int num_print)
                 target, all_words + (i * M), 1,
                 all_words, n_words, 1);
     }
+    for (i = 0; i < n_words2; i++)
+    {
+        scores[n_words + i] = count_possible(
+                target, other_guesses + (i * M), 1,
+                all_words, n_words, 1);
+    }
 
     /* argsort scores */
-    for (i = 0; i < n_words; i++)
+    for (i = 0; i < n_words + n_words2; i++)
     {
         score_idxs[i] = i;
     }
-    qsort_scores(scores, score_idxs, n_words);
+    qsort_scores(scores, score_idxs, n_words + n_words2);
     for (i = 0; i < num_print; i++)
     {
         printf("%d remaining when guessing ", scores[score_idxs[i]]);
-        print_word(all_words + (score_idxs[i] * M));
+        if (score_idxs[i] < n_words)
+        {
+            print_word(all_words + (score_idxs[i] * M));
+        }
+        else
+        {
+            print_word(other_guesses + ((score_idxs[i] - n_words) * M));
+        }
         printf("\n");
     }
 }
@@ -333,11 +360,12 @@ void qsort_scores(int *scores, int *score_idxs, int len)
 void check_allwords(void)
 {
     int all_words[M * N];
-    int n_words;
+    int other_guesses[M * N2];
+    int n_words, n_words2;
     int i, j, score;
-    int score_idxs[N], scores[N];
+    int score_idxs[N + N2], scores[N + N2];
 
-    n_words = read_words(all_words);
+    read_words(all_words, other_guesses, &n_words, &n_words2);
     for (i = 0; i < n_words; i++)
     {
         score = 0;
@@ -350,18 +378,37 @@ void check_allwords(void)
         }
         scores[i] = score;
     }
+    for (i = 0; i < n_words2; i++)
+    {
+        score = 0;
+        /* total number of remaining words if target = j and guess = i */
+        for (j = 0; j < n_words; j++)
+        {
+            score += count_possible(
+                    all_words + (j * M), other_guesses + (i * M), 1,
+                    all_words, n_words, 1);
+        }
+        scores[n_words + i] = score;
+    }
 
     /* argsort scores */
-    for (i = 0; i < n_words; i++)
+    for (i = 0; i < n_words + n_words2; i++)
     {
         score_idxs[i] = i;
     }
-    qsort_scores(scores, score_idxs, n_words);
+    qsort_scores(scores, score_idxs, n_words + n_words2);
 
-    for (i = 0; i < n_words; i++)
+    for (i = 0; i < n_words + n_words2; i++)
     {
         printf("%.7f ", scores[score_idxs[i]] * 1.0 / n_words);
-        print_word(all_words + (score_idxs[i] * M));
+        if (score_idxs[i] < n_words)
+        {
+            print_word(all_words + (score_idxs[i] * M));
+        }
+        else
+        {
+            print_word(other_guesses + ((score_idxs[i] - n_words) * M));
+        }
         printf("\n");
     }
 }
