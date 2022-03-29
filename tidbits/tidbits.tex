@@ -2555,4 +2555,38 @@ of rolling either a one, or either a one or two, respectively. Solving, we find:
 \end{align}
 Yay!
 
+\chapter{03/29/22---Strogatz Congruent Angle Bisectors Problem}
+
+Since I am a Strogatz simp, I have listened to a few interviews here and there,
+and noticed the problem he gave: prove that if two angle bisectors of a triangle
+have the same length, then the triangle must be isosceles.
+
+Consider the triangle $ABC$, and consider the angle bisectors of angles $A$ and
+$B$. Call the side $AB = s$, and call the length of both bisectors $d$ (which
+intersect sides $BC$ at $a'$ and side $AC$ at $b'$ respectively, so $Aa' = Bb' =
+d$). We then apply the law of cosines and sines on both triangles $ABa'$ and
+$ABb'$ to obtain the two constraints (call the angle $BAC = 2\theta_a$ for
+convenience):
+\begin{align}
+    s^2 + d^2 - 2sd\cos\p{\theta_a} &= (Ba')^2 =
+        d^2\p{\frac{\sin \theta_a}{\sin 2\theta_b}},\\
+    s^2 + d^2 - 2sd\cos\p{\theta_b} &= (Ab')^2 =
+        d^2\p{\frac{\sin \theta_b}{\sin 2\theta_a}}.
+\end{align}
+It is clear that $\theta_a = \theta_b$ is one solution, which proves the
+conjecture. Are there any other solutions? We set $s^2 + d^2$ to be a constant
+and simplify to obtain (let $x \equiv 8s/d$)
+\begin{align}
+    \sin^4 \theta_a \cos^2 \theta_a + x\sin^2\theta_a \cos^3 \theta_a
+    = \sin^4 \theta_b \cos^2 \theta_b + x\sin^2\theta_b \cos^3 \theta_b.
+\end{align}
+Note that $\theta_{a, b} \in \s{0, 45^\circ}$, in order that $ABC$ is a closed
+triangle. Over this range, I'm pretty sure that the function is single valued,
+so this forces $\theta_a = \theta_b$ and we are done.
+
+The key insight to this proof was noting that given the lengths $s$, $d$, and a
+$\theta_a$, the entire $ABC$ is immediately fixed. It then just remained to
+construct the triangle with both $\theta_a$ and $\theta_b$ and enforce
+consistency.
+
 \end{document}
