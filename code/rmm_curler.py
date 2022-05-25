@@ -8,7 +8,7 @@ from select import select
 REFRESH_INTERVAL = 3 # seconds
 NUM_LISTINGS = 50
 
-ALERT_WORDS = ['darling']
+ALERT_WORDS = ['dark']
 ALREADY_NOTIFIED = []
 OPEN_PROG = 'xdg-open'
 MSG_PROG = 'xmessage'
@@ -96,13 +96,16 @@ def print_listings(listings):
 
 if __name__ == '__main__':
     while True:
-        listings = fetch_listings_from_mm()
-        alert_listings(listings)
-        print_listings(listings)
+        try:
+            listings = fetch_listings_from_mm()
+            alert_listings(listings)
+            print_listings(listings)
 
-        print('Press a number (and enter) to go to url')
-        rlist, _, _ = select([sys.stdin], [], [], REFRESH_INTERVAL)
-        if rlist:
-            idx = int(sys.stdin.readline().strip())
-            print('Going to %d' % idx)
-            os.system('%s %s' % (OPEN_PROG, listings[idx]['url']))
+            print('Press a number (and enter) to go to url')
+            rlist, _, _ = select([sys.stdin], [], [], REFRESH_INTERVAL)
+            if rlist:
+                idx = int(sys.stdin.readline().strip())
+                print('Going to %d' % idx)
+                os.system('%s %s' % (OPEN_PROG, listings[idx]['url']))
+        except:
+            pass
