@@ -6,9 +6,9 @@ import time
 from select import select
 
 REFRESH_INTERVAL = 3 # seconds
-NUM_LISTINGS = 50
+NUM_LISTINGS = 20
 
-ALERT_WORDS = ['rainy']
+ALERT_WORDS = ['dark']
 ALREADY_NOTIFIED = []
 # linux
 OPEN_PROG = 'xdg-open'
@@ -85,7 +85,7 @@ def alert_listings(listings):
                 os.system(message)
                 ALREADY_NOTIFIED.append(l['id'])
 def print_listings(listings):
-    os.system('clear')
+    os.system('clear && printf \'\e[3J\'')
     print('****************************************************************')
     for idx, l in enumerate(listings):
         print('#%02d [%d/%d%s]{%s ago) %s {/u/%s}' % (
