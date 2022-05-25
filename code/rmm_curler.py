@@ -106,6 +106,6 @@ if __name__ == '__main__':
             if rlist:
                 idx = int(sys.stdin.readline().strip())
                 print('Going to %d' % idx)
-                os.system('%s %s' % (OPEN_PROG, listings[idx]['url']))
+                os.system('%s %s&!' % (OPEN_PROG, listings[idx]['url']))
         except:
             pass
