@@ -10,6 +10,17 @@ T my_pow(T a, int pow)
     return ret;
 }
 
+int my_logfloor(int a, int base)
+{
+    int ret = 0;
+    while (a >= base)
+    {
+        a /= base;
+        ret++;
+    }
+    return ret;
+}
+
 // take root-th order root (e.g. root=2 => sqrt), for fun
 const double ROOT_TOL = 1e-15;
 template <typename T>
