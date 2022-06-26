@@ -6,12 +6,16 @@ import time
 from select import select
 
 REFRESH_INTERVAL = 3 # seconds
-NUM_LISTINGS = 50
+NUM_LISTINGS = 20
 
-ALERT_WORDS = ['darling']
+ALERT_WORDS = ['dark']
 ALREADY_NOTIFIED = []
+# linux
 OPEN_PROG = 'xdg-open'
-MSG_PROG = 'xmessage'
+MSG_PROG = 'xmessage -file -&'
+# macos
+# OPEN_PROG = 'xopen'
+# MSG_PROG = 'xargs -I % osascript -e \'tell app "System Events" to display dialog "%"\''
 
 with open(f'{os.environ["HOME"]}/.reddit_creds') as f:
     lines = f.readlines()
@@ -74,13 +78,14 @@ def alert_listings(listings):
         for alert_word in ALERT_WORDS:
             if alert_word in l['title'].lower() and l['id'] not in ALREADY_NOTIFIED:
                 message = (
-                    'echo -e "%s\n(%s)" | %s -file -&'
+                    'echo -e "%s (%s)" | %s'
                     % (l['title'], l['url'], MSG_PROG)
                 )
+                # print(message)
                 os.system(message)
                 ALREADY_NOTIFIED.append(l['id'])
 def print_listings(listings):
-    os.system('clear')
+    os.system('clear && printf \'\e[3J\'')
     print('****************************************************************')
     for idx, l in enumerate(listings):
         print('#%02d [%d/%d%s]{%s ago) %s {/u/%s}' % (
@@ -96,13 +101,16 @@ def print_listings(listings):
 
 if __name__ == '__main__':
     while True:
-        listings = fetch_listings_from_mm()
-        alert_listings(listings)
-        print_listings(listings)
+        try:
+            listings = fetch_listings_from_mm()
+            alert_listings(listings)
+            print_listings(listings)
 
-        print('Press a number (and enter) to go to url')
-        rlist, _, _ = select([sys.stdin], [], [], REFRESH_INTERVAL)
-        if rlist:
-            idx = int(sys.stdin.readline().strip())
-            print('Going to %d' % idx)
-            os.system('%s %s' % (OPEN_PROG, listings[idx]['url']))
+            print('Press a number (and enter) to go to url')
+            rlist, _, _ = select([sys.stdin], [], [], REFRESH_INTERVAL)
+            if rlist:
+                idx = int(sys.stdin.readline().strip())
+                print('Going to %d' % idx)
+                os.system('%s %s&' % (OPEN_PROG, listings[idx]['url']))
+        except:
+            pass
