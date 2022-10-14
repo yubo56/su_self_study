@@ -2410,7 +2410,7 @@ not depend on the momenta, we obtain
             - \vec{\nabla}_p f_0 \cdot \vec{\nabla}_x \Phi_1.
 \end{align*}
 
-\chapter{03/07/21---Random Youtube Problem}
+\chapter{03/07/21---Random Youtube Problem, Removing $k / N$}
 
 I thought the name of this was something like the ``Pythagorean Problem'', but I
 can't find the youtube video I got it from. The premise is simple: start with
@@ -2588,5 +2588,281 @@ The key insight to this proof was noting that given the lengths $s$, $d$, and a
 $\theta_a$, the entire $ABC$ is immediately fixed. It then just remained to
 construct the triangle with both $\theta_a$ and $\theta_b$ and enforce
 consistency.
+
+\chapter{10/12/22---Random Walks in 2D vs 3D}
+
+\section{Naively: not worrying about double counting}
+
+A random Youtube video pointed this out. Random walks are different in 2D and
+3D\@: you tend to return to the origin eventually in 2D, but not in 3D. Why?
+
+Let's do the continuum case of this first, since it's easier. Random walks in
+the continuum limit are just diffusion, given by
+\begin{equation}
+    \pd{\psi}{t} = \nabla^2 \psi.
+\end{equation}
+The solutions to the heat equation in N-D are given by the eigenfunctions
+\begin{align}
+    \psi_{\vec{k}}(\vec{x}, t) &= e^{-k^2 t} e^{i\p{\vec{k} \cdot \vec{x}}},\\
+    \psi(\vec{x}, t) &=
+        \int\limits \psi_{\vec{k}}(x, 0)e^{-k^2 t}
+            e^{i\p{\vec{k} \cdot \vec{x}}} \;\mathrm{d}^N\vec{k},\\
+    \psi(0, t) &=
+            \int\limits \psi_{\vec{k}}(x, 0)e^{-k^2 t} \;\mathrm{d}^N\vec{k}
+            ,\nonumber\\
+        &= \int\limits \psi_{\vec{k}}(x, 0)e^{-k^2 t} k^{N - 1}\;\mathrm{d}k
+            ,\nonumber\\
+        &= \frac{1}{t^{N/2}}
+            \int\limits \psi_{\vec{k}}(x, 0)e^{-\kappa^2} \kappa^{N - 1}
+            \;\mathrm{d}\kappa.
+\end{align}
+The integral is just N-th moment of the Gaussian, which is always convergent.
+Thus, the value of the wavefunction at $0$ as a function of time decays as
+$t^{-N / 2}$. If we want the probability that a particle \emph{never} returns to
+the origin, we just need to integrate the wavefunction amplitude for all time
+and take the complement, or
+\begin{equation}
+    \mathrm{Prob} \sim \int\limits_0^\infty \psi(0, t)\;\mathrm{d}t.
+\end{equation}
+It's clear that when $N > 2$, this integral is convergent ($\propto t^{1 -
+N/2}$), and when $N \leq 2$ that this integral is divergent (either
+logarithmically or as a power law). Thus, this shows that $N = 2$ is indeed the
+critical value.
+
+If we do this in the discrete case, the double counting issue that we are
+running into (referenced in the title) is much more clear. Consider the
+number of paths by which we find ourselves at the origin after $2N$ steps. This
+is just $\binom{2N}{N}$. Trajectories that never return to the origin within
+$2N$ steps are not in any of the trajectories that return within $2k < 2N$
+steps, so we can say that
+\begin{equation}
+    \mathrm{Prob}\p{M > 2N}
+        = 1 - \sum\limits_k^N \binom{2N}{N} / 2^{2N}.
+\end{equation}
+Here, the probability is that we have taken $M$ steps without returning to the
+origin. We just have to evaluate the convergence of the sum. We use Stirling's
+formula
+\begin{align}
+    \binom{2N}{N} &= \frac{\p{2N}! }{ \p{N!}^2} \nonumber\\
+        &\approx \frac{(2N)^{2N} \sqrt{2\pi (2N)}/ e^{2N}}{
+            \s{N^N \sqrt{2\pi N} / e^N}^2},\\
+    \binom{2N}{N} / 2^{2N} &\approx
+        \sqrt{\frac{1}{\pi N}}.
+\end{align}
+Thus, we find that, generalizing to $N$ dimensions,
+\begin{equation}
+    \mathrm{Prob}\p{M > 2N} \sim \sum\limits_k^N \p{\frac{2}{k}}^{D / 2}.
+\end{equation}
+This sum is convergent iff $D > 2$, so again, we recover the necessary result.
+
+In both of these approaches, we have omitted some double counting: a trajectory
+that finds itself at the origin after $2p$ and $2q > 2p$ steps will be counted
+twice in the summation. As such, this ``probability'' that we compute above is
+actually negative for the so-called ``divergent'' cases, rather than going to
+zero.
+
+\textbf{Edit:} I looked at an online answer, and it points something very simple
+out: instead of calling the quantity we computed above the \emph{probability},
+just call it the \emph{expected number of returns}. Then, it's easy to see that
+the expected number of returns diverges for lower dimensions, while it converges
+for higher dimensions (and to a number $< 1$). A simple argument shows that this
+is one-to-one with return probability at all: if it is likely that a trajectory
+returns, then after each return, it will continue to return, and the expected
+number of returns is infinite with infinite time. In other words, only if the
+average return time is infinite can we end up with finitely-many average returns
+after infinite time.
+
+\section{Different Problem: weighted random walk escape probability}
+
+Here's a different problem I stumbled across. Consider a fella at $n = 1$, that
+will then do a weighted RW with probability $\beta$ (to the left). What is the
+probability that he escapes $n = 0$, and if he fails to escape, what is his mean
+survival time?
+
+Call $S_n$ the expected number of steps from death. We note that $S_1 = 1 +
+(\beta S_0 + (1 - \beta)S_2) = 1 + (1 - \beta) S_2$. More generally, we have the
+inductive relation
+\begin{align}
+    S_0 &= 0,\\
+    S_n &= 1 + S_{n - 1}\beta + S_{n + 1}(1 - \beta).
+\end{align}
+
+\subsection{Continuum Limit: Survival Time and Probability Distribution}
+
+Let's first do this in the continuum limit because I'm way faster at it. This
+comes out as:
+\begin{align}
+    0 &= 1 + \frac{S_{x + 1} - 2S_x + S_{x - 1}}{2}
+            + \p{1/2 - \beta}S_{x + 1} - \p{1/2 - \beta}S_{x - 1},\\
+        &\approx 1 + \frac{1}{4}\ptd{S}{x} + \p{1 - 2\beta}\pd{S}{x}.
+\end{align}
+Here, let's just set $\delta x = 1$. This is a second-order ODE, so we need two
+BCs:
+\begin{align}
+    S(0) &= 0, & S(1) = 1 + \p{1 - \beta}S(2).
+\end{align}
+This ODE is also inhomogeneous, so we first write down the homogeneous solution
+that satisfies the first BC (if $\beta \neq 1/2$):
+\begin{align}
+    S_0(x) &= C\p{1 - e^{xk}},\\
+    k &= 4\p{2\beta - 1}.
+\end{align}
+$C$ will be fixed later by applying the second BC\@. But we first need to find a
+particular solution that satisfies the inhomogeneous part. This is easily
+guessed, so we find
+\begin{align}
+    S_1(x) &= \frac{x}{2\beta - 1},\\
+    S(x) &= C\p{1 - e^{xk}} + \frac{x}{2\beta - 1},\\
+    \frac{1}{2\beta - 1} + C\p{1 - e^k}
+        &= 1 + \p{1 - \beta}\p{
+            \frac{2}{2\beta - 1} + C\p{1 - e^{2k}}},\\
+    C &= 0.
+\end{align}
+Since $C = 0$, it's clear that our particular solution is the only piece that
+matters, and this is only well-defined if $\beta > 1/2$. For $\beta < 1/2$, it's
+clear that our assumption that $S$ is well-behaved is violated, and we can
+interpret this as the fact that $S$ is infinite everywhere.
+
+As for the survival probability, we note that $P(x)$ satisfies the same
+inductive relation but just without the $1$ (so it's even homogeneous, nice).
+Thus,
+\begin{equation}
+    P(x) = C\p{1 - e^{xk}},
+\end{equation}
+and we have BC $P(0) = 0$. The second condition is that $P(x) < 1$. This is
+trivially satisfied if $k < 0$ ($\beta < 1/2$), in which case
+\begin{equation}
+    P(x) = 1 - e^{-4\p{1 - 2\beta} x}.
+\end{equation}
+If instead $k > 0$, the only solution is $C = 0$, so everybody dies.
+
+What about the case where $\beta = 1/2$? The ODE simplifies in this case, and we
+obtain
+\begin{equation}
+    0 = 1 + \frac{1}{4}\ptd{S}{x}.
+\end{equation}
+The homogeneous solution is $k = 0$ with multiplicity $2$, so the two
+homogeneous solutions are $S(x) = e^{0x}$ and $S(x) = xe^{0x} = x$. A particular
+integral can be found on inspection, so we obtain that
+\begin{equation}
+    S(x) = Cx - 2x^2.
+\end{equation}
+This satisfies $S(0) = 0$ trivially, and $C$ is fixed by requiring that
+\begin{align}
+    C - 2 &= 1 + \frac{1}{2}\p{2C - 8},\\
+    C &= 0.
+\end{align}
+Again, only the particular integral matters, so $S(x) = -2x^2$, so once again we
+see that the walker escapes on average since $S$ is pathological. We thus
+conclude in this simple analysis that the walker fails to escape iff $\beta >
+1/2$, so only with a weighted random walk.
+
+As for the survival probability, this satisfies
+\begin{equation}
+    0 = 4\ptd{P}{x}.
+\end{equation}
+We immediately obtain that $P(x) = Ax + B$, but the only solution that retains
+$P(\infty) < 1$ is $A = B = 0$ so everybody dies.
+
+\subsection{The Centered Case}
+
+Note from the above that $\beta > 1/2$ has convergent survival probability,
+while $\beta < 1/2$ has convergent mean survival time. We found that the $\beta
+= 1/2$ case has both divergent mean survival time and vanishing survival
+probability. This strongly hints at a heavy-tailed survival time distribution.
+
+To solve this, let's consider solving the heat equation
+\begin{equation}
+    \pd{\psi}{t} = \nabla^2 \psi,
+\end{equation}
+with initial condition a delta function at $x_0$ and BC $\psi(0, t) = 0$. This
+BC is trivially satisfied by the method of images, so we take
+\begin{equation}
+    \psi(0, t) = \delta\p{x - x_0} - \delta\p{x + x_0}.
+\end{equation}
+Our goal is to evaluate
+\begin{equation}
+    P(t) = \int\limits_0^\infty \psi(x, t)\;\mathrm{d}t,
+\end{equation}
+so the total area under the PDF\@. This has a laborious solution doing out the
+full sets of integrals etc.\ (see my Notability note), but we can just assert
+the solution using the Green's function for the heat equation and linearity:
+\begin{align}
+    \psi(x, t) &= \frac{1}{\sqrt{4\pi t}}
+        \p{e^{-\frac{(x - x_0)^2}{4t}} - e^{-\frac{(x - x_0)^2}{4t}}},\\
+    \int\limits_0^\infty \psi(x, t)\;\mathrm{d}x
+        &= \frac{1}{\sqrt{4\pi t}}\int\limits_{-x_0}^{x_0}
+            e^{-\frac{x^2}{4t}}\;\mathrm{d}x.
+\end{align}
+For late times $t \gg x_0^2$, the integral $\approx 2x_0$, so we find
+\begin{equation}
+    P(t \gg x_0^2) \approx \frac{x_0}{\sqrt{\pi t}}.
+\end{equation}
+Indeed, long tailed! Note that this was literally the result that we would have
+obtained if we used dimensional analysis
+
+\subsection{Discrete Limit}
+
+Can we redo the above calculation in the discrete case? This turns out to be way
+easier using the method of images laid out above. Instead of drunkard at $x = 1$
+initially that can walk off the cliff, we consider drunkard at $x = 1$ and
+anti-drunkard at $x = -1$. The probability density to be at $x$ after $n$ steps
+is then just
+\begin{equation}
+    P(x, n) = B_n(x - 1) - B_n(x + 1),
+\end{equation}
+where $B_n(y)$ is the probability to reach displacement $y$ after taking $n$
+steps. But of course,
+\begin{equation}
+    B_n(y) = 2^{-n}\binom{n}{(n + y) / 2}.
+\end{equation}
+Moreover, if we consider the total survival probability
+\begin{align}
+    P(n) &= \sum_{x = 0}^\infty P(x, n)\nonumber\\
+        &= \sum_{x = 0}^\infty B_n(x) - B_n(x + 2)\nonumber\\
+        &= B_n(0) + B_n(1).
+\end{align}
+Note that either one of $B_n(0)$ or $B_n(1)$ are always zero, so we just have
+\begin{align}
+    B_n(0) &= \frac{1}{2^n}\binom{n}{n/2}\nonumber\\
+        &\approx \sqrt{\frac{1}{\pi n}},\\
+    B_n(1) &= \frac{1}{2^n}\binom{n}{(n + 1)/2}\nonumber\\
+        &\approx \frac{(2m + 1)^{2m + 1}\sqrt{2\pi(2m + 1)} / e^{2m + 1}}{
+            2^{2m+1}m^m\p{m+1}^{m+1}2\pi\sqrt{m(m+1)}/e^{2m+1}}\nonumber\\
+        &= \p{\frac{(m+1/2)^2}{m(m+1)}}^{m+1/2}
+            \sqrt{\frac{2m+1}{2\pi m(m+1)}}\nonumber\\
+        &= \p{1 + \frac{1}{4m(m+1)}}^{m+1/2}
+            \sqrt{\frac{2m+1}{2\pi m(m+1)}}.
+\end{align}
+Since the scalings agree, we find $P(n) \propto \sqrt{1/\pi n}$.
+
+The biased walk case isn't that much harder if we just take
+\begin{equation}
+    B_n(y) = \frac{1}{\beta^{(n+y)/2}}\frac{1}{\p{1 - \beta}^{(n-y)/2}}
+        \binom{n}{(n + y) / 2}.
+\end{equation}
+Thus, if we just consider the even case for now, we find
+\begin{equation}
+    B_n(0) \approx \frac{2^n}{\beta^{n/2}\p{1 - \beta}^{n/2}}
+        \frac{1}{\sqrt{\pi n}}.
+\end{equation}
+Wow, symmetry is great!
+
+It's worth noting that there's a simple generating function for this as well.
+Let's just consider the unbiased case for simplicity, then the operator for a
+single step is multiplication by $(x + 1/x)$, and so
+\begin{equation}
+    G_n(x) = x\p{x + 1/x}^n/2^n.
+\end{equation}
+The leading $x$ is just because we start at $1$. The method of images case gives
+\begin{equation}
+    2^nG'_n(x) = \p{x - 1/x}\p{x + 1/x}^n.
+\end{equation}
+The coefficients of $G_n'(x)$ are then $a_{n, k}$ where
+\begin{equation}
+    a_{n, k} = \frac{1}{2^n}\p{\binom{n}{k - 1} - \binom{n}{k + 1}}.
+\end{equation}
+This will again let us easily sum the coefficients from $0$ to $\infty$. We'll
+stop working on this here.
 
 \end{document}
