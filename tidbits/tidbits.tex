@@ -2865,4 +2865,63 @@ The coefficients of $G_n'(x)$ are then $a_{n, k}$ where
 This will again let us easily sum the coefficients from $0$ to $\infty$. We'll
 stop working on this here.
 
+\subsection{Unrelated: Recursive Problem}
+
+Short problem on YT: What is the value of the expression
+\begin{equation}
+    \p{\frac{1}{4} - \p{\frac{1}{4} - \p{\dots}^2}^2}^2?
+\end{equation}
+Clearly, we just set up
+\begin{equation}
+    y = \p{\frac{1}{4} - y}^2
+\end{equation}
+and find that
+\begin{equation}
+    y = \frac{3 \pm 2\sqrt{2}}{4}.
+\end{equation}
+Intuitively, the smaller root is probably more important, so we guess that the
+correct value is $(3 - 2\sqrt{2}) / 4$. But why? What does it mean for the
+expression to evaluate to two roots?
+
+I don't have good answers to this, but as a physicist, the only way we'd
+actually run into this expression is as a limiting case of the iterative map
+\begin{equation}
+    x_{i + 1} = \p{\frac{1}{4} - x_i}^2.
+\end{equation}
+Thus, we can ask, if $x_n$ converges, what value does it converge to, and when
+do we get convergence? Let's write $x_0 = y_0 + \delta$ for $y_0$ a root of the
+above, then we find
+\begin{equation}
+    \delta' = x_1 - y_0 = \delta^2 - 2\delta\p{\frac{1}{4} - y_0}.
+\end{equation}
+Of course, if $1/4 - y_0 < -1/2$ (or $y_0 > 3/4$), then we immediately see that
+any positive $\delta$ will diverge, and indeed the positive root above $(3 +
+2\sqrt{2}) / 4$ satisfies this. Thus, any $x_0 > (3 + 2\sqrt{2}) / 4$ will
+diverge. On the other hand, if the initial $\delta$ is negative, then it will
+tend to remain negative while growing, so we find that $y_+$ is an unstable
+point in the map.
+
+What about the lower bound on $x_0$? Well, we clearly should expand about $y_-$,
+and note that since $2\delta(1/4 - y_-) = \delta(\sqrt{2} - 1)$, we can write
+\begin{equation}
+    \delta_1 = \delta_0^2 - \delta_0\p{\sqrt{2} - 1}.
+\end{equation}
+Note that if $\delta_0 > \sqrt{2}$, then $\delta_1 > \delta_0$, but this isn't
+really a relevant case since $y_+$ is extremely close to $\sqrt{2}$. However, we
+can run into problems if $\delta_0 < 0$ while $\delta_1 = \sqrt{2}$, i.e.\ we
+start with a negative $x_0$ but immediately get sent into the unstable, positive
+range when we reach $x_1$. Thus, we solve
+\begin{align}
+    \sqrt{2} &= \delta_0^2 - \delta_0\p{\sqrt{2} - 1},\\
+    \delta_0 &= \frac{(\sqrt{2} - 1) + \sqrt{\p{\sqrt{2} - 1}^2 + 4\sqrt{2}}}{2}
+        = -1.
+\end{align}
+Thus, if $x_0 < -1$, we also diverge. Thus, it's clear that we obtain
+convergence to $y_-$ iff $x_0 \in \p{-1, y_+}$.
+
+Was the stability of the equilibria obvious? Yes: we just need to figure out
+whether the derivative of $\p{1/4 - y}^2 - y$ is increasing or decreasing at
+either equilibrium. The derivative is just $2y - 3/2$, so indeed $y_+$ is
+unstable and $y_-$ is stable.
+
 \end{document}
