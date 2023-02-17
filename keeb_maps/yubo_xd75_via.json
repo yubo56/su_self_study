@@ -74,11 +74,11 @@
       "KC_P0",
       "KC_RGHT",
       "KC_TRNS",
-      "KC_RCTL",
-      "KC_RALT",
+      "KC_LCTL",
+      "KC_LALT",
       "KC_VOLD",
       "KC_VOLU",
-      "TO(3)"
+      "TG(3)"
     ],
     [
       "KC_TRNS",
@@ -155,7 +155,7 @@
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
-      "KC_TRNS"
+      "TO(3)"
     ],
     [
       "KC_TRNS",
@@ -222,14 +222,14 @@
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
+      "KC_LGUI",
+      "KC_LCTL",
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
+      "KC_LCTL",
+      "KC_LALT",
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS"
@@ -298,7 +298,7 @@
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
-      "MO(2)",
+      "MO(4)",
       "KC_LGUI",
       "KC_SPC",
       "KC_LEFT",
@@ -309,15 +309,15 @@
       "KC_RALT",
       "KC_VOLD",
       "KC_VOLU",
-      "TO(0)"
+      "KC_TRNS"
     ],
     [
       "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
-      "KC_TRNS",
+      "KC_F1",
+      "KC_F2",
+      "KC_F3",
+      "KC_F4",
+      "KC_F5",
       "KC_TRNS",
       "KC_TRNS",
       "KC_TRNS",
@@ -388,5 +388,6 @@
       "KC_TRNS",
       "KC_TRNS"
     ]
-  ]
+  ],
+  "encoders": []
 }
