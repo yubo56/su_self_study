@@ -2867,7 +2867,7 @@ stop working on this here.
 
 \subsection{Unrelated: Recursive Problem}
 
-Short problem on YT: What is the value of the expression
+Short problem on YT\@: What is the value of the expression
 \begin{equation}
     \p{\frac{1}{4} - \p{\frac{1}{4} - \p{\dots}^2}^2}^2?
 \end{equation}
@@ -2923,5 +2923,139 @@ Was the stability of the equilibria obvious? Yes: we just need to figure out
 whether the derivative of $\p{1/4 - y}^2 - y$ is increasing or decreasing at
 either equilibrium. The derivative is just $2y - 3/2$, so indeed $y_+$ is
 unstable and $y_-$ is stable.
+
+\section{Linear Predictive Coding: Autoregressions and Fourier Transforms}
+
+This was a simple enough inquiry initially: given a partial time series that
+contains sinusoids, how do we extract the frequency? We know one way to do this
+using the FFT, but there are advantages to other techniques. Courtesy of Jeremy
+Goodman's pointers.
+
+The trick has to do with autoregressions. Suppose we are looking to extract $l$
+frequencies of form $e^{i \omega_m t}$, so that
+\begin{equation}
+    y_n = \sum\limits_m^l C_m e^{i\omega_m n \Delta t}.
+\end{equation}
+Thus, if we have at least $2l$ points or so, we should be able to fit for the
+$2l$ DOF $C_m$ and $\omega_m$. There can be a noise term above if need be, in
+which case more points will smooth out the noise.
+
+What is the trick? Well, we compute the $l$-th order autoregression. In other
+words, for each sequence of $l$ points, we can write down the expression
+satisfying:
+\begin{equation}
+    y_n = \sum\limits_{m = 1}^l a_m y_{n - m}.
+\end{equation}
+With $l$-many such sequences, we have enough equations to solve for the $l$-many
+unknowns $a_m$. These can be written in the matrix form:
+\begin{equation}
+    \begin{bmatrix}
+        y_n\\
+        y_{n + 1}\\
+        \vdots\\
+        y_{n + l}
+    \end{bmatrix} =
+    \begin{bmatrix}
+        y_{n - 1} & y_{n - 2} & \dots & y_{n - l}\\
+        y_{n} & y_{n - 1} & \dots & y_{n - l + 1}\\
+        \vdots & \vdots & \dots & \vdots\\
+        y_{n + l - 1} & y_{n + l - 2} & \dots & y_{n - 1}
+    \end{bmatrix}
+    \begin{bmatrix}
+        a_1\\
+        a_2\\
+        \vdots\\
+        a_l
+    \end{bmatrix}.\label{eq:autoreg_def}
+\end{equation}
+These $\z{a_l}$ form the $\mathrm{AR}(l)$ autoregressive model for $y_n$.
+
+This is great, but how do we get the frequencies, or also maybe the growth
+rates? Now, we rewrite the above equation as
+\begin{equation}
+    0 =
+    \begin{bmatrix}
+        y_{n} & y_{n - 1} & \dots & y_{n - l}\\
+        y_{n + 1} & y_{n} & \dots & y_{n - l + 1}\\
+        \vdots & \vdots & \dots & \vdots\\
+        y_{n + l} & y_{n + l - 1} & \dots & y_{n - 1}
+    \end{bmatrix}
+    \begin{bmatrix}
+        -1\\
+        a_1\\
+        \vdots\\
+        a_l
+    \end{bmatrix} \equiv \bm{B} \cdot \vec{a}.
+\end{equation}
+Now, what if the $y_n$ look like $\lambda^n$ for some complex $\lambda$? Then
+the $\lambda$ must satisfy
+\begin{equation}
+    1 - a_1\lambda - a_2\lambda^2 - \dots - a_l\lambda^l = 0.
+\end{equation}
+This is the characteristic equation for this $\mathrm{AR}(l)$ model. If we solve
+for the roots of this equation, we get the possible values of $\lambda$ that
+satisfy the model. In other words, if the $y_n = \lambda^n$ indeed, then $\bm{B}
+\cdot \vec{a} = 0$ as requested above. Then, if the data are oscillatory, then
+$\lambda = e^{i\omega_m}$ as requested above.
+
+\subsection{Intuitive Understanding}
+
+There's something slightly unintuitive here: we began by seeking the frequencies
+in the $y_n$, but we eventually obtained this by solving an equation that has
+\emph{nothing} to do with the $y_n$, the characteristic equation for the
+$\mathrm{AR}(l)$ model! Why does this make sense?
+
+Well, it should be noted that a particular $\mathrm{AR}(l)$ model does not
+uniquely specify the $y_n$; this would be impossible, since there are only $l$
+DOF in the model and $2l + 1$ in Eq.~\eqref{eq:autoreg_def}. Indeed, this
+suggests that the amplitudes of the modes $C_m$, as well as the initial
+normalization of the autoregressive chain ($y_{n - l}$) are free parameters. As
+such, we can imagine that the $\mathrm{AR}(l)$ model permits a family of
+solutions, any with the correct frequencies. In other words, we could also
+imagine writing:
+\begin{equation}
+    \bm{B} \cdot \ket{a} = \sum\limits_{m=1}^lC_m\ket{b_m}\bra{b_m}\ket{a}.
+\end{equation}
+
+Another way to think about the characteristic equation is as exactly a
+characteristic equation of a matrix. If we consider the matrix that maps the
+vector
+\begin{align}
+    \begin{bmatrix}
+        y_N\\
+        y_{N - 1}\\
+        \vdots\\
+        y_{N - l}
+    \end{bmatrix} = \bm{M}
+    \begin{bmatrix}
+        y_{N - 1}\\
+        y_{N - 2}\\
+        \vdots\\
+        y_{N - l - 1}
+    \end{bmatrix},
+\end{align}
+then it's clear that $\bm{M}$ has the form
+\begin{equation}
+    \bm{M} = \begin{bmatrix}
+        a_1 & a_2 & \dots & a_{l - 1} & a_l\\
+        1 & 0 & \dots & 0 & 0\\
+        0 & 1 & \dots & 0 & 0\\
+        0 & 0 & \dots & 1 & 0
+    \end{bmatrix}.
+\end{equation}
+It's then clear $\bm{M}$ apparently has exactly the characteristic equation that
+we prescribe above. This makes sense: the matrix $\bm{M}$ tells us whether a
+vector-valued sequence of $y$ values is growing, decaying, or oscillating.
+
+\textbf{As such, the final conclusion of this tidbit is this: the autoregression
+is another way of expressing a Markov chain that allows us to advance the time
+series. Then, note that any sequence with $y_n = z^n$ where $z$ is complex
+(allowing periodic or exponential sequences) has $z$ as one of the eigenvalue of
+its Markov chain matrix, or $z$ is a root of its characteristic polynomial.
+Turning this on its head, if we compute the autoregression for a sequence and
+find a root $w$ of its characteristic polynomial, this implies that the sequence
+has a geometric component with factor $w$. Applying this to sequence with a
+periodic component with frequency $\omega$, we see that $e^{i\omega \Delta t}$
+must be a root of the characteristic polynomial of its autoregression.}
 
 \end{document}
