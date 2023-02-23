@@ -276,4 +276,84 @@ $\E\p{X_2 - X_1} = 0$ while linearity of variance gives $\Var\p{X_2 - X_1} =
 and $\sim \sqrt{t}$. This is not chaos, where the separation grows
 deterministically and $\sim \exp\p{\lambda t}$.
 
+\section{02/23/23---Rayleigh Distribution}
+
+\subsection{2D}
+
+The Rayleigh distribution is commonly used for mutual inclinations. Can we
+briefly give ourselves some intuition for it?
+
+It's known that the Rayleigh distribution is the magnitude of a 2D vector with
+two normally-distributed components. Thus, consider if $X$ and $Y$ are drawn
+from $N\p{0, \sigma}$. Then the CDF of the magnitude $M = \sqrt{X^2 + Y^2}$ of
+the vector is calculated as
+\begin{align}
+    F_M(m; \sigma) &= \iint\limits_{D(m)}f_U(u; \sigma)
+        f_V(v; \sigma)\;\mathrm{d}u\mathrm{d}v
+\end{align}
+Here, $D(m)$ is the unit disc satisfying $\sqrt{u^2 + v^2} \leq m$, and $f_U =
+N(0, \sigma)$ and $f_V = N(0, \sigma)$ are the PDFs of the random variables $U,
+V$. Upon changing to polar coordinates and integrating:
+\begin{align}
+    F_M(m; \sigma) &= \int\limits_0^m 2\pi
+        \frac{1}{2\pi \sigma^2}\exp\s{-\frac{u^2 + v^2}{2\sigma^2}}
+            \;m'\mathrm{d}m',\\
+        &= \frac{1}{\sigma^2}\int\limits_0^m m'\exp\s{-\frac{(m')^2}{2\sigma^2}}
+            \;\mathrm{d}m',\\
+    f_M(m; \sigma) &= \frac{m}{\sigma^2}\exp\s{-\frac{m^2}{2\sigma^2}}.
+\end{align}
+This is a Rayleigh distribution with width $\sigma$.
+
+Now, if we know that two vectors have a magnitude separation that is Rayleigh
+distributed (like Rayleigh distribution), and we know that they are iid, how can
+we obtain their individual distributions (under the right assumptions)? Well,
+let's first assume that the four vector components are all normally distributed
+with $N\p{0, \sigma}$. Then their separation vector's components are also
+normally distributed with:
+\begin{align}
+    f_{X_1 - X_2}\p{x_1 - x_2; \sigma} &= N\p{0, \sigma\sqrt{2}},\\
+    f_{Y_1 - Y_2}\p{y_1 - y_2; \sigma} &= N\p{0, \sigma\sqrt{2}}.
+\end{align}
+Thus, the separation vector's magnitude is Rayleigh distributed with width
+parameter $\sigma \sqrt{2}$. Thus, to generate a pair of vectors whose
+separation magnitude is Rayleigh distributed with width $\delta$, we can just
+generate the vector components from $N\p{0, \delta / \sqrt{2}}$.
+
+To briefly comment, this obviously doesn't depend on the number of vectors, as
+long as the measured Rayleigh distribution is for arbitrary pairs in the system.
+
+\subsection{3D}
+
+What about in 3D\@? This is just as much for my own practice with manipulating
+PDFs and CDFs than anything. Consider a vector $\p{v_x, v_y, v_z}$ with all
+three components drawn from $N\p{0, \sigma}$. What is the distribution of the
+magnitude? Again:
+\begin{align}
+    F_M(m; \sigma)
+        &= \frac{1}{(2\pi \sigma^2)^{3/2}}\iiint_{D(m)}
+            f_{Vx}\p{v_x; \sigma}
+            f_{Vy}\p{v_y; \sigma}
+            f_{Vz}\p{v_z; \sigma}\;\mathrm{d}^3v,\\
+        &= \frac{4\pi}{(2\pi \sigma^2)^{3/2}}\int_0^m
+            e^{-(m')^2/(2\sigma^2)}\;(m')^2\mathrm{d}m',\\
+    f_M(m; \sigma) &= \frac{4\pi m^2}{\p{2\pi \sigma^2}^{3/2}}
+            e^{-m^2/(2\sigma^2)}.
+\end{align}
+This of course can easily generalize: it is clear that in N-D\@:
+\begin{equation}
+    f^{(N)}_M(m; \sigma)
+        = \frac{S^{(N)}_m}{\p{2\pi \sigma^2}^{N / 2}}
+            e^{-m^2 / (2\sigma^2)},
+\end{equation}
+where $S^{(N)}_m$ is the surface area of the $N$-sphere with radius $m$.
+
+And what about the separation vector between some $\vec{v}$ and $\vec{w}$ in
+3D\@? Well, each component of $\vec{v} - \vec{w}$ has distribution $N\p{0,
+\sigma \sqrt{2}}$ again, so if $U = \abs{\vec{v} - \vec{w}}$, then its PDF is
+\begin{align}
+    f_U(u; \sigma)
+        &= \frac{u^2}{\sigma^3\sqrt{4\pi}}
+            e^{-m^2 / (4\sigma^2)}.
+\end{align}
+
 \end{document}
