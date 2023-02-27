@@ -2887,4 +2887,36 @@ whether the derivative of $\p{1/4 - y}^2 - y$ is increasing or decreasing at
 either equilibrium. The derivative is just $2y - 3/2$, so indeed $y_+$ is
 unstable and $y_-$ is stable.
 
+\chapter{02/26/23---Bad Acronym Generator}
+
+Lol, we were joking about bad acronyms in science when somebody brought up the
+Python package that generates acronyms from a given phrase:
+\url{https://github.com/bacook17/acronym}. How easy is this to write?
+
+Let's phrase this problem a little more concretely: given a sequence of $M$
+characters, and a list of $N$ words, find all words that can be embedded in the
+sequence of $M$ characters. This seems like a classic dynamic programming
+problem, and I didn't find it within 30 seconds of Googling, so let's just write
+this up. For fun, we'll do it in C++ (maybe relearn stdio) and describe the
+algorithm here.
+
+First a little complexity analysis. Call the maximum length of the words in the
+word list $L$, call the full sequence $z$ and individual words $w_i$. The naive
+algorithm is to go through each word and see whether it is a substring of the
+given sequence. Seeking a substring of length $L$ in a sequence of length $M$ is
+done using $\mathcal{O}(M+L)$ comparisons and reads if we just do a simple
+search using two moving indicies: for the $j$-th element in $z$, if it's equal
+to the $k$-th element in in a word $w$ then we increment both $j$ and $k$ else
+just $j$. Return if $k$ ever equals len($w$) $+1$. Naively iterating through the
+word list and doing this element by element yields $\mathcal{O}\p{N(M + L)}$.
+Can we do better?
+
+What about if we do it in parallel: for the $j$-th element in $z$, if it is
+equal to the $k_i$-th element in word $w_i$, then increment $k_i$, else not,
+then increment $j$ at the end. This still requires $\mathcal{O}(N(M + L))$
+comparisons, but only $\mathcal{O}\p{M + NL}$ reads, so it's a smidgen faster.
+The comparisons are inevitable: in the worst case scenario where every word is
+barely not a substring, you need to compare every word character to every
+sequence character.
+
 \end{document}
