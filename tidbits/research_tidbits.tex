@@ -356,4 +356,122 @@ And what about the separation vector between some $\vec{v}$ and $\vec{w}$ in
             e^{-m^2 / (4\sigma^2)}.
 \end{align}
 
+\section{03/15/23---Mass Loss and Binary Orbit Change}
+
+Without kicks, Hills 1983 seems to have the best prescription. Time to revisit
+this problem now that I've done it wrong literally every time I've tried to do
+it.
+
+\subsection{Brute Force Circular}
+
+We start with a circular orbit and in the rest frame of the binary. Call the
+pre-ML energy $E$ and post-ML energy $E'$. These are the sums of kinetic and
+gravitational potential energies, so
+\begin{align}
+    E &= \frac{m_1v_1^2}{2} + \frac{m_2v_2^2}{2} - \frac{Gm_1m_2}{a},\\
+    E' &= E - \frac{m_1v_1^2}{2}(1 - f) + \frac{Gm_1m_2}{a}\p{1 - f}.
+\end{align}
+Here, $m_1' = fm_1$ is the post-ML mass. Note then that
+\begin{align}
+    v_1^2 &= \p{\frac{am_2}{m_{13}}}^2\frac{Gm_{12}}{a}
+        = \frac{Gm_2^2}{m_{12}a},\\
+    K_{\rm cm} &= \frac{\p{(1 - f)m_1v_1}^2}{2\p{fm_1 + m_2}}.
+\end{align}
+Here, $K_{\rm cm}$ is the kinetic energy associated with the motion of the
+post-ML binary's center of mass. To undergo unbinding, we need $f$ such that $E'
+= K_{\rm cm}$, so that in the co-moving frame the binary is unbound. This is a
+laborious calculation, but we can write ($f' \equiv 1 - f$ is the fraction of
+mass lost from $m_1$)
+\begin{align*}
+    0 &= E' - K_{\rm cm},\\
+        &= -\frac{Gm_1m_2}{2a}
+            - \frac{m_1v_1^2}{2}f' + \frac{Gm_1m_2}{a}f'
+            - \frac{\p{f'm_1v_1}^2}{2\p{fm_1 + m_2}},\\
+        &= -\frac{Gm_1m_2}{2a}
+            - \frac{Gm_1m_2^2}{2m_{12}a}f' + \frac{Gm_1m_2}{a}f'
+            - \frac{\p{f'm_1}^2}{2\p{fm_1 + m_2}}
+                \frac{Gm_2^2}{m_{12}a},\\
+        &= -\frac{1}{2} - \frac{m_2}{2m_{12}}f'
+            + f'
+            - \frac{m_1m_2(f')^2}{2(m_{12} - f'm_1)m_{12}},\\
+        &= -(m_{12} - f'm_1)m_{12}
+            - m_2\p{m_{12} - f'm_1}f'
+            + 2(m_{12} - f'm_1)m_{12}f'
+            - m_1m_2(f')^2,\\
+        &= -m_{12} + f'(m_1 - m_2 + 2m_{12})
+            - 2m_1(f')^2,\\
+        &= (f')^2 - \frac{f'}{2}\p{3 + \frac{m_2}{m_1}}
+            + \frac{1}{2}\p{1 + \frac{m_2}{m_1}},\\
+    f' &= \frac{(3 + q)/2 \pm \sqrt{(3 + q)^2/4 - 2(1+q)}}{2},\\
+        &= \frac{(3 + q)/2 \pm ((q-1)/2)}{2},\\
+        &= \frac{1 + q}{2},\\
+        &= \frac{m_{12}}{2m_1}.
+\end{align*}
+Whew. This is the canonical result, that we need to lose $f'm_1 =
+\frac{m_{12}}{2}$ mass to unbind the system.
+
+\subsection{Easier Circular}
+
+The primary difficulty above was that we had this stupid center of mass kinetic
+energy to carry around. This can be simplified if we just recognize that we only
+need to compute the contribution of the reduced mass to the energy to understand
+whether the system remains bound. Recall that the the kinetic energy of of the
+reduced mass component is just
+\begin{align}
+    K_{\rm red} &= \frac{\mu v_{\rm rel}^2}{2},\\
+    E_{\rm red} &= K_{\rm red} - \frac{Gm_{12}\mu}{a} =
+            -\frac{Gm_{12}\mu}{2a},\\
+    v_{\rm rel}^2 &= \frac{Gm_{12}}{a},\\
+    E_{\rm red}' &= \frac{\mu v_{\rm rel}^2}{2}
+        - \frac{Gm_{12}'\mu'}{a} = 0,\\
+        &= \frac{Gm_{12}\mu'}{2a} - \frac{Gm_{12}'\mu'}{a}.
+\end{align}
+Thus, we end up with the result that $m_{12}' = m_{12} / 2$ results in a
+reduced-mass energy $= 0$ and unbinding. It's important to recognize that
+$v_{\rm rel}$ is the relative velocity of the two particles, given by
+$\bm{v}_{\rm rel} = \bm{v}_2 - \bm{v}_1$, which does not change with
+instantaneous mass loss.
+
+\subsection{Eccentric Unbinding}
+
+The argument in the previous section is much easier to generalize to a general
+orbit. Consider that the orbit has semimajor axis $a$ and unbinds when the
+separation is at $r$. Then
+\begin{align*}
+    E_{\rm red} &= \frac{1}{2}\mu v_{\rm rel}^2
+        - \frac{Gm_{12}\mu}{r} = -\frac{Gm_{12}\mu}{2a},\\
+    \frac{v_{\rm rel}^2}{2} &= Gm_{12}\p{-\frac{1}{2a} + \frac{1}{r}},\\
+    E_{\rm red}' &= \frac{1}{2}\mu' v_{\rm rel}^2 - \frac{Gm_{12}'\mu'}{r},\\
+        &= \mu'\s{-\frac{Gm_{12}}{2a} + \frac{Gm_{12}}{r}}
+            - \frac{Gm_{12}'\mu'}{r}.
+\end{align*}
+Setting this equal to zero, we find
+\begin{align}
+    0 &= \mu'\s{-\frac{Gm_{12}}{2a} + \frac{Gm_{12}}{r}}
+            - \frac{Gm_{12}'\mu'}{r},\\
+    \frac{m_{12}'}{m_{12}} &= -\frac{r}{2a} + 1.
+\end{align}
+If we re-express $m_{12}' \equiv m_{12} - \Delta$, then we can rewrite
+\begin{align}
+    1 - \frac{\Delta}{m_{12}} &= 1 - \frac{r}{2a}
+        = 1 - \frac{1 - e^2}{2\p{1 + e\cos f}}.
+\end{align}
+This makes sense: since the mass loss effects a torque on the system, we have to
+give it the maximum torque to unbind the system, which occurs at pericenter.
+Thus, qualitatively we need a minimum eccentricity of $(1 - e) / 2 \sim m_{12}'
+/ m_{12}$ to unbind the system of $m_{12}' > m_{12} / 2$, i.e.\ if the mass loss
+is too little.
+
+\subsection{Bound Orbits: Final Eccentricity}
+
+Of course, these exercises can be repeated if we would like for bound orbits,
+and tracking the angular momentum of the system as well to get eccentricity.
+I may redo this some day, but for now I will just cite the result from Hills
+1983, where the final eccentricity is given by
+\begin{equation}
+    e = \z{1 - (1 - e_0^2)\s{\frac{1 - (2a_0/r)(\Delta / m_{12})}{
+        1 - \Delta / m_{12}}^2}}^{1/2}.
+\end{equation}
+
 \end{document}
+
