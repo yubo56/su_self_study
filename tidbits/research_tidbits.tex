@@ -473,5 +473,134 @@ I may redo this some day, but for now I will just cite the result from Hills
         1 - \Delta / m_{12}}^2}}^{1/2}.
 \end{equation}
 
+\section{Pendulum Periods}
+
+It might be helpful to just do the simple pendulum in a few ways to get its
+period. Specifically, I mean the oscillation of the nondimensionalized EOM
+\begin{equation}
+    \ddot{\theta} = -\sin\theta.
+\end{equation}
+In the small angle approximation $\theta \ll 1$, we have that the frequency of
+the oscillator is just $1$, so the period is $2\pi$.
+
+\subsection{Lindstedt-Poincar\'e}
+
+I always get this wrong, so let's try again. The zeroth order solution is
+$\theta = \epsilon \cos\p{\omega_0 t}$ where $\omega_0 = 1$. Let's next imagine
+that the frequency has a small $\epsilon$ dependence, so that
+\begin{align*}
+    \theta(t) &= \epsilon \cos\p{(1 + \epsilon \omega_1)t},\\
+    \ddot{\theta} &= -\epsilon \p{1 + \epsilon \omega_1}^2
+            \cos\p{(1 + \epsilon \omega_1)t},\\
+            &\approx -\epsilon \cos\p{(1 + \epsilon \omega_1)t}
+                + \frac{1}{6}\epsilon^3 \cos^3\p{(1 + \epsilon \omega_1)t}.
+\end{align*}
+Using the quick identity
+\begin{align*}
+    \cos^3\theta &= \cos\theta - \cos\theta \sin^2\theta\\
+        &= \cos\theta + \frac{\cos\theta\p{\cos 2\theta - 1}}{2}\\
+        &= \frac{\cos\theta}{2} + \frac{\cos (3\theta) +
+            \sin\theta\sin2\theta}{2}\\
+        &= \frac{\cos\theta}{2} + \frac{\cos (3\theta)}{2} +
+            \sin^2\theta\cos\theta\\
+        &= -\cos^3\theta + \frac{3\cos\theta}{2} + \frac{\cos(3\theta)}{2},\\
+    \cos^3\theta &= \frac{3\cos\theta}{4} + \frac{\cos(3\theta)}{4},
+\end{align*}
+we obtain
+\begin{align*}
+    -\epsilon \p{1 + \epsilon \omega_1}^2
+            \cos\p{(1 + \epsilon \omega_1)t}
+            &\approx -\epsilon \cos\p{(1 + \epsilon \omega_1)t}
+                + \frac{1}{6}\epsilon^3 \cos^3\p{(1 + \epsilon \omega_1)t}.
+\end{align*}
+Matching coefficients of the first frequency term, we find
+\begin{align*}
+    -\epsilon\p{1 + 2\epsilon \omega_1}
+        &\approx -\epsilon + \frac{\epsilon^3}{8},\\
+    \omega_1 &= -\frac{\epsilon}{16},\\
+    \omega &= 1 - \frac{\epsilon^2}{16}.
+\end{align*}
+In our Ph106b class notes, we solve the Duffing oscillator with this technique,
+for which $\ddot{\theta} = -\theta - \epsilon \theta^3$ and we obtain that
+$\omega = 1 + (3/8)\epsilon A^2$ for oscillation amplitude $A$. For the simple
+pendulum, $\epsilon = -1/6$, and so we recover that $\omega = 1 - A^2/16$. We
+didn't do this strictly correctly, I guess, since our small parameter was the
+oscillation amplitude $A$ instead of the perturbing term $\epsilon$, but we
+obtain the right result: \textbf{the oscillation period grows with larger
+amplitude}. We can already anticipate that $\epsilon \to 4$ will produce
+problems, and indeed $\epsilon = \pi$ corresponds to the upside-down pendulum.
+
+\subsection{Explicit Integral}
+
+The period of the pendulum can be solved exactly using the method of
+quadratures. During oscillation, the total energy of the system is conserved,
+\begin{equation}
+    E = -\cos \theta + \frac{\dot{\theta}^2}{2}.
+\end{equation}
+Note that in this notation, $\theta = 0$ is the bottom, so $\theta \in [-\pi,
+\pi]$. We would formally derive this by writing down the Lagrangian and making
+the Legendre transform, but in the present case if we just identify $p =
+\dot{\theta}$ the conjugate momentum to $\theta$ then we find immediately that
+$\dot{p} = -\pdil{E}{\theta} = -\sin\theta$ and that $\dot{\theta} = \pdil{E}{p}
+= p = \dot{\theta}$. Thus, we can explicitly write:
+\begin{align*}
+    \dot{\theta}(\theta) &= \sqrt{2(E + \cos \theta)},\\
+        &= \sqrt{2\p{\cos\theta - \cos\theta_0}}.
+\end{align*}
+The period of the pendulum is formally defined such that
+\begin{align*}
+    P &= 4\int\limits_0^{\theta_0}\rd{t}{\theta}\;\mathrm{d}\theta
+\end{align*}
+This is the amount of time it takes for the pendulum to go from an initial
+condition $\pm \theta_0$ to $0$, so a quarter-period. For sufficiently small
+$\theta_0$, the quadrature expression can be expanded
+\begin{align*}
+    \dot{\theta} &\approx \sqrt{-\theta^2 + \theta_0^2}\\
+    P &= 4\int\limits_0^{\theta_0} \frac{1}{\sqrt{\theta_0^2 - \theta^2}}
+            \;\mathrm{d}\theta.
+\end{align*}
+We know this is arcsin, but is it obvious? Actually, yeah:
+\begin{align*}
+    \int\limits^y\frac{1}{\sqrt{1 - x^2}}\;\mathrm{d}x
+        &= \int\limits^{\arcsin(y)}
+            \frac{1}{\sqrt{1 - \sin^2u}}\;\mathrm{d}(\sin u),\\
+        &= \int\limits^{\arcsin(y)}\mathrm{d}u,\\
+        &= \arcsin(y).
+\end{align*}
+So then
+\begin{align*}
+    P &= 4\s{\arcsin\p{\frac{\theta}{\theta_0}}}_0^{\theta_0},\\
+        &= 2\pi.
+\end{align*}
+Great.
+
+What about in the nonlinear limit though? In full generality, we have
+\begin{align*}
+    P &= 4\int\limits_0^{\theta_0}
+        \frac{1}{\sqrt{2\p{\cos \theta - \cos \theta_0}}} \;\mathrm{d}\theta.
+\end{align*}
+In the limit where $\theta_0 \to \pm \pi$, we cannot make any approximations
+since $\theta$ will span the full angular interval. However, $\theta_0$
+sufficiently close to $\pm \pi$, the unstable points, we recognize that the
+dominant contribution to $P$ will be near $\pi$. Thus, let's instead ask the
+question: for some fixed $\theta_1 \ll 1$, how long does it take for the
+trajectory to reach $\theta_1$ as $\theta_0 \to \pi$? We again should be able to
+make expansions now (let $\phi \equiv \pi - \theta$)
+\begin{align*}
+    P &\gtrsim 4\int\limits_{\phi_0}^{\phi_1}
+        \frac{1}{\sqrt{\phi^2 - \phi_0^2}} \;\mathrm{d}\phi.
+\end{align*}
+Note here that $\phi > \phi_0$. This one is probably a cosh?
+\begin{align*}
+    \int\limits^y\frac{1}{\sqrt{x^2 - 1}}\;\mathrm{d}x
+        &= \int\limits^{\cosh^{-1}(y)}
+            \frac{1}{\sqrt{\cosh^2(u) - 1}}\;\mathrm{d}(\cosh(u)),\\
+        &= \cosh^{-1}(y),\\
+    P &\gtrsim 4\s{\cosh^{-1}\p{\frac{\phi}{\phi_0}}}^{\phi_1}_{\phi_0},\\
+        &\gtrsim 4\ln\p{\phi_1 / \phi_0} \sim -4\ln\p{\pi_0}.
+\end{align*}
+Here, we've made use of the fact that $\cosh(x) \approx \exp(x) / 2$ for large
+$x$. Hence, we recover the logarithmic divergence that is expected
+
 \end{document}
 
