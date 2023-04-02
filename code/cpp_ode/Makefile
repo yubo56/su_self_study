@@ -1,19 +1,26 @@
-MACINC=/opt/homebrew/Cellar/gsl/2.7.1/include
-MACLIB=/opt/homebrew/Cellar/gsl/2.7.1/lib
+GSLMACINC=/opt/homebrew/Cellar/gsl/2.7.1/include
+GSLMACLIB=/opt/homebrew/Cellar/gsl/2.7.1/lib
 
-PNG=1tests/pendulum01.png
+BOOSTMACINC=/opt/homebrew/Cellar/boost/1.81.0_1/include
+BOOSTMACLIB=/opt/homebrew/Cellar/boost/1.81.0_1/lib
+BOOSTFLAGS=-Wno-deprecated-declarations
 
-all: 1test ${PNG}
+PNG=1gsl/pendulum01.png
 
-1test: 1test.cpp
-	g++-12 --std=c++20 -I${MACINC} -L${MACLIB} -lm -lgsl -lblas $< -o $@
+all: 1gsl ${PNG}
+
+1gsl: 1gsl.cpp
+	g++-12 --std=c++20 -I${GSLMACINC} -L${GSLMACLIB} -lm -lgsl -lblas $< -o $@
 	./$@
 
 ${PNG}: 1plot.py
 	python $<
 
 open:
-	open 1tests/pendulum*.png
+	open 1gsls/pendulum*.png
+
+2boost: 2boost.cpp Makefile
+	g++-12 --std=c++20 -I${BOOSTMACINC} -L${BOOSTMACLIB} -lm -lblas ${BOOSTFLAGS} $< -o $@
 
 clean:
-	rm -rf 1test 1tests/
+	rm -rf 1gsl 1gsls 2boost
