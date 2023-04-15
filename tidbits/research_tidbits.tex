@@ -600,7 +600,60 @@ Note here that $\phi > \phi_0$. This one is probably a cosh?
         &\gtrsim 4\ln\p{\phi_1 / \phi_0} \sim -4\ln\p{\pi_0}.
 \end{align*}
 Here, we've made use of the fact that $\cosh(x) \approx \exp(x) / 2$ for large
-$x$. Hence, we recover the logarithmic divergence that is expected
+$x$. Hence, we recover the logarithmic divergence that is expected.
+
+\section{Distributions of Functions of Random Variables}
+
+I can never remember how to do this, so let me just write it down.
+
+If we have a random variable $X$ and a second random variable $Y$ that satisfies
+$y = y(x)$, then the PDF of Y is simple:
+\begin{align}
+    \int\limits f_Y(y)\;\mathrm{d}y
+        &= \int\limits f_X(x)\;\mathrm{d}x,\\
+    f_Y(y) &= f_X(x)\rd{x}{y}.
+\end{align}
+
+What if we have a random variable $Z$ that is a function of two random variables
+$X, Y$ satisfying $z(x, y)$? This is a little trickier, but we need to write
+down the CDF
+\begin{align}
+    \int\limits f_Z(z)\;\mathrm{d}z
+        &= \iint\limits f_Y(y)f_X(x)\;\mathrm{d}x\mathrm{d}y.
+\end{align}
+
+This is no longer solvable in general (but we can often do well in statistical
+cases with moment-generating functions, CLT, and others). But for sufficiently
+simple dependencies, we can do this. Let's just consider $z = x + y$, for $x, y
+\in \mathcal{U}_{[0, 1]}$. This is then easy to do:
+\begin{align}
+    \int\limits_0^z f_Z(w)\;\mathrm{d}w
+        &= \int\limits_0^{\min(z, 1)}
+            \int\limits_{0}
+                ^{\min(z - y, 1)}\;\mathrm{d}x\;\mathrm{d}y,\\
+        &= \int\limits_0^{\min(z, 1)}
+            \min\p{z - y, 1}\;\mathrm{d}y,\\
+        &=
+        \begin{cases}
+            \int\limits_0^z
+                z - y\;\mathrm{d}y & z < 1\\[10pt]
+            \int\limits_0^{z - 1}
+                \;\mathrm{d}y +
+            \int\limits_{z - 1}^1
+                (z - y)\;\mathrm{d}y & z > 1,
+        \end{cases}\\
+        &=
+        \begin{cases}
+            z^2 / 2 & z < 1\\
+            (z - 1) + (z - 1/2) - z(z-1) + (z - 1)^2/2 & z > 1,
+        \end{cases}\\
+    f_Z(z) &=
+        \begin{cases}
+            z & z < 1\\
+            2 - z & z > 1.
+        \end{cases}
+\end{align}
+We can do the same for $z = xy$:
 
 \end{document}
 
