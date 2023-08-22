@@ -655,5 +655,65 @@ simple dependencies, we can do this. Let's just consider $z = x + y$, for $x, y
 \end{align}
 We can do the same for $z = xy$:
 
+\section{Change in Mutual Inclination in Hierarchical Triples due to SNe}
+
+We find that when a hierarchical stellar triple has its inner and outer orbits
+initially isotropically distributed, the final mutual inclination distribution
+is not isotropic, but is depleted near $90^\circ$. We build a simple
+quantitative model analogous to this phenomenon and show that it has an exact
+solution.
+
+The essence of this behavior is that: a symmetric SNe in the inner orbit results
+in an effective kick to the outer orbit in the plane of the inner orbit, denoted
+$\vec{v}_{\rm k, eff}$. Only the component of this kick aligned with the outer
+orbit normal contributes to realignment of the outer AM\@. Thus,
+\begin{equation}
+    \Delta I \lesssim \Delta I_{\max}\propto v_{\rm k, eff}\sin I.
+\end{equation}
+The actual change in $I$ is approximately symmetrically distributed over the
+interval $\s{-\Delta I_{\max}, \Delta I_{\max}}$. Note that, strictly speaking,
+neither $I$ nor $\cos I$ are uniformly distributed: imagine that the initial AM
+is along $\uv{l}_{\rm b, 0}$, then the final AMs are distributed in an
+azimuthally symmetric way about $\uv{l}_{\rm b, 0}$. This is closer to a
+symmetric distribution in $I$ than $\cos I$ though.
+
+To see what effect this has on the outer inclination, we imagine a diffusion
+equation for $I \in [0, \pi]$ with diffusion coefficient $D_0 \sin I$. This can
+be thought of as the cumulative effect of infinitely many, infinitesimally small
+effective kicks. This has the form
+\begin{equation}
+    \pd{f}{t} &= \pd{}{I}\s{D_0\sin I\pd{f}{I}},
+\end{equation}
+where $f(t, I)$ is the PDF of $I$ at time $t$. I really just wanted to solve
+this PDE lol.
+
+We first consider the steady-state solutions of this PDE\@. One possible family of
+solutions requires that
+\begin{align}
+    D_0\sin I\pd{f}{I} &= C,\\
+    -\sin^2I \pd{f}{\cos I} &= \frac{C}{D_0},\\
+    \pd{f}{\cos I} &= \frac{C}{D_0\p{\cos^2 I - 1}}.
+\end{align}
+But since $\arctanh'(x) = (1 - x^2)^{-1}$, we find that this is just
+\begin{equation}
+    f(\cos I) &= \frac{C}{D_0}\arctanh(\cos I).
+\end{equation}
+Then $C$ can be set by the normalization of $f(t, I)$. The second homogeneous
+solution is simply the family of linear solutions $f(t, I) = A \times I$. If the
+IC is symmetric, then the symmetry is preserved under evolution, and we can
+require that $f'(t, 0) = 0$ at all times. This thus requires that
+\begin{equation}
+    f\p{\cos I \in [-1, 1]} &= \frac{C}{D_0}\abs{\arctanh(\cos I) - \cos I}.
+\end{equation}
+This works since $\arctanh'(0) = 1$, so the derivative is indeed zero at $\cos I
+= 0$, and the solution is symmetric. $C$ is again set by the normalization,
+which I'm too lazy to compute. This is thus the steady-state solution, and we
+see that it vanishes at the origin and is singular at $\cos I = \pm 1$. This is
+indeed the behavior we were beginning to see!
+
+Of course, with just a single kick, we don't evolve to this steady state $f$,
+but only a little bit. Nevertheless, this gives a quantitative model reflecting
+the depletion near $\cos I = 0$.
+
 \end{document}
 
