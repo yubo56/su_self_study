@@ -2919,4 +2919,42 @@ The comparisons are inevitable: in the worst case scenario where every word is
 barely not a substring, you need to compare every word character to every
 sequence character.
 
+\section{Pythagorean Theorem and LoC Proofs, Maybe}
+
+Somehow, I've never actually tried to do these proofs, and I never could get
+them to work as a kid. Am I smarter than a high schooler?
+
+I think the first step is to prove the law of sines, which lets us invoke
+similar triangles. For sides $abc$ and angles $ABC$, it's easy to drop an
+altitude and show that the area $S$ of a triangle $2S = ab\sin C = bc\sin A =
+ac\sin B$, and then we can just divide through by $abc$. With this, we can use
+similar triangles!
+
+To do the Pythagorean proof, we just need to invoke similar triangles. Call
+sides $a \leq b < c$, then drop altitude $d \perp c$, which divides the
+hypotenuse into $c_1$ and $c_2$. By similar triangles, we have:
+\begin{align*}
+    \frac{a}{c_1} = \frac{b}{d} &= \frac{c}{a},\\
+    \frac{a}{d} = \frac{b}{c_2} &= \frac{c}{b}.
+\end{align*}
+Multiplying out, we obtain
+\begin{align*}
+    a^2 &= c_1c & b^2 &= c_2c,\\\
+    a^2 + b^2 &= c^2.
+\end{align*}
+
+Finally, LoC. For $abc$ and $\theta$ opposite $c$, we drop the altitude to $c$
+dividing $\theta_1$, $\theta_2$, $c_1$, and $c_2$ with length $d$. By the
+Pythagorean theorem,
+\begin{align*}
+    \p{c_1 + c_2}^2 &= \p{a\sin \theta_1 + b\sin \theta_2}^2,\\
+    c^2 &= a^2\sin^2\theta_1 + b^2\sin^2\theta_2
+            + 2ab\sin\theta_1 \sin \theta_2,\\
+        &= a^2 + b^2 - a^2\cos^2\theta_1 - b^2\cos\theta_2
+            + 2ab\p{\cos\theta_1 \cos\theta_2 - \cos\theta},\\
+        &= a^2 + b^2 - 2ab\cos\theta
+            - \p{a\cos\theta_1 - b\cos\theta_2}^2.
+\end{align*}
+But $a\cos\theta_1 = b\cos\theta_2 = d$.
+
 \end{document}
