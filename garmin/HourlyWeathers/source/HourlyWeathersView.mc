@@ -12,7 +12,7 @@ function max(a, b) {
 
 var lat = 42.4522; // default location, cornell
 var lon = -76.4804;
-var key = "";
+var key = "3D7nJJiv5g1xQmBvyIkjdAyJPRzjvCnv";
 var site = "https://api.tomorrow.io/v4/timelines";
 
 var precipMax = 50.0; // max 50mm/hr

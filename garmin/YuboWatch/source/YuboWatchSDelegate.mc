@@ -26,7 +26,7 @@ using Toybox.Math;
 using Toybox.Position;
 using Toybox.Time;
 
-const appid = "cc7cba204b53bc042a349e3e770f83c7";
+const appid = "";
 const lat = 42.4522; // default location, cornell
 const lon = -76.4804;
 const url = "https://api.openweathermap.org/data/2.5/onecall";
