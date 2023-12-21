@@ -12,7 +12,7 @@ function max(a, b) {
 
 var lat = 42.4522; // default location, cornell
 var lon = -76.4804;
-var key = "3D7nJJiv5g1xQmBvyIkjdAyJPRzjvCnv";
+var key = "";
 var site = "https://api.tomorrow.io/v4/timelines";
 
 var precipMax = 50.0; // max 50mm/hr
@@ -26,8 +26,8 @@ var dx = xmax - 2 * left;
 var dy = ymax - 2 * top;
 var r = 1.0;
 var d = 2 * r + 1;
-var numdays = 3;
-var numhours = 72;
+var numdays = 2;
+var numhours = 48;
 
 class HourlyWeathersView extends WatchUi.View {
     var dc;
