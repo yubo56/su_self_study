@@ -35,7 +35,7 @@ class YuboDataFieldView extends WatchUi.DataField {
     }
 
     function onLayout(dc) {
-        return true;
+        return;
     }
 
 

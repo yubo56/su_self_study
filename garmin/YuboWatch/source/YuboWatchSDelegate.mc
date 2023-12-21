@@ -4,9 +4,10 @@ using Toybox.Communications;
 using Toybox.Math;
 using Toybox.Position;
 using Toybox.Sensor;
+using Toybox.Time;
 
-var lat = 42.4522; // default location, cornell
-var lon = -76.4804;
+var lat = 1.35; // 42.4522; // default location, cornell
+var lon = 103.82; // -76.4804;
 var appid = "";
 
 (:background)
@@ -37,11 +38,11 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     }
 
     function onTemporalEvent() {
-        var positionInfo = Position.getInfo();
-        if (positionInfo has :position && positionInfo.position != null) {
-            bglat = positionInfo.position.toDegrees()[0];
-            bglon = positionInfo.position.toDegrees()[1];
-        }
+        // var positionInfo = Position.getInfo();
+        // if (positionInfo has :position && positionInfo.position != null) {
+        //     bglat = positionInfo.position.toDegrees()[0];
+        //     bglon = positionInfo.position.toDegrees()[1];
+        // }
         if (!System.getDeviceSettings().phoneConnected) {
             Background.exit([dat, false, precips]);
         }
@@ -53,25 +54,23 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	                "lon" => bglon,
 	                "appid" => appid,
 	                "units" => "metric",
-	                "exclude" => "daily,current,hourly,alerts"
+	                // "exclude" => "daily,current,hourly,alerts"
+                    "exclude" => "hourly,minutely,alerts"
 	            },
 	            {
 	                :method => Communications.HTTP_REQUEST_METHOD_GET,
 	                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 	            },
-	            method(:minutelyCb)
+                // new Lang.Method(self, :minutelyCb)
+	            new Lang.Method(self, :currentCb)
 	        );
 	    }
     }
     function minutelyCb(responseCode, data) {
-        if (responseCode != 200) {
-            Background.exit([dat, false, precips]);
-            return;
-        }
-        if (data.hasKey("minutely")) {
-            precips = new [61];
+        if (responseCode == 200) {
+            precips = new [60];
             var minutely = data.get("minutely");
-            for (var i = 0; i < 61; i++) {
+            for (var i = 0; i < 60; i++) {
                 precips[i] = Math.ln(minutely[i].get("precipitation"));
             }
         }
@@ -88,7 +87,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
                 :method => Communications.HTTP_REQUEST_METHOD_GET,
                 :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
             },
-            method(:currentCb)
+            new Lang.Method(self, :currentCb)
         );
     }
 

@@ -13,7 +13,7 @@ function max(a, b) {
 var lat = 42.4522; // default location, cornell
 var lon = -76.4804;
 var key = "";
-var site = "https://data.climacell.co/v4/timelines";
+var site = "https://api.tomorrow.io/v4/timelines";
 
 var precipMax = 50.0; // max 50mm/hr
 var precipMin = 0.1; // min 0.1mm/hr
@@ -96,7 +96,7 @@ class HourlyWeathersView extends WatchUi.View {
                 :method => Communications.HTTP_REQUEST_METHOD_GET,
                 :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
             },
-            method(:climacellHourlyCb)
+            new Lang.Method(self, :climacellHourlyCb)
         );
     }
     function climacellHourlyCb(responseCode, responseBody) {

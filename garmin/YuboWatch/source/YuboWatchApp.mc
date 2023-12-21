@@ -7,6 +7,7 @@ using Toybox.System;
 var BGDATA = "bgdata";
 var PRECIPS = "precips";
 var NUMFAILED = "numfailed";
+var LASTBATT = "lastbatt";
 var BKGD_MINS = 5;
 
 (:background)
@@ -24,7 +25,7 @@ class YuboWatchApp extends Application.AppBase {
     function onStop(state) {
     }
 
-    // 15m recurring background
+    // 5m recurring background
     function getInitialView() {
         Background.registerForTemporalEvent(new Time.Duration(BKGD_MINS * 60));
         return [ new YuboWatchView() ];

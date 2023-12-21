@@ -81,7 +81,6 @@ class YuboWatchView extends WatchUi.WatchFace {
         var d = 2 * r + 1;
 
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_BLACK);
-        dc.clear();
         dc.drawRectangle(left, top, dx, dy);
 
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
@@ -108,8 +107,8 @@ class YuboWatchView extends WatchUi.WatchFace {
             var TEMP_MIN = lows[0];
             var TEMP_MAX = his[0];
             for (var i = 0; i < numDays; i++) {
-                TEMP_MIN = min(min(TEMP_MIN, lows[i]), dews[i]);
-                TEMP_MAX = max(TEMP_MAX, his[i]);
+                TEMP_MIN = Math.floor(min(min(TEMP_MIN, lows[i]), dews[i]));
+                TEMP_MAX = Math.ceil(max(TEMP_MAX, his[i]));
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
 
@@ -124,17 +123,13 @@ class YuboWatchView extends WatchUi.WatchFace {
             dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(left, linepy, dx, 2);
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            for (var i = 1; mid5 + 5 * i < TEMP_MAX; i++) {
-	            if (mid5 + 5 * i < TEMP_MAX) {
-	                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-	                dc.drawLine(left + 1, line1py, left+dx - 2, line1py);
-	            }
+            for (var i = 1; mid5 + 5 * i <= TEMP_MAX; i++) {
+                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                dc.drawLine(left + 1, line1py, left+dx - 2, line1py);
             }
-            for (var i = 1; mid5 - 5 * i > TEMP_MIN; i++) {
-	            if (mid5 - 5 > TEMP_MIN) {
-	                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-	                dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
-	            }
+            for (var i = 1; mid5 - 5 * i >= TEMP_MIN; i++) {
+                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
 	        }
 
 	        for (var i = 0; i < numDays; i++) {
@@ -159,7 +154,11 @@ class YuboWatchView extends WatchUi.WatchFace {
 	    }
     }
 
-    function onUpdate(dc) {
+    public function onUpdate(dc) {
+        // empty screen out
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+        dc.clear();
+
         // set time view
         var timeFormat = "$1$$2$";
         var clockTime = System.getClockTime();
@@ -171,7 +170,7 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.drawText(10, 62, Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_LEFT);
 
         var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-        var dateView = View.findDrawableById("DateLabel");
+        //  var dateView = View.findDrawableById("DateLabel");
         var dateFormat = "$1$, $2$ $3$";
         var dateString = Lang.format(
             dateFormat,
@@ -184,14 +183,14 @@ class YuboWatchView extends WatchUi.WatchFace {
         var myStats = System.getSystemStats();
         var battPerc = myStats.battery;
         var battStr = battPerc.format("%.1f");
-        var battView = View.findDrawableById("BattLabel");
+        // var battView = View.findDrawableById("BattLabel");
         dc.setColor(battPerc > 20 ? Graphics.COLOR_GREEN : Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(164, 9, Graphics.FONT_MEDIUM, battStr, Graphics.TEXT_JUSTIFY_RIGHT);
 
         // set memory
-        var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(45, 116, Graphics.FONT_SMALL, Lang.format("($1$%)", [memPerc]), Graphics.TEXT_JUSTIFY_RIGHT);
+        // var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
+        // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        // dc.drawText(45, 116, Graphics.FONT_SMALL, Lang.format("($1$%)", [memPerc]), Graphics.TEXT_JUSTIFY_RIGHT);
 
         // set steps & cals
         var info = ActivityMonitor.getInfo();
