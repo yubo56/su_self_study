@@ -2,13 +2,14 @@ using Toybox.Application;
 using Toybox.Background;
 using Toybox.WatchUi;
 using Toybox.Time;
-using Toybox.System;
 
-var BGDATA = "bgdata";
-var PRECIPS = "precips";
-var NUMFAILED = "numfailed";
-var LASTBATT = "lastbatt";
-var BKGD_MINS = 5;
+enum {
+    BGDATA,
+    PRECIPS,
+    NUMFAILED,
+    LASTBATT
+}
+const BKGD_MINS = 5;
 
 (:background)
 class YuboWatchApp extends Application.AppBase {
@@ -17,11 +18,9 @@ class YuboWatchApp extends Application.AppBase {
         AppBase.initialize();
     }
 
-    // onStart() is called on application start up
     function onStart(state) {
     }
 
-    // onStop() is called when your application is exiting
     function onStop(state) {
     }
 
@@ -31,7 +30,6 @@ class YuboWatchApp extends Application.AppBase {
         return [ new YuboWatchView() ];
     }
 
-    // New app settings have been received so trigger a UI update
     function onSettingsChanged() {
         WatchUi.requestUpdate();
     }
@@ -47,12 +45,9 @@ class YuboWatchApp extends Application.AppBase {
         // always remove precip data (isn't working rn, but also precips are quickly out of date)
         Application.getApp().setProperty(PRECIPS, data[2]);
         if (data[1]) {
-            Application.getApp().deleteProperty(NUMFAILED);
+            Application.getApp().setProperty(NUMFAILED, 0);
         } else {
             var numFailed = Application.getApp().getProperty(NUMFAILED);
-            if (numFailed == null) {
-                numFailed = 0;
-            }
             Application.getApp().setProperty(NUMFAILED, numFailed + 1);
         }
     }

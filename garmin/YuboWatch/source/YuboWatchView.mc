@@ -46,8 +46,8 @@ function max(a, b) {
     return a > b ? a : b;
 }
 
-var precipMax = Math.ln(50.0); // max 50mm/hr
-var precipMin = Math.ln(0.1); // min 0.1mm/hr
+const precipMax = Math.ln(50.0); // max 50mm/hr
+const precipMin = Math.ln(0.1); // min 0.1mm/hr
 
 class YuboWatchView extends WatchUi.WatchFace {
     function initialize() {
@@ -62,12 +62,7 @@ class YuboWatchView extends WatchUi.WatchFace {
 
     // Load your resources here
     function onLayout(dc) {}
-
-    // Called when this View is brought to the foreground. Restore
-    // the state of this View and prepare it to be shown. This includes
-    // loading resources into memory.
-    function onShow() {
-    }
+    function onShow() {}
 
     function drawGraphs(dc) {
         // 214 x 180 according to simulator?
@@ -87,11 +82,11 @@ class YuboWatchView extends WatchUi.WatchFace {
         // precipitation graph
         var precips = Application.getApp().getProperty(PRECIPS);
         if (precips.size() > 0) {
-            var len = precips.size();
-            for (var i = 0; i < len; i++) {
+            // change len and (len + 1) below
+            for (var i = 0; i < 30; i++) {
                 if (precips[i] < precipMin) { continue; }
                 var precip = min(precips[i], precipMax);
-                var px = Math.round(1.0 * (i + 1) / (len + 1) * dx + left);
+                var px = Math.round(1.0 * (i + 1) / 31 * dx + left);
                 var py = Math.round((1.0 - (precip - precipMin) / (precipMax - precipMin)) * dy + top); // y=0 is top of screen
                 dc.fillRectangle(px - 1, py - 1, 2, 2);
             }
@@ -100,15 +95,11 @@ class YuboWatchView extends WatchUi.WatchFace {
         var bgdat = Application.getApp().getProperty(BGDATA);
         // hi/lo graph
         if (bgdat.size() > 19) {
-            var his = bgdat[17];
-	        var lows = bgdat[18];
-	        var dews = bgdat[19];
-            var numDays = lows.size();
-            var TEMP_MIN = lows[0];
-            var TEMP_MAX = his[0];
-            for (var i = 0; i < numDays; i++) {
-                TEMP_MIN = Math.floor(min(min(TEMP_MIN, lows[i]), dews[i]));
-                TEMP_MAX = Math.ceil(max(TEMP_MAX, his[i]));
+            var TEMP_MIN = bgdat[18][0];
+            var TEMP_MAX = bgdat[17][0];
+            for (var i = 1; i < 7; i++) {
+                TEMP_MIN = Math.floor(min(min(TEMP_MIN, bgdat[18][i]), bgdat[19][i]));
+                TEMP_MAX = Math.ceil(max(TEMP_MAX, bgdat[17][i]));
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
 
@@ -132,24 +123,21 @@ class YuboWatchView extends WatchUi.WatchFace {
                 dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
 	        }
 
-	        for (var i = 0; i < numDays; i++) {
+	        for (var i = 0; i < 7; i++) {
 	            // generate plots, assume temp in (-10, 30)
-	            var px = Math.round(1.0 * (i + 1) / (numDays + 1) * dx + left);
+	            var px = Math.round(1.0 * (i + 1) / 8 * dx + left);
 
                 dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-                var low = lows[i];
-                var lowpy = Math.round((1.0 - (low - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-                dc.fillRectangle(px - r, lowpy - r, d, d);
+                var y = Math.round((1.0 - (bgdat[18][i] - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                dc.fillRectangle(px - r, y - r, d, d);
 
                 dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-                var hi = his[i];
-                var hipy = Math.round((1.0 - (hi - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(px - r, hipy - r, d, d);
+                y = Math.round((1.0 - (bgdat[17][i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - r, y - r, d, d);
 
 	            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-                var dew = dews[i];
-                var dewpy = Math.round((1.0 - (dew - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-                dc.fillRectangle(px - r, dewpy - r, d, d);
+                y = Math.round((1.0 - (bgdat[19][i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - r, y - r, d, d);
 	        }
 	    }
     }
@@ -160,53 +148,37 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.clear();
 
         // set time view
-        var timeFormat = "$1$$2$";
-        var clockTime = System.getClockTime();
-        var timeString = Lang.format(
-            timeFormat,
-            [clockTime.hour.format("%02d"), clockTime.min.format("%02d")]
-        );
+        var time = System.getClockTime();
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(10, 62, Graphics.FONT_NUMBER_HOT, timeString, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(10, 62, Graphics.FONT_NUMBER_HOT, Lang.format(
+            "$1$$2$",
+            [time.hour.format("%02d"), time.min.format("%02d")]
+        ), Graphics.TEXT_JUSTIFY_LEFT);
 
-        var now = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-        //  var dateView = View.findDrawableById("DateLabel");
-        var dateFormat = "$1$, $2$ $3$";
-        var dateString = Lang.format(
-            dateFormat,
-            [now.day_of_week, now.month, now.day.format("%02d")]
-        );
+        time = Time.Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(10, 46, Graphics.FONT_MEDIUM, dateString, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(10, 46, Graphics.FONT_MEDIUM, Lang.format(
+            "$1$, $2$ $3$",
+            [time.day_of_week, time.month, time.day.format("%02d")]
+        ), Graphics.TEXT_JUSTIFY_LEFT);
 
         // set battery
-        var myStats = System.getSystemStats();
-        var battPerc = myStats.battery;
-        var battStr = battPerc.format("%.1f");
-        // var battView = View.findDrawableById("BattLabel");
-        dc.setColor(battPerc > 20 ? Graphics.COLOR_GREEN : Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(164, 9, Graphics.FONT_MEDIUM, battStr, Graphics.TEXT_JUSTIFY_RIGHT);
-
-        // set memory
-        // var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
-        // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        // dc.drawText(45, 116, Graphics.FONT_SMALL, Lang.format("($1$%)", [memPerc]), Graphics.TEXT_JUSTIFY_RIGHT);
+        var v = System.getSystemStats();
+        dc.setColor(v.battery > 20 ? Graphics.COLOR_GREEN : Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(164, 9, Graphics.FONT_MEDIUM, v.battery.format("%.1f"), Graphics.TEXT_JUSTIFY_RIGHT);
 
         // set steps & cals
-        var info = ActivityMonitor.getInfo();
-        var steps = info.steps;
-        var stepGoal = info.stepGoal;
-        var calories = info.calories;
-        dc.setColor(steps > stepGoal ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(96, 9, Graphics.FONT_MEDIUM, steps.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+        v = ActivityMonitor.getInfo();
+        dc.setColor(v.steps > v.stepGoal ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(96, 9, Graphics.FONT_MEDIUM, v.steps.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(32, 28, Graphics.FONT_MEDIUM, calories.format("%04d"), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(32, 28, Graphics.FONT_MEDIUM, v.calories.format("%04d"), Graphics.TEXT_JUSTIFY_LEFT);
 
         // set HR view
-        var lastHRSample = ActivityMonitor.getHeartRateHistory(1, true).next();
+        v = ActivityMonitor.getHeartRateHistory(1, true).next();
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(32, 9, Graphics.FONT_MEDIUM,
-            lastHRSample == null ? "N/A" : lastHRSample.heartRate.format("%03d"),
+            v == null ? "N/A" : v.heartRate.format("%03d"),
             Graphics.TEXT_JUSTIFY_LEFT);
 
         // set bluetooth view
@@ -219,21 +191,20 @@ class YuboWatchView extends WatchUi.WatchFace {
         }
 
         // set success view
-        var numFailures = Application.getApp().getProperty(NUMFAILED);
-        numFailures = numFailures ? numFailures : -1;
-        if (numFailures >= 0) {
+        var nf = Application.getApp().getProperty(NUMFAILED);
+        if (nf > 0) {
             dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(121, 48, Graphics.FONT_SMALL, numFailures.toString(), Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(121, 48, Graphics.FONT_SMALL, nf.toString(), Graphics.TEXT_JUSTIFY_LEFT);
         } else {
             dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
             dc.drawText(121, 48, Graphics.FONT_SMALL, "Y", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         // set debug view
-        var last = Background.getLastTemporalEventTime();
+        v = Background.getLastTemporalEventTime();
         var timeSinceLast = 999;
-        if (last != null) {
-            timeSinceLast = Time.now().value() - last.value();
+        if (v != null) {
+            timeSinceLast = Time.now().value() - v.value();
         }
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(102, 82, Graphics.FONT_SMALL, timeSinceLast.format("%03d"), Graphics.TEXT_JUSTIFY_LEFT);
@@ -266,33 +237,24 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.drawText(168, 130, Graphics.FONT_SMALL, getFromBg(bgdat, 13), Graphics.TEXT_JUSTIFY_LEFT);
         dc.drawText(168, 142, Graphics.FONT_SMALL, getFromBg(bgdat, 14), Graphics.TEXT_JUSTIFY_LEFT);
 
-        var positionInfo = Position.getInfo();
+        v = Position.getInfo();
         var bglat = lat;
         var bglon = lon;
         var alt = 0;
-        if (positionInfo has :position && positionInfo.position != null) {
-            bglat = positionInfo.position.toDegrees()[0];
-            bglon = positionInfo.position.toDegrees()[1];
+        if (v has :position && v.position != null) {
+            bglat = v.position.toDegrees()[0];
+            bglon = v.position.toDegrees()[1];
         }
-        if (positionInfo has :altitude && positionInfo.altitude != null) {
-            alt = positionInfo.altitude;
+        if (v has :altitude && v.altitude != null) {
+            alt = v.altitude;
         }
-        var latLonStr = Lang.format("$1$/$2$/$3$", [bglat.format("%05.2f"), bglon.format("%05.2f"), alt.format("%04d")]);
-        dc.drawText(73, 31, Graphics.FONT_SMALL, latLonStr, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(73, 31, Graphics.FONT_SMALL, Lang.format("$1$/$2$/$3$", [bglat.format("%05.2f"), bglon.format("%05.2f"), alt.format("%04d")]), Graphics.TEXT_JUSTIFY_LEFT);
         drawGraphs(dc);
     }
-
-    // Called when this View is removed from the screen. Save the
-    // state of this View here. This includes freeing resources from
-    // memory.
     function onHide() {
     }
-
-    // The user has just looked at their watch. Timers and animations may be started here.
     function onExitSleep() {
     }
-
-    // Terminate any active timers and prepare for slow updates.
     function onEnterSleep() {
     }
 }
