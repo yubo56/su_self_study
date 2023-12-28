@@ -54,6 +54,10 @@ class YuboDataFieldView extends WatchUi.DataField {
         if (info has :currentHeartRate && info.currentHeartRate != null) {
             infoDict.put("hrate", (info.currentHeartRate % 100).format("%02d"));
         }
+        if (info has :currentCadence && info.currentCadence != null) {
+            infoDict.put("cadence", (info.currentCadence % 100).format("%02d"));
+        }
+
         if (info has :currentSpeed && info.currentSpeed != null && info.currentSpeed > 0) {
             var pace = 1000.0 / (60 * info.currentSpeed); // min/km, frac
             infoDict.put("pace", Lang.format("$1$:$2$", [
