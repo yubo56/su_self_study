@@ -43,8 +43,8 @@ class HourlyWeathersView extends WatchUi.View {
     var dews = [];
     var precipsHr = [];
     var precipsMin = [];
-    var code1 = -1;
-    var code2 = -1;
+    var code1 = 999;
+    var code2 = 999;
     var bglat = lat;
     var bglon = lon;
 
@@ -109,20 +109,18 @@ class HourlyWeathersView extends WatchUi.View {
     }
     function climacellHourlyCb(responseCode, responseBody) {
         code1 = responseCode;
-        if (responseCode != 200) {
-            return;
+        if (responseCode == 200) {
+            var responseIntervals = responseBody.get("data").get("timelines")[0].get("intervals");
+            temps = new [numhours];
+            dews = new [numhours];
+            precipsHr = new [numhours];
+            for (var i = 0; i < numhours; i++) {
+                temps[i] = responseIntervals[i].get("values").get("temperature");
+                dews[i] = responseIntervals[i].get("values").get("dewPoint");
+                var precip = responseIntervals[i].get("values").get("precipitationIntensity");
+                precipsHr[i] = Math.ln(max(precipMin, min(precipMax, precip)));
+            }
         }
-        var responseIntervals = responseBody.get("data").get("timelines")[0].get("intervals");
-        temps = new [numhours];
-        dews = new [numhours];
-        precipsHr = new [numhours];
-        for (var i = 0; i < numhours; i++) {
-            temps[i] = responseIntervals[i].get("values").get("temperature");
-            dews[i] = responseIntervals[i].get("values").get("dewPoint");
-            var precip = responseIntervals[i].get("values").get("precipitationIntensity");
-            precipsHr[i] = Math.ln(max(precipMin, min(precipMax, precip)));
-        }
-
         // now get minutely weather
         Communications.makeWebRequest(
             url,
@@ -171,69 +169,71 @@ class HourlyWeathersView extends WatchUi.View {
             dc.drawText(left + (i + 0.5 + fracdayRemaining) * dx / numdays, 6, Graphics.FONT_TINY, later.day.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
         
-        if (temps.size() == 0) { return; }
+        if (temps.size() != 0) {
+            var TEMP_MIN = temps[0];
+            var TEMP_MAX = temps[0];
+            for (var i = 1; i < numhours; i++) {
+                TEMP_MIN = min(min(TEMP_MIN, temps[i]), dews[i]);
+                TEMP_MAX = max(max(TEMP_MAX, temps[i]), dews[i]);
+            }
+            var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
         
-        var TEMP_MIN = temps[0];
-        var TEMP_MAX = temps[0];
-        for (var i = 1; i < numhours; i++) {
-            TEMP_MIN = min(min(TEMP_MIN, temps[i]), dews[i]);
-            TEMP_MAX = max(max(TEMP_MAX, temps[i]), dews[i]);
-        }
-        var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
-    
-        var linepy = Math.round((1.0 - (mid5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        if (mid5 < 0) {
-            mid5 = -mid5;
-            dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-        }
-        dc.drawText(20, linepy - 10, Graphics.FONT_SMALL, mid5.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT);
-    
-        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(left, linepy, dx, 2);
-        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        for (var i = 1; mid5 + 5 * i < TEMP_MAX; i++) {
-            if (mid5 + 5 * i < TEMP_MAX) {
-                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-                dc.drawLine(left + 1, line1py, left+dx - 2, line1py);
+            var linepy = Math.round((1.0 - (mid5 - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+            if (mid5 < 0) {
+                mid5 = -mid5;
+                dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
             }
-        }
-        for (var i = 1; mid5 - 5 * i > TEMP_MIN; i++) {
-            if (mid5 - 5 > TEMP_MIN) {
-                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-                dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
+            dc.drawText(20, linepy - 10, Graphics.FONT_SMALL, mid5.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT);
+        
+            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(left, linepy, dx, 2);
+            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+            for (var i = 1; mid5 + 5 * i < TEMP_MAX; i++) {
+                if (mid5 + 5 * i < TEMP_MAX) {
+                    var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                    dc.drawLine(left + 1, line1py, left+dx - 2, line1py);
+                }
             }
-        }
-
-        dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < numhours; i++) {
-            // generate plots, assume temp in (-10, 30)
-            var px = Math.round(1.0 * (i + 1) / (numhours + 1) * dx + left);
+            for (var i = 1; mid5 - 5 * i > TEMP_MIN; i++) {
+                if (mid5 - 5 > TEMP_MIN) {
+                    var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                    dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
+                }
+            }
 
             dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-            var temppy = Math.round((1.0 - (temps[i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-            dc.fillRectangle(px - r, temppy - r, d, d);
-            
-            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-            var dewpy = Math.round((1.0 - (dews[i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
-            dc.fillRectangle(px - r, dewpy - r, d, d);
-            
-            dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-            var limmax = Math.ln(precipMax);
-            var limmin = Math.ln(precipMin);
-            var py = Math.round((1.0 - (precipsHr[i] - limmin) / (limmax - limmin)) * dy + top); // y=0 is top of screen
-            dc.fillRectangle(px - r, py - r, d, d);
+            for (var i = 0; i < numhours; i++) {
+                // generate plots, assume temp in (-10, 30)
+                var px = Math.round(1.0 * (i + 1) / (numhours + 1) * dx + left);
+
+                dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
+                var temppy = Math.round((1.0 - (temps[i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - r, temppy - r, d, d);
+                
+                dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
+                var dewpy = Math.round((1.0 - (dews[i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - r, dewpy - r, d, d);
+                
+                dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+                var limmax = Math.ln(precipMax);
+                var limmin = Math.ln(precipMin);
+                var py = Math.round((1.0 - (precipsHr[i] - limmin) / (limmax - limmin)) * dy + top); // y=0 is top of screen
+                dc.fillRectangle(px - r, py - r, d, d);
+            }
         }
         
-        if (precipsMin.size() == 0) { return; }
-        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < numMinutes; i++) {
-            var px = Math.round(1.0 * (i + 1) / (numMinutes + 1) * dx + left);
+        
+        if (precipsMin.size() != 0) {
+            dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+            for (var i = 0; i < numMinutes; i++) {
+                var px = Math.round(1.0 * (i + 1) / (numMinutes + 1) * dx + left);
 
-            var limmax = Math.ln(precipMax);
-            var limmin = Math.ln(precipMin);
-            var py = Math.round((1.0 - (precipsMin[i] - limmin) / (limmax - limmin)) * dy + top); // y=0 is top of screen
-            dc.fillRectangle(px - r, py - r, d, d);
+                var limmax = Math.ln(precipMax);
+                var limmin = Math.ln(precipMin);
+                var py = Math.round((1.0 - (precipsMin[i] - limmin) / (limmax - limmin)) * dy + top); // y=0 is top of screen
+                dc.fillRectangle(px - r, py - r, d, d);
+            }
         }
     }
 

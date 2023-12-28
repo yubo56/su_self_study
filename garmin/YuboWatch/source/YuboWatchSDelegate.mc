@@ -74,33 +74,11 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
                 "appid" => appid,
                 "units" => "metric",
                 "exclude" => "hourly,minutely,alerts"
-                // "exclude" => "daily,current,hourly,alerts"
             },
             headers,
-            // new Lang.Method(self, :minutelyCb)
             new Lang.Method(self, :currentCb)
         );
     }
-    // function minutelyCb(responseCode, data) {
-    //     if (responseCode == 200) {
-    //         precips = new [30];
-    //         for (var i = 0; i < 30; i++) {
-    //             precips[i] = Math.ln(data.get("minutely")[i].get("precipitation"));
-    //         }
-    //     }
-    //     Communications.makeWebRequest(
-    //         url,
-    //         {
-    //             "lat" => bglat,
-    //             "lon" => bglon,
-    //             "appid" => appid,
-    //             "units" => "metric",
-    //             "exclude" => "hourly,minutely,alerts"
-    //         },
-    //         headers,
-    //         new Lang.Method(self, :currentCb)
-    //     );
-    // }
 
     function currentCb(responseCode, data) {
         code1 = responseCode;
