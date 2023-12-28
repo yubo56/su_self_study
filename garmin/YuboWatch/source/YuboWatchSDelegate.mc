@@ -40,6 +40,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     var precips = [];
     var bglat = lat;
     var bglon = lon;
+    var code1 = -1;
     function initialize() {
         System.ServiceDelegate.initialize();
     }
@@ -63,7 +64,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             bglon = positionInfo.position.toDegrees()[1];
         }
         if (!System.getDeviceSettings().phoneConnected) {
-            Background.exit([[], false, precips]);
+            Background.exit([[], false, precips, code1]);
         }
         Communications.makeWebRequest(
             url,
@@ -80,30 +81,31 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             new Lang.Method(self, :currentCb)
         );
     }
-    function minutelyCb(responseCode, data) {
-        if (responseCode == 200) {
-            precips = new [30];
-            for (var i = 0; i < 30; i++) {
-                precips[i] = Math.ln(data.get("minutely")[i].get("precipitation"));
-            }
-        }
-        Communications.makeWebRequest(
-            url,
-            {
-                "lat" => bglat,
-                "lon" => bglon,
-                "appid" => appid,
-                "units" => "metric",
-                "exclude" => "hourly,minutely,alerts"
-            },
-            headers,
-            new Lang.Method(self, :currentCb)
-        );
-    }
+    // function minutelyCb(responseCode, data) {
+    //     if (responseCode == 200) {
+    //         precips = new [30];
+    //         for (var i = 0; i < 30; i++) {
+    //             precips[i] = Math.ln(data.get("minutely")[i].get("precipitation"));
+    //         }
+    //     }
+    //     Communications.makeWebRequest(
+    //         url,
+    //         {
+    //             "lat" => bglat,
+    //             "lon" => bglon,
+    //             "appid" => appid,
+    //             "units" => "metric",
+    //             "exclude" => "hourly,minutely,alerts"
+    //         },
+    //         headers,
+    //         new Lang.Method(self, :currentCb)
+    //     );
+    // }
 
     function currentCb(responseCode, data) {
+        code1 = responseCode;
         if (responseCode != 200) {
-            Background.exit([[], false, precips]);
+            Background.exit([[], false, precips, code1]);
         }
         var current = data.get("current");
 
@@ -146,6 +148,6 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             his,
             lows,
             dews,
-        ], true, precips]);
+        ], true, precips, code1]);
     }
 }

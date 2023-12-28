@@ -167,6 +167,18 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.setColor(v.battery > 20 ? Graphics.COLOR_GREEN : Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(164, 9, Graphics.FONT_MEDIUM, v.battery.format("%.1f"), Graphics.TEXT_JUSTIFY_RIGHT);
 
+        // set memory
+        // var memPerc = (100.0 * myStats.usedMemory / myStats.totalMemory).format("%02d");
+        // dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        // dc.drawText(45, 116, Graphics.FONT_SMALL, Lang.format("($1$%)", [memPerc]), Graphics.TEXT_JUSTIFY_RIGHT);
+        
+        // draw last response code
+        v = Application.getApp().getProperty(LASTCODE1);
+        if (v != null) {
+            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(45, 116, Graphics.FONT_SMALL, Lang.format("$1$", [v]), Graphics.TEXT_JUSTIFY_RIGHT);
+        }
+
         // set steps & cals
         v = ActivityMonitor.getInfo();
         dc.setColor(v.steps > v.stepGoal ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -192,6 +204,7 @@ class YuboWatchView extends WatchUi.WatchFace {
 
         // set success view
         var nf = Application.getApp().getProperty(NUMFAILED);
+        nf = nf ? nf : -1;
         if (nf > 0) {
             dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
             dc.drawText(121, 48, Graphics.FONT_SMALL, nf.toString(), Graphics.TEXT_JUSTIFY_LEFT);

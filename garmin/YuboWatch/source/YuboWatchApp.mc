@@ -7,7 +7,8 @@ enum {
     BGDATA,
     PRECIPS,
     NUMFAILED,
-    LASTBATT
+    LASTBATT,
+    LASTCODE1,
 }
 const BKGD_MINS = 5;
 
@@ -44,10 +45,12 @@ class YuboWatchApp extends Application.AppBase {
         }
         // always remove precip data (isn't working rn, but also precips are quickly out of date)
         Application.getApp().setProperty(PRECIPS, data[2]);
+        Application.getApp().setProperty(LASTCODE1, data[3]);
         if (data[1]) {
             Application.getApp().setProperty(NUMFAILED, 0);
         } else {
             var numFailed = Application.getApp().getProperty(NUMFAILED);
+            numFailed = numFailed ? numFailed : 0;
             Application.getApp().setProperty(NUMFAILED, numFailed + 1);
         }
     }
