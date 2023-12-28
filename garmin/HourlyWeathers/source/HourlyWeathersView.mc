@@ -12,8 +12,15 @@ function max(a, b) {
 
 var lat = 42.4522; // default location, cornell
 var lon = -76.4804;
-var key = "";
-var site = "https://api.tomorrow.io/v4/timelines";
+const key = "";
+const site = "https://api.tomorrow.io/v4/timelines";
+
+const appid = "";
+const url = "https://api.openweathermap.org/data/2.5/onecall";
+const headers = {
+    :method => Communications.HTTP_REQUEST_METHOD_GET,
+    :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+};
 
 var precipMax = 50.0; // max 50mm/hr
 var precipMin = 0.1; // min 0.1mm/hr
@@ -28,12 +35,18 @@ var r = 1.0;
 var d = 2 * r + 1;
 var numdays = 2;
 var numhours = 48;
+var numMinutes = 60;
 
 class HourlyWeathersView extends WatchUi.View {
     var dc;
     var temps = [];
     var dews = [];
     var precipsHr = [];
+    var precipsMin = [];
+    var code1 = -1;
+    var code2 = -1;
+    var bglat = lat;
+    var bglon = lon;
 
     function initialize() {
         View.initialize();
@@ -74,8 +87,6 @@ class HourlyWeathersView extends WatchUi.View {
             ]
         );
         var positionInfo = Position.getInfo();
-        var bglat = lat;
-        var bglon = lon;
         if (positionInfo has :position && positionInfo.position != null) {
             bglat = positionInfo.position.toDegrees()[0];
             bglon = positionInfo.position.toDegrees()[1];
@@ -92,16 +103,13 @@ class HourlyWeathersView extends WatchUi.View {
                 "timesteps" => "1h",
                 "apikey" => key
             },
-            {
-                :method => Communications.HTTP_REQUEST_METHOD_GET,
-                :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-            },
+            headers,
             new Lang.Method(self, :climacellHourlyCb)
         );
     }
     function climacellHourlyCb(responseCode, responseBody) {
+        code1 = responseCode;
         if (responseCode != 200) {
-            System.println(responseCode);
             return;
         }
         var responseIntervals = responseBody.get("data").get("timelines")[0].get("intervals");
@@ -114,6 +122,30 @@ class HourlyWeathersView extends WatchUi.View {
             var precip = responseIntervals[i].get("values").get("precipitationIntensity");
             precipsHr[i] = Math.ln(max(precipMin, min(precipMax, precip)));
         }
+
+        // now get minutely weather
+        Communications.makeWebRequest(
+            url,
+            {
+                "lat" => bglat,
+                "lon" => bglon,
+                "appid" => appid,
+                "units" => "metric",
+                "exclude" => "daily,current,hourly,alerts"
+            },
+            headers,
+            new Lang.Method(self, :minutelyCb)
+        );
+    }
+    function minutelyCb(responseCode, data) {
+        code2 = responseCode;
+        if (responseCode == 200) {
+            precipsMin = new [numMinutes];
+            for (var i = 0; i < numMinutes; i++) {
+                var precip = data.get("minutely")[i].get("precipitation");
+                precipsMin[i] = Math.ln(max(precipMin, min(precipMax, precip)));
+            }
+        }
         WatchUi.requestUpdate();
     }
     
@@ -122,11 +154,16 @@ class HourlyWeathersView extends WatchUi.View {
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_BLACK);
         dc.clear();
         dc.drawRectangle(left, top, dx, dy);
-        
+
+        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
+
+        dc.drawText(left + dx / 2, top + dy, Graphics.FONT_TINY,
+            Lang.format("($1$/$2$)$3$/$4$", [code1, code2, bglat.format("%.2f"), bglon.format("%.2f")]),
+        Graphics.TEXT_JUSTIFY_CENTER);
         var now = Time.now();
         for (var i = 0; i < numdays; i++) {
             var fracdayRemaining = (24.0 - System.getClockTime().hour) / 24;
-            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
+            
             dc.drawLine(left + (i + fracdayRemaining) * dx / numdays, top, left + (i + fracdayRemaining) * dx / numdays, top + dy);
             
             var timeDelta = new Time.Duration((i + 1) * Time.Gregorian.SECONDS_PER_DAY);
@@ -185,6 +222,17 @@ class HourlyWeathersView extends WatchUi.View {
             var limmax = Math.ln(precipMax);
             var limmin = Math.ln(precipMin);
             var py = Math.round((1.0 - (precipsHr[i] - limmin) / (limmax - limmin)) * dy + top); // y=0 is top of screen
+            dc.fillRectangle(px - r, py - r, d, d);
+        }
+        
+        if (precipsMin.size() == 0) { return; }
+        dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < numMinutes; i++) {
+            var px = Math.round(1.0 * (i + 1) / (numMinutes + 1) * dx + left);
+
+            var limmax = Math.ln(precipMax);
+            var limmin = Math.ln(precipMin);
+            var py = Math.round((1.0 - (precipsMin[i] - limmin) / (limmax - limmin)) * dy + top); // y=0 is top of screen
             dc.fillRectangle(px - r, py - r, d, d);
         }
     }
