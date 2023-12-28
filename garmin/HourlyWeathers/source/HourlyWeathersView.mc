@@ -47,9 +47,9 @@ class HourlyWeathersView extends WatchUi.View {
     // loading resources into memory.
     function onShow() {
         var now = Time.now();
-        var twoDays = new Time.Duration(numdays * Time.Gregorian.SECONDS_PER_DAY);
+        var duration = new Time.Duration(numdays * Time.Gregorian.SECONDS_PER_DAY);
         var today = Time.Gregorian.utcInfo(now, Time.FORMAT_SHORT);
-        var later = Time.Gregorian.utcInfo(now.add(twoDays), Time.FORMAT_SHORT);
+        var later = Time.Gregorian.utcInfo(now.add(duration), Time.FORMAT_SHORT);
         var fmtstr = "$1$-$2$-$3$T$4$:$5$:$6$Z";
         var startstr = Lang.format(
             fmtstr,
@@ -127,11 +127,11 @@ class HourlyWeathersView extends WatchUi.View {
         for (var i = 0; i < numdays; i++) {
             var fracdayRemaining = (24.0 - System.getClockTime().hour) / 24;
             dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_BLACK);
-            dc.drawLine(left + (i + fracdayRemaining) * dx / 3, top, left + (i + fracdayRemaining) * dx / 3, top + dy);
+            dc.drawLine(left + (i + fracdayRemaining) * dx / numdays, top, left + (i + fracdayRemaining) * dx / numdays, top + dy);
             
             var timeDelta = new Time.Duration((i + 1) * Time.Gregorian.SECONDS_PER_DAY);
 	        var later = Time.Gregorian.info(now.add(timeDelta), Time.FORMAT_SHORT);
-            dc.drawText(left + (i + 0.5 + fracdayRemaining) * dx / 3, 6, Graphics.FONT_TINY, later.day.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(left + (i + 0.5 + fracdayRemaining) * dx / numdays, 6, Graphics.FONT_TINY, later.day.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
         
         if (temps.size() == 0) { return; }
