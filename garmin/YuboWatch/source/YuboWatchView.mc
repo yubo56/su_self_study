@@ -39,13 +39,6 @@ function colorDraw(dc, x, y, dat, idx, fmt, colorPos, colorNeg, size) {
     dc.drawText(x, y, size, val.format(fmt), Graphics.TEXT_JUSTIFY_LEFT);
 }
 
-function min(a, b) {
-    return a > b ? b : a;
-}
-function max(a, b) {
-    return a > b ? a : b;
-}
-
 const precipMax = Math.ln(50.0); // max 50mm/hr
 const precipMin = Math.ln(0.1); // min 0.1mm/hr
 
@@ -53,9 +46,6 @@ class YuboWatchView extends WatchUi.WatchFace {
     function initialize() {
         if (Application.getApp().getProperty(BGDATA) == null) {
             Application.getApp().setProperty(BGDATA, []);
-        }
-        if (Application.getApp().getProperty(PRECIPS) == null) {
-            Application.getApp().setProperty(PRECIPS, []);
         }
         WatchFace.initialize();
     }
@@ -74,32 +64,22 @@ class YuboWatchView extends WatchUi.WatchFace {
         var dy = ymax - top;
         var r = 2.0;
         var d = 2 * r + 1;
+        var i = 0;
 
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_BLACK);
         dc.drawRectangle(left, top, dx, dy);
 
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-        // precipitation graph
-        var precips = Application.getApp().getProperty(PRECIPS);
-        if (precips.size() > 0) {
-            // change len and (len + 1) below
-            for (var i = 0; i < 30; i++) {
-                if (precips[i] < precipMin) { continue; }
-                var precip = min(precips[i], precipMax);
-                var px = Math.round(1.0 * (i + 1) / 31 * dx + left);
-                var py = Math.round((1.0 - (precip - precipMin) / (precipMax - precipMin)) * dy + top); // y=0 is top of screen
-                dc.fillRectangle(px - 1, py - 1, 2, 2);
-            }
-        }
 
         var bgdat = Application.getApp().getProperty(BGDATA);
         // hi/lo graph
         if (bgdat.size() > 19) {
-            var TEMP_MIN = bgdat[18][0];
+            var TEMP_MIN = bgdat[18][0] > bgdat[19][0] ? bgdat[19][0] : bgdat[18][0];
             var TEMP_MAX = bgdat[17][0];
-            for (var i = 1; i < 7; i++) {
-                TEMP_MIN = Math.floor(min(min(TEMP_MIN, bgdat[18][i]), bgdat[19][i]));
-                TEMP_MAX = Math.ceil(max(TEMP_MAX, bgdat[17][i]));
+            for (i = 1; i < 7; i++) {
+                TEMP_MIN = TEMP_MIN > bgdat[18][i] ? bgdat[18][i] : TEMP_MIN;
+                TEMP_MIN = Math.floor(TEMP_MIN > bgdat[19][i] ? bgdat[19][i] : TEMP_MIN);
+                TEMP_MAX = Math.ceil(TEMP_MAX > bgdat[17][i] ? TEMP_MAX : bgdat[17][i]);
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
 
@@ -114,16 +94,16 @@ class YuboWatchView extends WatchUi.WatchFace {
             dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(left, linepy, dx, 2);
             dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            for (var i = 1; mid5 + 5 * i <= TEMP_MAX; i++) {
-                var line1py = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-                dc.drawLine(left + 1, line1py, left+dx - 2, line1py);
+            for (i = 1; mid5 + 5 * i <= TEMP_MAX; i++) {
+                linepy = Math.round((1.0 - (mid5 + 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                dc.drawLine(left + 1, linepy, left+dx - 2, linepy);
             }
-            for (var i = 1; mid5 - 5 * i >= TEMP_MIN; i++) {
-                var line2py = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
-                dc.drawLine(left + 1, line2py, left+dx - 2, line2py);
+            for (i = 1; mid5 - 5 * i >= TEMP_MIN; i++) {
+                linepy = Math.round((1.0 - (mid5 - 5 * i - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                dc.drawLine(left + 1, linepy, left+dx - 2, linepy);
 	        }
 
-	        for (var i = 0; i < 7; i++) {
+	        for (i = 0; i < 7; i++) {
 	            // generate plots, assume temp in (-10, 30)
 	            var px = Math.round(1.0 * (i + 1) / 8 * dx + left);
 
@@ -182,7 +162,9 @@ class YuboWatchView extends WatchUi.WatchFace {
         // set steps & cals
         v = ActivityMonitor.getInfo();
         dc.setColor(v.steps > v.stepGoal ? Graphics.COLOR_GREEN : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(96, 9, Graphics.FONT_MEDIUM, v.steps.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(96, 12, Graphics.FONT_MEDIUM, v.steps.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(96, -2, Graphics.FONT_TINY, v.stepGoal.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(32, 28, Graphics.FONT_MEDIUM, v.calories.format("%04d"), Graphics.TEXT_JUSTIFY_LEFT);
 
@@ -215,10 +197,8 @@ class YuboWatchView extends WatchUi.WatchFace {
 
         // set debug view
         v = Background.getLastTemporalEventTime();
-        var timeSinceLast = 999;
-        if (v != null) {
-            timeSinceLast = Time.now().value() - v.value();
-        }
+        var timeSinceLast = v == null ? 999 : Time.now().value() - v.value();
+
         dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(102, 82, Graphics.FONT_SMALL, timeSinceLast.format("%03d"), Graphics.TEXT_JUSTIFY_LEFT);
 

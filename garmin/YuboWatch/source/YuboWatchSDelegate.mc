@@ -37,10 +37,8 @@ const headers = {
 
 (:background)
 class YuboWatchSDelegate extends System.ServiceDelegate {
-    var precips = [];
     var bglat = lat;
     var bglon = lon;
-    var code1 = -1;
     function initialize() {
         System.ServiceDelegate.initialize();
     }
@@ -58,13 +56,14 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	        (id % 100).format("%02d")]);
     }
     function onTemporalEvent() {
+        if (!System.getDeviceSettings().phoneConnected) {
+            Background.exit([[], false, -11]);
+        }
+
         var positionInfo = Position.getInfo();
         if (positionInfo has :position && positionInfo.position != null) {
             bglat = positionInfo.position.toDegrees()[0];
             bglon = positionInfo.position.toDegrees()[1];
-        }
-        if (!System.getDeviceSettings().phoneConnected) {
-            Background.exit([[], false, precips, code1]);
         }
         Communications.makeWebRequest(
             url,
@@ -81,26 +80,21 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
     }
 
     function currentCb(responseCode, data) {
-        code1 = responseCode;
         if (responseCode != 200) {
-            Background.exit([[], false, precips, code1]);
+            Background.exit([[], false, responseCode]);
         }
         var current = data.get("current");
 
         // parse weather into "TDRSAOC" (thunderstorm, drizzle, rain, snow, "atmosphere", clear, cloudy) + code
         var weather = current.get("weather")[0];
-        var wsymb = "O";
-        if (weather.get("id") != 800) {
-            wsymb = weather.get("main").substring(0, 1);
-        }
+        var wsymb = weather.get("id") == 800 ? "O" : weather.get("main").substring(0, 1);
 
         var daily = data.get("daily");
 
-        var numDays = daily.size();
-        var his = new [numDays];
-        var lows = new [numDays];
-        var dews = new [numDays];
-        for (var i = 0; i < numDays; i++) {
+        var his = new [7];
+        var lows = new [7];
+        var dews = new [7];
+        for (var i = 0; i < 7; i++) {
             lows[i] = daily[i].get("temp").get("min");
             his[i] = daily[i].get("temp").get("max");
             dews[i] = daily[i].get("dew_point");
@@ -126,6 +120,6 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             his,
             lows,
             dews,
-        ], true, precips, code1]);
+        ], true, 200]);
     }
 }

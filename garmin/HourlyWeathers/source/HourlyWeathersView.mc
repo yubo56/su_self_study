@@ -22,6 +22,8 @@ const headers = {
     :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
 };
 
+// add another, maybe accuweather or smth?
+
 var precipMax = 50.0; // max 50mm/hr
 var precipMin = 0.1; // min 0.1mm/hr
 

@@ -5,7 +5,7 @@ using Toybox.Time;
 
 enum {
     BGDATA,
-    PRECIPS,
+    PRECIPS, // UNUSED
     NUMFAILED,
     LASTBATT,
     LASTCODE1,
@@ -43,15 +43,12 @@ class YuboWatchApp extends Application.AppBase {
         if (data[0].size() > 0) {
             Application.getApp().setProperty(BGDATA, data[0]);
         }
-        // always remove precip data (isn't working rn, but also precips are quickly out of date)
-        Application.getApp().setProperty(PRECIPS, data[2]);
-        Application.getApp().setProperty(LASTCODE1, data[3]);
+        Application.getApp().setProperty(LASTCODE1, data[2]);
         if (data[1]) {
             Application.getApp().setProperty(NUMFAILED, 0);
         } else {
             var numFailed = Application.getApp().getProperty(NUMFAILED);
-            numFailed = numFailed ? numFailed : 0;
-            Application.getApp().setProperty(NUMFAILED, numFailed + 1);
+            Application.getApp().setProperty(NUMFAILED, numFailed ? numFailed + 1 : 1);
         }
     }
 }
