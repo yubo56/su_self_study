@@ -73,13 +73,13 @@ class YuboWatchView extends WatchUi.WatchFace {
 
         var bgdat = Application.getApp().getProperty(BGDATA);
         // hi/lo graph
-        if (bgdat.size() > 19) {
-            var TEMP_MIN = bgdat[18][0] > bgdat[19][0] ? bgdat[19][0] : bgdat[18][0];
-            var TEMP_MAX = bgdat[17][0];
+        if (bgdat.size() == 33) {
+            var TEMP_MIN = bgdat[12] > bgdat[26] ? bgdat[26] : bgdat[12];
+            var TEMP_MAX = bgdat[19];
             for (i = 1; i < 7; i++) {
-                TEMP_MIN = TEMP_MIN > bgdat[18][i] ? bgdat[18][i] : TEMP_MIN;
-                TEMP_MIN = Math.floor(TEMP_MIN > bgdat[19][i] ? bgdat[19][i] : TEMP_MIN);
-                TEMP_MAX = Math.ceil(TEMP_MAX > bgdat[17][i] ? TEMP_MAX : bgdat[17][i]);
+                TEMP_MIN = TEMP_MIN > bgdat[12 + i] ? bgdat[12 + i] : TEMP_MIN;
+                TEMP_MIN = Math.floor(TEMP_MIN > bgdat[26 + i] ? bgdat[26 + i] : TEMP_MIN);
+                TEMP_MAX = Math.ceil(TEMP_MAX > bgdat[19 + i] ? TEMP_MAX : bgdat[19 + i]);
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
 
@@ -108,15 +108,15 @@ class YuboWatchView extends WatchUi.WatchFace {
 	            var px = Math.round(1.0 * (i + 1) / 8 * dx + left);
 
                 dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-                var y = Math.round((1.0 - (bgdat[18][i] - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
+                var y = Math.round((1.0 - (bgdat[19 + i] - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
                 dc.fillRectangle(px - r, y - r, d, d);
 
                 dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-                y = Math.round((1.0 - (bgdat[17][i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                y = Math.round((1.0 - (bgdat[12 + i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
                 dc.fillRectangle(px - r, y - r, d, d);
 
 	            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
-                y = Math.round((1.0 - (bgdat[19][i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                y = Math.round((1.0 - (bgdat[26 + i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
                 dc.fillRectangle(px - r, y - r, d, d);
 	        }
 	    }
@@ -206,12 +206,12 @@ class YuboWatchView extends WatchUi.WatchFace {
         var bgdat = Application.getApp().getProperty(BGDATA);
 
         colorDraw(dc, 139, 75, bgdat, 0, "%04.1f", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_LARGE);
-        colorDraw(dc, 139, 61, bgdat, 7, "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 139, 61, bgdat, 12, "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
         colorDraw(dc, 158, 61, bgdat, 3, "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
-        colorDraw(dc, 177, 61, bgdat, 8, "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
-        colorDraw(dc, 139, 47, bgdat, 9, "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
-        colorDraw(dc, 158, 47, bgdat, 11, "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
-        colorDraw(dc, 177, 47, bgdat, 10, "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 177, 61, bgdat, 19, "%02d", Graphics.COLOR_WHITE, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 139, 47, bgdat, 13, "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
+        colorDraw(dc, 158, 47, bgdat, 27, "%02d", Graphics.COLOR_BLUE, Graphics.COLOR_PURPLE, Graphics.FONT_SMALL);
+        colorDraw(dc, 177, 47, bgdat, 20, "%02d", Graphics.COLOR_LT_GRAY, Graphics.COLOR_RED, Graphics.FONT_SMALL);
 
         dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
         dc.drawText(139, 101, Graphics.FONT_SMALL, textFromBg(bgdat, 1, "%02d"), Graphics.TEXT_JUSTIFY_LEFT);
@@ -223,12 +223,12 @@ class YuboWatchView extends WatchUi.WatchFace {
         dc.drawText(103, 67, Graphics.FONT_SMALL, getFromBg(bgdat, 4), Graphics.TEXT_JUSTIFY_LEFT);
         dc.drawText(103, 100, Graphics.FONT_SMALL, getFromBg(bgdat, 5), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(187, 75, Graphics.FONT_SMALL, getFromBg(bgdat, 15), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(187, 87, Graphics.FONT_SMALL, getFromBg(bgdat, 16), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(187, 75, Graphics.FONT_SMALL, getFromBg(bgdat, 10), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(187, 87, Graphics.FONT_SMALL, getFromBg(bgdat, 11), Graphics.TEXT_JUSTIFY_LEFT);
 
-        dc.drawText(168, 118, Graphics.FONT_SMALL, getFromBg(bgdat, 12), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(168, 130, Graphics.FONT_SMALL, getFromBg(bgdat, 13), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(168, 142, Graphics.FONT_SMALL, getFromBg(bgdat, 14), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(168, 118, Graphics.FONT_SMALL, getFromBg(bgdat, 7), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(168, 130, Graphics.FONT_SMALL, getFromBg(bgdat, 8), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(168, 142, Graphics.FONT_SMALL, getFromBg(bgdat, 9), Graphics.TEXT_JUSTIFY_LEFT);
 
         v = Position.getInfo();
         var bglat = lat;

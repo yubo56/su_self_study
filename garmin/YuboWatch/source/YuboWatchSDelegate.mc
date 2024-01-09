@@ -1,24 +1,3 @@
-//  0 temp
-//  1 wspeed
-//  2 humid
-//  3 tdewp
-//  4 sunrise
-//  5 sunset
-//  6 uvi
-//  7 tlo
-//  8 thi
-//  9 ttlo
-// 10 tthi
-// 11 ttdewp
-// 12 wtoday
-// 13 wtomm
-// 14 wovmm
-// 15 wsymb
-// 16 wcode
-// 17 dhis
-// 18 dlos
-// 19 ddews
-
 using Toybox.Background;
 using Toybox.System;
 using Toybox.Communications;
@@ -91,35 +70,25 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 
         var daily = data.get("daily");
 
-        var his = new [7];
-        var lows = new [7];
-        var dews = new [7];
+        var ret = new[33];
         for (var i = 0; i < 7; i++) {
-            lows[i] = daily[i].get("temp").get("min");
-            his[i] = daily[i].get("temp").get("max");
-            dews[i] = daily[i].get("dew_point");
+            ret[12 + i] = daily[i].get("temp").get("min");
+            ret[19 + i] = daily[i].get("temp").get("max");
+            ret[26 + i] = daily[i].get("dew_point");
         }
-        Background.exit([[
-            current.get("temp"),
-            current.get("wind_speed") * 3.6,
-            current.get("humidity"),
-            Math.round(current.get("dew_point")),
-            timeToHHMM(current.get("sunrise")),
-            timeToHHMM(current.get("sunset")),
-            Math.round(current.get("uvi")),
-            Math.round(lows[0]),
-            Math.round(his[0]),
-            Math.round(lows[1]),
-            Math.round(his[1]),
-            Math.round(dews[1]),
-            weatherStr(daily[0].get("weather")[0]),
-            weatherStr(daily[1].get("weather")[0]),
-            weatherStr(daily[2].get("weather")[0]),
-            wsymb,
-            (weather.get("id") % 100).format("%02d"),
-            his,
-            lows,
-            dews,
-        ], true, 200]);
+
+        ret[0] = current.get("temp");
+        ret[1] = current.get("wind_speed") * 3.6;
+        ret[2] = current.get("humidity");
+        ret[3] = Math.round(current.get("dew_point"));
+        ret[4] = timeToHHMM(current.get("sunrise"));
+        ret[5] = timeToHHMM(current.get("sunset"));
+        ret[6] = Math.round(current.get("uvi"));
+        ret[7] = weatherStr(daily[0].get("weather")[0]);
+        ret[8] = weatherStr(daily[1].get("weather")[0]);
+        ret[9] = weatherStr(daily[2].get("weather")[0]);
+        ret[10] = wsymb;
+        ret[11] = (weather.get("id") % 100).format("%02d");
+        Background.exit([ret, true, 200]);
     }
 }
