@@ -90,7 +90,9 @@
 
 \begin{document}
 
-\section{Maximum Separatrix Area}
+\section{Laplace Plane Dynamics}
+
+\subsection{Maximum Separatrix Area---Simple}
 
 Consider a planet with orbit normal $\uv{l}_{\rm p}$ that experiences precession
 driven by stellar oblateness $\uv{l}_{\rm s}$ and an outer perturber
@@ -201,6 +203,58 @@ Note: the integral for $A_{\rm sep}$ is analytic:
             \sqrt{\cot^2\frac{\epsilon}{2} - u^2}}}}_{u=-1}^{u=1}\nonumber\\
         &= 8\s{\tan^{-1}\sqrt{\frac{\sin^2(\epsilon / 2)}{\cos \epsilon}}}.
 \end{align}
+
+\subsection{Maximum Separatrix Area---Melaine}
+
+Melaine says that the separatrix is given by the solutions to the equation
+($I_Q$ is the satellite inclination to the planet equator, and $\delta Q$ is the
+corresponding phase angle; we call these $\theta,\phi$ above)
+\begin{align}
+    \tan I_{\rm Q,\pm}
+        &= \frac{\cos \delta Q \sin (2\epsilon) \pm \sin \delta Q
+            \sin \epsilon\sqrt{2\p{u - 1 + \sqrt{1 + u^2 + 2u\cos\p{2\epsilon}}}}}{
+            u + 1 - 2\cos^2 \delta Q \sin^2\epsilon - \sqrt{1 + u^2 +
+            2u\cos(2\epsilon)}}.
+\end{align}
+Here $u = r_{\rm M}^5/a^5$.
+However, this expression is singular for $\cos \delta_Q = w_{\pm}$, where
+\begin{equation}
+    w_{\pm} = \pm \sqrt{\frac{1 + u - \sqrt{1 + u^2 +
+        2u\cos(2\epsilon)}}{2\sin^2\epsilon}}.
+\end{equation}
+This is where the denominator vanishes. Note that this must be a
+removable/coordinate singularity: physically, there is no special value of
+$\delta_Q$. The separatrix area is then just given by integrating $\cos I_Q$ but
+taking the correctly-signed roots, which Melaine works out to be
+\begin{align}
+    \frac{A}{2} ={}&
+            \int\limits_0^\pi \cos I_{\rm Q, +} - \cos I_{\rm Q,
+            -}\;\mathrm{d}\delta_Q,\\
+        ={}&
+        \int\limits_0^{\arccos w_+}
+            \p{\frac{-1}{\sqrt{1 + x_+^2}}
+                - \frac{-1}{1 + x_-^2}}\;\mathrm{d}\delta_Q\nonumber\\
+        &+ \int\limits_{\arccos w_+}^{\arccos w_-}
+            \p{\frac{1}{\sqrt{1 + x_+^2}}
+                - \frac{-1}{1 + x_-^2}}\;\mathrm{d}\delta_Q\nonumber\\
+        &+ \int\limits_{\arccos w_-}^{\pi}
+            \p{\frac{1}{\sqrt{1 + x_+^2}}
+                - \frac{1}{1 + x_-^2}}\;\mathrm{d}\delta_Q.
+\end{align}
+
+We find that the two expressions agree, see Fig.~\ref{fig:laplace}. Is it
+obvious that they should? Setting $u = 1$, we find that
+\begin{align}
+    \tan I_{\rm Q, \pm} &=
+        \frac{\cos \delta Q \sin (2\epsilon) \pm \sin \delta Q
+            \sin \epsilon\sqrt{4\cos \epsilon}}{
+            2 - 2\cos^2 \delta Q \sin^2\epsilon - 2\cos \epsilon}\nonumber\\
+        &=
+        \frac{\cos \delta Q \sin (2\epsilon) \pm \sin \delta Q
+            \sin \epsilon\sqrt{4\cos \epsilon}}{
+            2 - 2\cos^2 \delta Q \sin^2\epsilon - 2\cos \epsilon}.
+\end{align}
+Not obvious.
 
 \end{document}
 
