@@ -31,6 +31,8 @@ class YuboDataFieldView extends WatchUi.DataField {
             "gctb" => "00.0",
             "vert" => "00.0", // vertical oscillation, mm
             "stance" => "00.0", // fraction of time in stance phase
+
+            "locAcc" => Position.QUALITY_NOT_AVAILABLE,
         };
     }
 
@@ -90,6 +92,9 @@ class YuboDataFieldView extends WatchUi.DataField {
         if (info has :maxHeartRate && info.maxHeartRate != null) {
             infoDict.put("maxhrate", (info.maxHeartRate % 100).format("%02d"));
         }
+        if (info has :currentLocationAccuracy && info.currentLocationAccuracy != null) {
+            infoDict.put("locAcc", info.currentLocationAccuracy);
+        }
         
         var data = rd.getRunningDynamics();
         if (data == null) { return; }
@@ -134,10 +139,18 @@ class YuboDataFieldView extends WatchUi.DataField {
         
         dc.setColor(Graphics.COLOR_WHITE, cbg);
         dc.drawLine(0.5 * width, 0, 0.5 * width, h3);
-        dc.drawLine(0, h1, width, h1);
-        dc.drawLine(0, h2, width, h2);
-        dc.drawLine(0, h3, width, h3);
-        dc.drawLine(0, h4, width, h4);
+        dc.setColor(Graphics.COLOR_GREEN, cbg);
+        var heights = [h1, h2, h3, h4];
+        for (var i = 0; i < 4; i++) {
+            if (infoDict.get("locAcc") == i) { // == so only set once
+                dc.setColor(Graphics.COLOR_WHITE, cbg);
+            }
+            // draw fat lines for visibility
+            dc.drawLine(0, heights[i]-1, width, heights[i]-1);
+            dc.drawLine(0, heights[i], width, heights[i]);
+            dc.drawLine(0, heights[i]+1, width, heights[i]+1);
+        }
+        dc.setColor(Graphics.COLOR_WHITE, cbg); // in case not hit in loop
 
         dc.drawText(xl, y1, fs, infoDict.get("telapsed"), Graphics.TEXT_JUSTIFY_RIGHT);
         dc.drawText(xr, y1, fs, infoDict.get("delapsed"), Graphics.TEXT_JUSTIFY_LEFT);
@@ -151,9 +164,9 @@ class YuboDataFieldView extends WatchUi.DataField {
         dc.drawText(xr, y3, fs2, infoDict.get("gctb"), Graphics.TEXT_JUSTIFY_LEFT);
         
         dc.drawText(0.21 * width, h3 - 2, fs, infoDict.get("tsplit"), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawLine(0.4 * width, h3 - 2, 0.4 * width, h4);
+        dc.drawLine(0.4 * width, h3, 0.4 * width, h4);
         dc.drawText(0.42 * width, h3 - 2, fs, infoDict.get("cals"), Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawLine(0.63 * width, h3 - 2, 0.63 * width, h4);
+        dc.drawLine(0.63 * width, h3, 0.63 * width, h4);
         dc.drawText(0.65 * width, h3 - 2, fs, infoDict.get("power"), Graphics.TEXT_JUSTIFY_LEFT);
         
         dc.drawText(xl, h4 - 3, fs, infoDict.get("stance"), Graphics.TEXT_JUSTIFY_RIGHT);
