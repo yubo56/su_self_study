@@ -820,5 +820,49 @@ maybe that's what \url{https://arxiv.org/pdf/2211.11347.pdf} is doing for one of
 the Euler angles? Since at least the Andoyer angles are Euler angles, though are
 a mixed set of them. Of course Jeremy's questions are hard to answer\dots
 
+\section{Mass Loss Induced Eccentricity}
+
+Consider a particle on a circular orbit with $a_0$ around a central mass
+$M_\star$ and initial mass $M$. It loses $\delta m$, ejected behind it with
+velocity $v_{\rm ej}$; what is the new sma and eccentricity?
+
+First, we note that the new mass of the particle, $M' = M - \delta m$, is now
+moving at velocity $v' = v_0 + \delta v$ where
+\begin{align}
+    v_0 &= \sqrt{GM_\star / a_0},\\
+    \delta v &= \frac{\delta m}{M'}v_{\rm ej}.
+\end{align}
+
+Then, computing the new angular momentum of the particle (which now has sma
+$a'$), we have (factoring out the particle mass)
+\begin{align}
+    \sqrt{GM_\star a'(1 - e^2)} &= a_0v',\\
+    \frac{GM_\star}{a_0}\frac{a'}{a_0}(1 - e^2) &= (v')^2,\\
+    1 - e^2 &= \frac{(v')^2}{v_0^2}\frac{a_0}{a'}.
+\end{align}
+On the other hand, the energy gives us
+\begin{align}
+    \frac{(v')^2}{2} - \frac{GM_\star}{a_0} &= -\frac{GM_\star}{2a'},\\
+    \frac{(v')^2}{v_0^2} - 2 &= -\frac{a_0}{a'}.
+\end{align}
+Combining, we find (define $\Delta \equiv \delta v / v_0$)
+\begin{align}
+    1 - e^2 &= \frac{(v')^2}{v_0^2}\p{2 - \frac{(v')^2}{v_0^2}},\\
+        &= \p{1 + \Delta}^2\p{2 - \p{1 + \Delta}^2},\\
+        &= 2\p{1 + 2\Delta + \Delta^2}
+            - \p{1 + 4\Delta + 6\Delta^2 + 4\Delta^3 + \Delta^4},\\
+        &= 1 - 4\Delta^2 - 4\Delta^3 - \Delta^4,\\
+    e &\approx 2\Delta = 2\frac{\delta m}{M'}\frac{v_{\rm ej}}{v_0}.
+\end{align}
+
+\section{Tides with Fluid Envelope}
+
+Question: for a planet w/ thin fluid envelope (by mass), it affects the
+dissipation of the rocky core, since the tidal bulge of the envelope will shield
+the perturbing potential somewhat. Can we estimate this effect? Moreover, how
+much does this effect depend on the radial extent of the envelope; can we check
+the effect of tidal inflation on the dissipation of a SN that is a rocky core +
+gaseous envelope?
+
 \end{document}
 
