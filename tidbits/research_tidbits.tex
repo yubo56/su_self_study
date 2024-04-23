@@ -1,7 +1,7 @@
     \documentclass[12pt]{article}
     \usepackage{fancyhdr, amsmath, amsthm, amssymb, mathtools, lastpage,
     hyperref, enumerate, graphicx, setspace, wasysym, upgreek, listings,
-    fouriernc}
+    fouriernc, cancel}
     \usepackage[margin=1in]{geometry}
     \usepackage{float}
     \newcommand*{\scinot}[2]{#1\times10^{#2}}
@@ -854,6 +854,178 @@ Combining, we find (define $\Delta \equiv \delta v / v_0$)
         &= 1 - 4\Delta^2 - 4\Delta^3 - \Delta^4,\\
     e &\approx 2\Delta = 2\frac{\delta m}{M'}\frac{v_{\rm ej}}{v_0}.
 \end{align}
+
+\section{Dissipative Resonance Capture, Canonical Transformations}
+
+\subsection{Canonical Transformations: Review}
+
+Let's just discuss in 1D for now, and review some old results. A set of
+variables $(q, p)$ and its Hamiltonian $H(q, p)$ are considered canonical if
+they obey Hamilton's equations
+\begin{align}
+    \rd{q}{t} &= \pd{H}{p}, &
+    \rd{p}{t} &= -\pd{H}{q}.
+\end{align}
+Recall that Hamiltonian evolution conserves phase space volume
+\begin{align}
+    \frac{1}{\delta V}\rd{\delta V}{t}
+        &= \sum\limits_{j=1}^m \pd{F_i}{r_i} = \vec{\nabla} \cdot \bm{F},
+\end{align}
+where $r_i = \p{p_i\dots p_n, q_i\dots q_n}$, and $\bm{F} = \p{-H_{q_i},\dots,
+-H_{q_n}, H_{p_i},\dots H_{p_n}}$ is the flux.
+
+A time-independent transformation is $Q(q, p)$, $P(q, p)$ is canonical if (for
+all $H$),
+\begin{align}
+    K(Q, P) &\equiv H\p{q(Q, P), p(Q, P)},\\
+    \rd{Q}{t} &= \pd{K}{P}, &
+    \rd{P}{t} &= -\pd{K}{Q}.
+\end{align}
+
+The canonicity of two variables is most easily determined by the Poisson
+Bracket, which equals $1$ if the transformation is canonical:
+\begin{equation}
+    \z{Q, P}_{qp}
+        \equiv \pd{Q}{q}\pd{P}{p} - \pd{Q}{p}\pd{P}{q} = 1.
+\end{equation}
+A second definition (Morbidelli 2002, S1.6) is that a transformation is
+canonical if there exists a generating function. This is a sufficient, but not
+necessary criterion. A third sufficient criterion is the existence of a
+Hamiltonian flow (Lie perturbation techniques): if
+\begin{align}
+    p &= P + \int\limits_0^\epsilon
+        \dot{P}\;\mathrm{d}t,\\
+    q &= Q + \int\limits_0^\epsilon \dot{Q}\;\mathrm{d}t,\\
+    \dot{Q} &= \rd{\chi}{P},\\
+    \dot{P} &= -\pd{\chi}{Q},
+\end{align}
+i.e.\ the time derivatives come from a generating Hamiltonian $\chi\p{Q, P}$,
+then the transformation is canonical. This can be interpreted as $(Q, P)$ being
+a Hamiltonian flow at time $\epsilon$.
+
+Note conveniently that a function $f(q, p)$ evolves following
+\begin{equation}
+    \rd{f}{t} = \pd{f}{q}\rd{q}{t} + \pd{f}{p}\rd{p}{t} = \z{f, H}.
+\end{equation}
+Then, if we expand $f(t)$ about $t=0$, then
+\begin{align}
+    f(t) &= f(0) + \sum\limits_{i=1}^\infty \frac{t^i}{i!}f^{{n}}(0)\nonumber\\
+        &= f(0) + \sum\limits_{i=1}^\infty \frac{t^i}{i!}
+            \mathcal{L}_H^{{i}}f(0),\\
+    \mathcal{L}_H^{{1}}f &= \z{f, H},\\
+    \mathcal{L}_H^{(n)}f &= \mathcal{L}_H^{(1)}\mathcal{L}_H^{(n-1)}f.
+\end{align}
+We call this the \emph{Lie series of $f$ under the flow of $H$}, and it is
+denoted $\mathcal{S}_H^tf$. Then a canonical transformation obeys
+\begin{align}
+    q &= \mathcal{S}_\chi^\epsilon Q, &
+    p &= \mathcal{S}_\chi^\epsilon P.
+\end{align}
+
+\subsection{Canonical Transformations: Why does it work?}
+
+Landau and Lifshitz have a very slick argument based on the variational
+principle (which actually recovers the extra $\partial S/\partial t$ change to
+the new Hamiltonian), but I need to convince myself in a dumber way.
+
+% Let's just explicitly evaluate the conditions:
+% \begin{align}
+%     \rd{Q(q, p)}{t} &= \pd{Q}{q}\pd{H}{p} - \pd{Q}{p}\pd{H}{q},\\
+%     \rd{P(q, p)}{t} &= \pd{P}{q}\pd{H}{p} - \pd{P}{p}\pd{H}{q},\\
+%     \pd{K}{Q} = \pd{}{Q}H\p{q(Q, P), p(Q, P)}
+%         &= \pd{H}{q}\pd{q}{Q} + \pd{H}{p}\pd{p}{Q} = -\rd{P}{t},\\
+%     \pd{K}{P} &= \pd{H}{q}\pd{q}{P} + \pd{H}{p}\pd{p}{P} = \rd{Q}{t},\\
+%     \pd{Q}{q} &= \pd{p}{P},\\
+%     \pd{Q}{p} &= -\pd{q}{P}.
+% \end{align}
+% Doing this with either set of equations gives the same result. But this doesn't
+% make sense, since for a general canonical transformation this produces that
+% $\z{Q, P}_{qp} = 2$?
+
+Apparently the easier way is to show that the PB WRT $(Q, P)$ and WRT $(q, p)$
+is the same iff $\z{Q, P}_{qp} = 1$, which then trivially results in our desired
+claim. Is this true?
+% https://astro.pas.rochester.edu/~aquillen/phy411/lecture2.pdf
+\begin{align}
+    \z{f, g}_{qp} &= \pd{f}{q}\pd{g}{p} - \pd{f}{p}\pd{g}{q},\\
+        &= \s{\pd{f}{Q}\pd{Q}{q}
+            + \pd{f}{P}\pd{P}{q}}
+            \s{\pd{g}{Q}\pd{Q}{p}
+            + \pd{g}{P}\pd{P}{p}}
+            - \s{\pd{f}{Q}\pd{Q}{p}
+            + \pd{f}{P}\pd{P}{p}}
+            \s{\pd{g}{Q}\pd{Q}{q}
+            + \pd{g}{P}\pd{P}{q}},\\
+        &= \cancel{f_Q Q_q g_Q Q_p} + f_QQ_q g_PP_p
+            + f_PP_qg_QQ_p + \cancel{f_PP_qg_PP_p}\nonumber\\
+        & - \cancel{f_QQ_pg_QQ_q} - f_QQ_pg_PP_q
+            - f_PP_pg_QQ_q - \cancel{f_PP_pg_PP_q},\\
+        &= \s{\pd{f}{Q}\pd{g}{P} - \pd{f}{P}\pd{g}{Q}}\z{Q, P}_{qp}
+            = \z{f, g}_{QP}\z{Q, P}_{qp}
+\end{align}
+It's a relatively long expansion with chain rules, but we get the desired
+result. Then, directly evaluating, we trivially obtain.
+\begin{align}
+    \rd{Q}{t} &= \z{Q, H}_{qp} = \z{Q, H\p{q(Q, P), p(Q, p)}}_{QP}
+        = \pd{K}{P},\\
+    \rd{P}{t} &= -\pd{K}{Q}.
+\end{align}
+With a time dependence,
+\begin{align}
+    \rd{Q}{t} &= \pd{K}{P} + \pd{Q}{t},\\
+        &= \pd{}{P}\p{K + \pd{S}{t}},\\
+    \rd{P}{t} &= -\pd{}{Q}\p{K + \pd{S}{t}}.
+\end{align}
+$S$ is the generating function, and can have various arguments, but is always
+added to $K$ and must have derivatives $\dot{S}_P = \pdil{Q}{t}$ and $\dot{S}_Q
+= -\pdil{P}{t}$.
+
+\subsection{Henrard Result}
+
+We work backwards, so that we can start with a Hamiltonian system. Consider the
+set of variables satisfying
+\begin{align}
+    \rd{Q}{\tau} &= \pd{}{P}K\p{Q, P}, &
+    \rd{P}{\tau} &= -\pd{}{Q}K\p{Q, P}.
+\end{align}
+Then, the time evolution of some $q\p{Q, P, \tau}$ and $p\p{Q, P, \tau}$ follow
+\begin{align}
+    \rd{q}{\tau} &= \z{q, K}_{QP} + \pd{q}{\tau},\\
+        &= \z{q, K}_{qp}\z{q, p}_{QP} + \pd{q}{\tau},\\
+        &= \pd{K}{p}\z{q, p}_{QP} + \pd{q}{\tau},\\
+    \rd{q}{t} &= \pd{K}{p} + \pd{q}{t},\\
+    \mathrm{d}t &\equiv \mathrm{d}\tau \z{q, p}_{QP},\\
+    \rd{p}{t} &= -\pd{K}{q} + \pd{p}{t}.
+\end{align}
+But if we define $H\p{q, p, t} \equiv K\p{Q(q, p, t), P(q, p, t)}$, then
+\begin{align}
+    \rd{q}{t} &= \pd{H}{p} + \pd{q}{t},\\
+    \rd{p}{t} &= -\pd{H}{q} + \pd{p}{t}.
+\end{align}
+Thus, if the goal is to match some near-Hamiltonian system with EOM
+\begin{align}
+    \rd{q}{t} &= \pd{H}{p} + \epsilon f(q, p),\\
+    \rd{p}{t} &= -\pd{H}{q} + \epsilon g(q, p),
+\end{align}
+then we must have
+\begin{align}
+    q(Q, P, t) &= q_0(Q, P) + \int\limits_0^t
+        \epsilon f(q, p)\;\mathrm{d}t',\\
+    p(Q, P, t) &= p_0(Q, P) + \int\limits_0^t
+        \epsilon g(q, p)\;\mathrm{d}t'.
+\end{align}
+Recall that we have freedom on the $Q, P$ that we're trying to choose to find
+the canonical transformation, so we obviously choose $q_0 = Q$ and $p_0 = P$, a
+\emph{near-identity, non-canonical transformation} between $(q, p)$ and $(Q,
+P)$. We thus land on
+\begin{align}
+    q &= Q + \int\limits_0^t \epsilon f(q, p)\;\mathrm{d}t',\\
+    p &= P + \int\limits_0^t \epsilon g(q, p)\;\mathrm{d}t'.
+\end{align}
+In Henrard's notation, these $(q, p)$ are denoted by $(\tilde{q}, \tilde{p})$.
+And the interpretation is just that, if we let $K(Q, P) = H(\tilde{q},
+\tilde{p})$, then the resulting equations of motion for $\dot{q}$ and $\dot{p}$
+will be as desired? A little unsatisfying, to be honest, but I'm done here.
 
 \section{Tides with Fluid Envelope}
 
