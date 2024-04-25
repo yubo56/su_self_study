@@ -1027,6 +1027,36 @@ And the interpretation is just that, if we let $K(Q, P) = H(\tilde{q},
 \tilde{p})$, then the resulting equations of motion for $\dot{q}$ and $\dot{p}$
 will be as desired? A little unsatisfying, to be honest, but I'm done here.
 
+\subsection{Forward Direction}
+
+Okay, fine, I'm not done, let's prove this in the forward direction. Let $q, p$
+satisfy the equations of motion
+\begin{align}
+    \rd{q}{t} &= f_0(q, p) + \epsilon f_1(q, p),\\
+    \rd{p}{t} &= g_0(q, p) + \epsilon g_1(q, p).
+\end{align}
+Here, $f_0(q, p) = \pdil{H}{p}$ and $g_0(q, p) = -\pdil{H}{q}$.
+
+Define the variables $Q(q, p, t), P(q, p, t)$ that satisfy
+\begin{align}
+    Q &= q - \int\limits_0^t \epsilon f_1(q, p)\;\mathrm{d}t',\\
+    P &= p - \int\limits_0^t \epsilon g_1(q, p)\;\mathrm{d}t'.
+\end{align}
+Inverting these relationships, we define a function of $Q, P$ via
+\begin{equation}
+    K(Q, P) \equiv H(q(Q, P, t), p(Q, P, t)).
+\end{equation}
+It's then straightforward to show that
+\begin{align}
+    \rd{Q}{t} &= \rd{q}{t} - \epsilon f_1(q, p),\\
+    \pd{K}{P} &= \pd{H}{p}\pd{p}{P} = f_0(q, p),\\
+    \rd{P}{t} &= \rd{p}{t} - \epsilon g_1(q, p),\\
+    -\pd{K}{Q} &= -\pd{H}{q}\pd{q}{Q} = g_0(q, p).
+\end{align}
+It is then clear that, by construction, $Q, P$ and $K(Q, P)$ satisfy Hamilton's
+Equations, but I'm missing a factor of the PB\@. So this construction is still
+misinterpreting Henrard's idea somewhat.
+
 \section{Tides with Fluid Envelope}
 
 Question: for a planet w/ thin fluid envelope (by mass), it affects the
