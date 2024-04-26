@@ -1057,6 +1057,59 @@ It is then clear that, by construction, $Q, P$ and $K(Q, P)$ satisfy Hamilton's
 Equations, but I'm missing a factor of the PB\@. So this construction is still
 misinterpreting Henrard's idea somewhat.
 
+\section{Tidal Dissipation into CS2?}
+
+Note that the weak friction equations give a nonzero tidal equilibrium obliquity
+\begin{equation}
+    \rd{\theta}{t} = \frac{1}{t_{\rm s}}
+        \p{\frac{2n}{\Omega_{\rm s}} - \cos \theta}.
+\end{equation}
+This was used by Valente \& Correia 2022, in conjunction with a spin-orbit
+resonance (non-secular) to excite large obliquities for eccentric orbits, where
+these asynchronous SORs are common. So maybe this is legit.
+
+If so, what is the condition for CS2 capture? Well, we know that the resonance
+width is
+\begin{align}
+    \cos \theta_{\rm sep}
+        &\approx \eta \cos I \pm \sqrt{2\eta \sin I
+            \p{1 - \cos \phi}},\\
+    \Delta \cos\theta \sim \sqrt{\eta_{\rm sync}\frac{n}{\Omega_{\rm s}}
+        \sin I}.
+\end{align}
+The condition then for guaranteed capture is
+\begin{align}
+    \frac{2n}{\Omega_{\rm s}} &\lesssim \sqrt{\eta_{\rm sync}
+        \frac{n}{\Omega_{\rm s}}\sin I},\\
+    \frac{4n}{\Omega_{\rm s}} &\lesssim \eta_{\rm sync}\sin I,\\
+    \Omega &\gtrsim \frac{4n}{\eta_{\rm sync}\sin I}.
+\end{align}
+However, recalling that $\eta_{\rm sync} \lesssim 0.7$ is required for large
+obliquities---well, $\eta_{\rm sync} \leq \eta_{\rm c}$, where
+\begin{equation}
+    \eta_{\rm c} = \p{\cos^{2/3}I + \sin^{2/3}I}^{-3/2},
+\end{equation}
+then since $\eta_{\rm c} \in [0.5, 1]$, this is the typical value of $\eta_{\rm
+c}$ as well. Thus, adopting fiducial values $\eta_{\rm sync} \sim \sin I \sim
+0.3$, we obtain that
+\begin{equation}
+    \Omega_{\rm s} \gtrsim 40n.
+\end{equation}
+
+Recall that planets are born near critical rotation, so
+\begin{align}
+    \Omega_{\rm s, 0} &\approx \sqrt{\frac{Gm}{R^3}},\\
+    \frac{\Omega_{\rm s, 0}}{n}
+        &= \sqrt{\frac{ma^3}{M_\star R^3}},\\
+        &=
+            6000
+            \p{\frac{(m/M_\star)/(m_\oplus/M_\odot)}{\scinot{3}{-6}}}^{1/2}
+            \p{\frac{(a/R) / (\mathrm{AU} / R_\oplus)}{\scinot{2.3}{4}}}^{3/2}.
+\end{align}
+Of course, these values are quite optimistic, but it's clear that planets have
+to spin down substantially before reaching synchronization, i.e.\ over many
+$t_{\rm s}$, and so there is plenty of time to experience obliquity excitement.
+
 \section{Tides with Fluid Envelope}
 
 Question: for a planet w/ thin fluid envelope (by mass), it affects the
