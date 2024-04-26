@@ -8,7 +8,7 @@ using Toybox.Time;
 const appid = "";
 const lat = 42.4522; // default location, cornell
 const lon = -76.4804;
-const url = "https://api.openweathermap.org/data/2.5/onecall";
+const url = "https://api.openweathermap.org/data/3.0/onecall";
 const headers = {
     :method => Communications.HTTP_REQUEST_METHOD_GET,
     :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON

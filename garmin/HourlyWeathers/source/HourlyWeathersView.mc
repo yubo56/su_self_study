@@ -16,7 +16,7 @@ const key = "";
 const site = "https://api.tomorrow.io/v4/timelines";
 
 const appid = "";
-const url = "https://api.openweathermap.org/data/2.5/onecall";
+const url = "https://api.openweathermap.org/data/3.0/onecall";
 const headers = {
     :method => Communications.HTTP_REQUEST_METHOD_GET,
     :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
