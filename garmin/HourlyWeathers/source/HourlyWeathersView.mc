@@ -35,8 +35,8 @@ var dx = xmax - 2 * left;
 var dy = ymax - 2 * top;
 var r = 1.0;
 var d = 2 * r + 1;
-var numdays = 2;
-var numhours = 48;
+var numdays = 4;
+var numhours = 96;
 var numMinutes = 60;
 
 class HourlyWeathersView extends WatchUi.View {
