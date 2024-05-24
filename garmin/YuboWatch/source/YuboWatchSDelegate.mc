@@ -70,11 +70,10 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 
         var daily = data.get("daily");
 
-        var ret = new[33];
+        var ret = new[26];
         for (var i = 0; i < 7; i++) {
             ret[12 + i] = daily[i].get("temp").get("min");
             ret[19 + i] = daily[i].get("temp").get("max");
-            ret[26 + i] = daily[i].get("dew_point");
         }
 
         ret[0] = current.get("temp");
