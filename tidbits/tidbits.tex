@@ -3006,4 +3006,37 @@ Pythagorean theorem,
 \end{align*}
 But $a\cos\theta_1 = b\cos\theta_2 = d$.
 
+\section{Number of 1s}
+
+This was a fun little problem I heard recently. Let the function $f(N)$ be
+defined as: write out the decimal representations of all numbers $\s{1, N}$,
+then $f(N)$ is the total number of $1$s in this string. Will $f(N)$ ever cross
+$N$, and if so, when?
+
+Intuitively, we might guess that it never crosses; it seems like a really small
+number! But it does cross, and it's easy to see why.
+
+For any power $k$, consider the numbers $\in \s{10^k, 10^{k + 1} - 1}$, i.e.\
+all numbers with $k$ digits. The total number of integers in this list will of
+course be $\scinot{9}{k}$, while the number of $1$s can be easily computed:
+the first digit is a one $1/9$ of the time, and the other digits are ones $1/10$
+of the time. Thus, the first digit contributes $10^{k - 1}$ ones, and the others
+contribute $(k - 1) \times 9 \times 10^{k - 1}$, and so
+\begin{align}
+    f\p{10^{k + 1} - 1} - f\p{10^k - 1}
+        &= 10^{k - 1} + 9\p{k - 1} \times 10^{k - 1}\nonumber\\
+        &= (9k - 8) \times 10^{k - 1}.
+\end{align}
+This will exceed $90 \times 10^{k - 1}$---the change in $N$---once $k \geq 11$.
+So it should cross some time when we are summing up $11$-digit numbers (because
+the scaling of $\Delta f$ is so steep in $k$, the location where $\Delta f -
+\Delta n$ changes sign is effectively where $f(N) - N$ changes signs too).
+
+This is easy to generalize to arbitrary bases $m$. Following the above argument,
+it is clear that $\Delta f$ can be written
+\begin{equation}
+    f\p{m^{k + 1} - 1} - f\p{m^k - 1}
+        = [(m-1)k - (m-2)] \times m^{k - 1}.
+\end{equation}
+
 \end{document}
