@@ -38,6 +38,13 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
 	        id == 800 ? "O" : w.get("main").substring(0, 1),
 	        (id % 100).format("%02d")]);
     }
+    function weatherStrCC(intv) {
+        var wc = intv.get("values").get("weatherCode");
+        return Lang.format("$1$$2$", [
+            (wc / 100).format("%02d"),
+            wc % 10
+        ]);
+    }
     function onTemporalEvent() {
         if (!System.getDeviceSettings().phoneConnected) {
             Background.exit([[], false, -11]);
@@ -79,9 +86,6 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
         ret[4] = timeToHHMM(current.get("sunrise"));
         ret[5] = timeToHHMM(current.get("sunset"));
         ret[6] = Math.round(current.get("uvi"));
-        ret[7] = "O00";
-        ret[8] = "O00";
-        ret[9] = "O00";
         ret[10] = wsymb;
         ret[11] = (weather.get("id") % 100).format("%02d");
 
@@ -91,7 +95,7 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
                "location" => Lang.format("$1$,$2$", [bglat, bglon]),
                "units" => "metric",
                "apikey" => key,
-               "fields" => "temperatureMax,temperatureMin,dewPointMax",
+               "fields" => "temperatureMax,temperatureMin,dewPointMax,weatherCode",
                "timesteps" => "1d",
                "endtime" => "nowPlus6d"
             }, 
@@ -109,6 +113,9 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             ret[18 + i] = intervals[i].get("values").get("temperatureMax");
             ret[24 + i] = intervals[i].get("values").get("dewPointMax");
         }
+        ret[7] = weatherStrCC(intervals[0]);
+        ret[8] = weatherStrCC(intervals[1]);
+        ret[9] = weatherStrCC(intervals[2]);
         Background.exit([ret, true, 200]);
     }
 }
