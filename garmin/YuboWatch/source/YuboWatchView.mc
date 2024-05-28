@@ -73,11 +73,12 @@ class YuboWatchView extends WatchUi.WatchFace {
 
         var bgdat = Application.getApp().getProperty(BGDATA);
         // hi/lo graph
-        if (bgdat.size() == 26) {
-            var TEMP_MIN = bgdat[12];
+        if (bgdat.size() == 33) {
+            var TEMP_MIN = bgdat[12] > bgdat[26] ? bgdat[26] : bgdat[12];
             var TEMP_MAX = bgdat[19];
             for (i = 1; i < 7; i++) {
-                TEMP_MIN = Math.floor(TEMP_MIN > bgdat[12 + i] ? bgdat[12 + i] : TEMP_MIN);
+                TEMP_MIN = TEMP_MIN > bgdat[12 + i] ? bgdat[12 + i] : TEMP_MIN;
+                TEMP_MIN = Math.floor(TEMP_MIN > bgdat[26 + i] ? bgdat[26 + i] : TEMP_MIN);
                 TEMP_MAX = Math.ceil(TEMP_MAX > bgdat[19 + i] ? TEMP_MAX : bgdat[19 + i]);
             }
             var mid5 = Math.round((TEMP_MIN + TEMP_MAX) / 10) * 5;
@@ -102,18 +103,20 @@ class YuboWatchView extends WatchUi.WatchFace {
                 dc.drawLine(left + 1, linepy, left+dx - 2, linepy);
 	        }
 
-            dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 	        for (i = 0; i < 7; i++) {
 	            // generate plots, assume temp in (-10, 30)
 	            var px = Math.round(1.0 * (i + 1) / 8 * dx + left);
+
+                dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
                 var y = Math.round((1.0 - (bgdat[19 + i] - TEMP_MIN + r + 1) / (TEMP_MAX - TEMP_MIN + 2 * r + 2)) * dy + top);
                 dc.fillRectangle(px - r, y - r, d, d);
-            }
-            dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-            for (i = 0; i < 7; i++) {
-                // generate plots, assume temp in (-10, 30)
-                var px = Math.round(1.0 * (i + 1) / 8 * dx + left);
-                var y = Math.round((1.0 - (bgdat[12 + i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+
+                dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
+                y = Math.round((1.0 - (bgdat[12 + i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
+                dc.fillRectangle(px - r, y - r, d, d);
+
+	            dc.setColor(Graphics.COLOR_GREEN, Graphics.COLOR_TRANSPARENT);
+                y = Math.round((1.0 - (bgdat[26 + i] - TEMP_MIN + 2.0) / (TEMP_MAX - TEMP_MIN + 4.0)) * dy + top);
                 dc.fillRectangle(px - r, y - r, d, d);
 	        }
 	    }
@@ -143,7 +146,7 @@ class YuboWatchView extends WatchUi.WatchFace {
         var v = System.getSystemStats();
         dc.setColor(v.battery > 20 ? Graphics.COLOR_GREEN : Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(164, 9, Graphics.FONT_MEDIUM, v.battery.format("%.1f"), Graphics.TEXT_JUSTIFY_RIGHT);
-        
+
         // draw last response code
         v = Application.getApp().getProperty(LASTCODE1);
         if (v != null) {
