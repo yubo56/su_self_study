@@ -108,10 +108,20 @@ class YuboWatchSDelegate extends System.ServiceDelegate {
             Background.exit([[], false, responseCode]);
         }
         var intervals = data.get("data").get("timelines")[0].get("intervals");
+        var numintervals = intervals.size();
         for (var i = 0; i < 6; i++) {
-            ret[12 + i] = intervals[i].get("values").get("temperatureMin");
-            ret[18 + i] = intervals[i].get("values").get("temperatureMax");
-            ret[24 + i] = intervals[i].get("values").get("dewPointMax");
+            if (i < numintervals)
+            {
+                ret[12 + i] = intervals[i].get("values").get("temperatureMin");
+                ret[18 + i] = intervals[i].get("values").get("temperatureMax");
+                ret[24 + i] = intervals[i].get("values").get("dewPointMax");
+            }
+            else
+            {
+                ret[12 + i] = ret[12 + numintervals - 1];
+                ret[18 + i] = ret[18 + numintervals- 1];
+                ret[24 + i] = ret[24 + numintervals - 1];
+            }
         }
         ret[7] = weatherStrCC(intervals[0]);
         ret[8] = weatherStrCC(intervals[1]);
