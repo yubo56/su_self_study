@@ -855,7 +855,9 @@ Combining, we find (define $\Delta \equiv \delta v / v_0$)
     e &\approx 2\Delta = 2\frac{\delta m}{M'}\frac{v_{\rm ej}}{v_0}.
 \end{align}
 
-\section{Tidal Dissipation into CS2?}
+\section{CS2 Misc}
+
+\subsection{04/26/2024---Tidal Dissipation into CS2?}
 
 Note that the weak friction equations give a nonzero tidal equilibrium obliquity
 \begin{equation}
@@ -872,7 +874,7 @@ width is
     \cos \theta_{\rm sep}
         &\approx \eta \cos I \pm \sqrt{2\eta \sin I
             \p{1 - \cos \phi}},\\
-    \Delta \cos\theta \sim \sqrt{\eta_{\rm sync}\frac{n}{\Omega_{\rm s}}
+    \Delta \cos\theta &\sim \sqrt{\eta_{\rm sync}\frac{n}{\Omega_{\rm s}}
         \sin I}.
 \end{align}
 The condition then for guaranteed capture is
@@ -908,7 +910,7 @@ Of course, these values are quite optimistic, but it's clear that planets have
 to spin down substantially before reaching synchronization, i.e.\ over many
 $t_{\rm s}$, and so there is plenty of time to experience obliquity excitement.
 
-\subsection{Do we believe Obliquity Excitation?}
+\subsection{04/29/2024---Do we believe Obliquity Excitation?}
 
 We start with the L12 Eq.~(37)
 \begin{equation}
@@ -972,6 +974,73 @@ be a despinning torque, so $\cos\theta$ grows.
 
 Maybe we can assert that the dynamical tide generally also acts to increase
 obliquities as long as the pattern frequency is negative? TODO\@.
+
+\textbf{09/02/24 Edit:} This is not actually quite true, the torque exerted by
+the orbit also has an in-plane component, EKE01.
+
+\subsection{09/02/24---Tidal Bulge-induced Precession?}
+
+As we know, in the apsidal precession problem, there is both a $J_2$ and a
+tides-induced precession effect (LML15). At synchronization, the tidal
+precession is faster, and for rapid rotation, the $J_2$ precession dominates.
+What about for spin precession? As in the discussion above, we focus on the
+effect on the planet's spin, so $\mu = m_{\rm p}$, and the perturber mass is
+$M_\star$. We want to compare this to the standard spin precession induced by
+oblateness, given by (e.g.\ SL22a)
+\begin{equation}
+    \omega_{\rm sl}
+        = \frac{k_2}{2k}\frac{M_\star}{m_{\rm p}}\p{\frac{R}{a}}^3
+            \omega \cos \theta.
+\end{equation}
+
+Let's do this two ways to try to ensure correctness. We first follow EKH98, then
+EKE01 (checked against FT07).
+
+In EKH98, the spin AM $I\bm{\Omega}$ and the orbital AM $\mu \bm{h} = \mu \bm{r}
+\times \bm{v}$ precess about the total AM $\bm{H}$, such that
+\begin{align}
+    \hat{h} = \p{\sin\eta \sin\chi, -\sin \eta \cos \chi, \cos \eta},
+\end{align}
+in an inertial frame with $\uv{z} \parallel \bm{H}$. In the limit of no tidal
+friction (just above Eq.~98), we have that $\eta$ is constant, and $\chi$
+advances uniformly with
+\begin{equation}
+    \dot{\chi} =
+        -\frac{Am_2\Omega_0 \Omega_\parallel}{2\mu\omega a^5 (1 - e^2)^2}.
+\end{equation}
+We consider circular orbits. EKH uses $A = k_2R^5$, $\mu = m_{\rm p}$, $m_2 =
+M_\star$, $\Omega_{\parallel} \approx \bm{\Omega} \cdot \uv{h} = \omega \cos
+\theta$ where $\theta$ is the obliquity and $\omega$ is the planet's spin rate,
+and $\Omega_0 = H / I \approx (L / S)\omega$. Thus, we have instead
+\begin{align}
+    \dot{\chi}
+        &=
+            -\frac{k_2R^5 M_\star \omega^2}{2m_{\rm p}\omega a^5}
+                \frac{L}{S}\cos\theta\nonumber\\
+        &=
+            -\frac{k_2}{2k}
+            \frac{M_\star}{m_{\rm p}}
+            \p{\frac{R}{a}}^3
+            \omega \cos \theta.
+\end{align}
+The correction of the factor of $2$ does not affect this expression (appendix of
+EKE01). Thus, this is exactly the rotational-induced precession rate. This
+suggests that EKH98 actually just includes this term somehow.
+
+Let's now follow EKE01 and FT07. We will work out EKE01, and compare to the
+appendix of FT07. But here, we run into a problem: there is no tidally-induced
+precession term! Indeed, it's always damping (EKE01). And when we look at FT07,
+maybe we see the answer: the Hamiltonian for the tidal bulge piece does not
+depend on the inclination, since it is always pointed at the companion (in the
+limit of zero dissipation). Thus, it can never contribute a $\dot{\Omega}$,
+since $\mathcal{F}_{\rm extra}(L, G, H) = \mathcal{F}_{\rm extra}(L, G)$. On the
+other hand, it \emph{does} contribute apsidal precession, since the bulge
+amplitude does depend on the eccentricity?
+
+So the EKH98 result must be the same rotational-bulge-induced precession that we
+have been studying, and indeed, the above two precession frequencies agree. So
+at the level of approximation considered there, the tidal bulge does \emph{not}
+affect the spin-orbit precession rate.
 
 \section{Tides with Fluid Envelope}
 
