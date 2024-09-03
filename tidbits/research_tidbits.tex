@@ -1042,6 +1042,510 @@ have been studying, and indeed, the above two precession frequencies agree. So
 at the level of approximation considered there, the tidal bulge does \emph{not}
 affect the spin-orbit precession rate.
 
+\textbf{Note (09/03/24):} Jeremy agrees that since the tidal bulge, described by
+the apsidal motion constant, cannot induce nodal precession, since it is always
+a radial distortion. There may be higher-order effects though.
+
+\subsection{09/02/24---Reworking Lai 2012}
+
+But Lai 2012 suggests that there should be a dissipation-free component? I guess
+it's time to follow his calculation and see what's going on. I suspect that the
+$y$ component will be zero, because it has a $\partial_\theta P_2(\cos\theta)$,
+which just depends on $P_1(\cos\theta)$, which vanishes when integrating against
+a $\delta \bar{\rho}$. Nevertheless, it will be instructive to finally
+understand this paper completely\dots
+
+We follow his Section 2 through Equation 30. We begin by writing out the tidal
+potential in the AM frame
+\begin{equation}
+    U\p{\bm{r}_L, t} = -GM'
+        \sum\limits_{m'} \frac{W_{2m'}r^2}{a^3}
+            e^{-im' \Omega t}Y_{2m'}\p{\theta_L, \phi_L}.
+\end{equation}
+Here, $W_{20} = -\sqrt{\pi/5}$ and $W_{\pm 2} = \sqrt{3\pi / 10}$. The angles
+represent the coordinates in the tidal potential frame, as do the $m'$.
+
+We re-express this in the spin frame using the Wigner $\mathcal{D}$-matrix. Dong
+has the entries, but it is the matrix that gives
+\begin{equation}
+    Y_{2m'}\p{\theta_L, \phi_L}
+        = \sum\limits_m \mathcal{D}_{mm'}(\Theta)Y_{2m}\p{\theta, \phi}.
+\end{equation}
+Here, $\Theta$ is the obliquity, or the misalignment angle between the spin and
+AM frames. Then, the tidal potential in the spin frame (which is where we will
+work going forwards) is
+\begin{align}
+    U\p{\bm{r}, t}
+        &= -\sum\limits_{mm'} U_{mm'} r^2Y_{2m}\p{\theta, \phi}
+            e^{-im \Omega t},\\
+    U_{mm'}
+        &\equiv \frac{GM'}{a^3}\mathcal{U}_{mm'}
+        \equiv \frac{GM'}{a^3}W_{2m'}\mathcal{D}_{mm'}(\Theta).
+\end{align}
+
+Now, the planet will in general experience some sort of a tidal response to this
+perturbing potential. Typically, this is parameterized in terms of the $l$th
+Love number, but Dong absorbs all of these into one coefficient, as we shall
+see. First, for each tidal forcing frequency, associaote to it a phase lag
+\begin{align}
+    \Delta_{mm'} &= \tilde{\omega}_{mm'}t_{mm'},\\
+    \tilde{\omega}_{mm'} &= m'\Omega - m\omega,
+\end{align}
+where $\omega$ is the spin frequency of the planet, $\tilde{\omega}_{mm'}$
+is the tidal frequency of the $mm'$ component, and $t_{mm'}$ is the lag time.
+For the purposes of computing the torque, we will need the perturbed structure
+of the body, expressed in terms of the Lagrangian displacement and density
+perturbations:
+\begin{align}
+    \bm{\xi}_{mm'}\p{\bm{r}, t}
+        &=
+            \frac{U_{mm'}}{\omega_0^2}
+            \bar{\bm{\xi}}_{mm'}\p{\bm{r}}
+            e^{-im'\Omega t + i\Delta_{mm'}},\\
+    \delta \rho_{mm'}\p{\bm{r}, t}
+        &=
+            \frac{U_{mm'}}{\omega_0^2}
+            \delta \bar{\rho}_{mm'}(\bm{r})
+            e^{-im'\Omega t + i\Delta_{mm'}},\\
+    \delta \bar{\rho}_{mm'}
+        &= -\bm{\nabla} \cdot \p{\rho \bar{\bm{\xi}}_{mm'}}.
+\end{align}
+Here, $\bar{\bm{\xi}}_{mm'}$ and $\delta \bar{\rho}_{mm'}$ describe the shape of
+the static perturbation to the body; other than a factor of $e^{im\phi}$, Dong
+claims that they are purely real. Does this mean that I can define them as
+\begin{equation}
+    \bar{\bm{\xi}}_{mm'}\p{\bm{r}}
+        = \bar{\bm{\xi}}_{m'}\p{r, \theta}e^{im\phi},
+\end{equation}
+or not? I'll do that for now.
+
+Now, to evaluate the tidal torque on the star, we need to evaluate
+\begin{align}
+    \bm{T}
+        &=
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\rho\p{\bm{r}, t}
+                \bm{r} \times \s{-\bm{\nabla} U^*\p{\bm{r}, t}}.
+\end{align}
+This is somewhat tedious to write out all at once, so let's start with the
+gradient of the potential (we drop the $\bm{r}$ component, since it will go away
+with the cross product)
+\begin{align}
+    -\bm{\nabla}_\perp U^*\p{\bm{r}, t}
+        &=
+            r^2
+            \sum\limits_{mm'}
+            U_{mm'}
+            e^{im\Omega t}
+            \bm{\nabla}_{\perp}
+            (Y^*_{2m}(\theta, \phi))\nonumber\\
+        &=
+            r^2
+            \sum\limits_{mm'}
+            U_{mm'}
+            e^{im\Omega t}
+            \p{
+                \frac{1}{r} \pd{}{\theta}Y^*_{2m}\p{\theta, \phi}\uv{\theta}
+                + \frac{1}{r\sin\theta}
+                    \pd{}{\phi}Y^*_{2m}\p{\theta, \phi}\uv{\phi}
+            },\\
+    \bm{r} \times \s{-\bm{\nabla}_\perp U^*\p{\bm{r}, t}}
+        &=
+            r^2
+            \sum\limits_{mm'}
+            U_{mm'}
+            e^{im\Omega t}
+            \p{
+                \pd{}{\theta}Y^*_{2m}\p{\theta, \phi}\uv{\phi}
+                - \frac{1}{\sin\theta}
+                    \pd{}{\phi}Y^*_{2m}\p{\theta, \phi}\uv{\theta}
+            },
+\end{align}
+and so
+\begin{align}
+    \bm{T}
+        &=
+            \sum\limits_{\bar{m}m'}
+            U_{\bar{m}m'}
+            e^{-im'\Omega t}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\rho\p{\bm{r}, t}
+                r^2
+                \p{
+                    \pd{}{\theta}Y^*_{2\bar{m}}\p{\theta, \phi}\uv{\phi}
+                    - \frac{1}{\sin\theta}
+                        \pd{}{\phi}Y^*_{2\bar{m}}\p{\theta, \phi}\uv{\theta}
+                }\nonumber\\
+        &=
+            \sum\limits_{m\bar{m}m'}
+            \frac{U_{\bar{m}m'}U_{mm'}}{\omega_0^2}
+            e^{i\Delta_{\bar{m}m'}}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                \p{
+                    \pd{}{\theta}Y^*_{2\bar{m}}\p{\theta, \phi}\uv{\phi}
+                    + \frac{im}{\sin\theta}
+                        Y^*_{2\bar{m}}\p{\theta, \phi}\uv{\theta}
+                }.
+\end{align}
+Then, to compute the $\uv{z}$ component of this, we note that
+\begin{align}
+    \uv{\phi} &= -\sin\phi \uv{x} + \cos\phi \uv{y},\\
+    \uv{\theta} &= \cos\theta\p{\cos\phi \uv{x} + \sin\phi \uv{y}} -
+        \sin\theta\uv{z}.
+\end{align}
+Thus, the integral of $\delta \bar{\rho}_{mm'}Y_{2\bar{m}}^* \propto
+\delta_{m\bar{m}}$, and so we have
+\begin{align}
+    T_z
+        &=
+            -\sum\limits_{m\bar{m}m'}
+            \frac{U_{\bar{m}m'}U_{mm'}}{\omega_0^2}
+            e^{i\Delta_{\bar{m}m'}}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                (i\bar{m})Y^*_{2\bar{m}}\p{\theta, \phi},\\
+    \Re (T_z)
+        &=
+            \sum\limits_{mm'}
+            m
+            \frac{U_{mm'}^2}{\omega_0^2}
+            \sin (\Delta_{mm'})
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                Y^*_{2m}\p{\theta, \phi}\nonumber\\
+        &\equiv
+            T_0
+            \sum\limits_{mm'}
+            m
+            \mathcal{U}_{mm'}^2
+            \sin (\Delta_{mm'})
+            \kappa_{mm'},\\
+    \kappa_{mm'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                Y^*_{2m}\p{\theta, \phi}.
+\end{align}
+Note that $U^2_{mm'} / \omega_0^2 = T_0 \mathcal{U}_{mm'} / MR^2$.
+
+On the other hand, the $xy$ components are a little less straightforward, since
+\begin{align}
+    \sin\phi &= -\frac{e^{i\phi} - e^{-i\phi}}{2i},\\
+    \cos\phi &= \frac{e^{i\phi} + e^{-i\phi}}{2}.
+\end{align}
+Thus, $m=\bar{m}$ is no longer guaranteed (and in fact, $m = \bar{m} \pm 1$),
+and we have the full form for $T_x$ (to compare with Lai 2012):
+\begin{align}
+    \Re(T_x)
+        &=
+            T_0
+            \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}
+            \mathcal{U}_{\bar{m}m'}
+            \frac{i\sin \Delta_{mm'}}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                \p{
+                    -\pd{Y^*_{2\bar{m}}}{\theta}\sin\phi
+                    + \frac{i\bar{m}}{\tan \theta}
+                        Y^*_{2\bar{m}}\cos\phi
+                },\\
+        &\equiv
+            T_0
+            \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}
+            \mathcal{U}_{\bar{m}m'}
+            \sin \Delta_{mm'}
+            \kappa_{m\bar{m}m'},\\
+    \kappa_{m\bar{m}m'}
+        &\equiv
+            \frac{1}{iMR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                \p{
+                    \pd{Y^*_{2\bar{m}}}{\theta}\sin\phi
+                    - \frac{i\bar{m}}{\tan \theta}
+                        Y^*_{2\bar{m}}\cos\phi
+                }.
+\end{align}
+Note that $\kappa_{m\bar{m}m'}$ is real, since $\delta\bar{\rho} \propto
+e^{im\phi}$, and the only terms in the integrand that have forms
+$e^{i\bar{m}\phi} \pm e^{i\phi}$ have imaginary coefficients.
+
+Finally, to get a torque, we need to relate the $\kappa_{m\bar{m}m'}$ to the
+$\kappa_{mm'}$. We need the identity
+\begin{align}
+    \pd{Y_{lm}}{\theta}
+        &= \frac{m}{\tan\theta}Y_{lm} + \sqrt{(l - m)(l + m + 1)}
+            e^{-i\phi}Y_{l(m+1)},
+\end{align}
+which then lets us write the geometric piece of the integrand in
+$\kappa_{m\bar{m}m'}$, denoted $\mathcal{I}$ (simply to have something on the
+LHS of the equation), as:
+\begin{align}
+    \mathcal{I}
+        &\equiv
+            \pd{Y_{2\bar{m}}^*}{\theta}
+                    \frac{e^{i\phi} - e^{-i\phi}}{2i}
+                + \frac{\bar{m}}{i\tan\theta}Y_{2\bar{m}}^*
+                    \frac{e^{i\phi} + e^{-i\phi}}{2}\nonumber\\
+        &=
+            \s{\frac{\bar{m}}{\tan\theta} Y_{2\bar{m}}^*
+                    + \sqrt{(2-\bar{m})(3+\bar{m})}e^{i\phi}Y_{2(\bar{m} + 1)}^*}
+                \frac{e^{i\phi} - e^{-i\phi}}{2i}
+            + \frac{\bar{m}}{\tan\theta}Y_{2\bar{m}}^*
+                \frac{e^{i\phi} + e^{-i\phi}}{2i}\nonumber\\
+        &=
+            \frac{\bar{m}}{\tan\theta}Y_{2\bar{m}}^* \frac{e^{i\phi}}{i}
+            + \sqrt{(2-\bar{m})(3+\bar{m})}Y_{2(\bar{m} + 1)}^*
+                \frac{e^{2i\phi} - 1}{2i}
+\end{align}
+Let's evaluate a few cases. First, for $m=2$, and $\bar{m} = 3, 1$. Of course,
+$\bar{m} = 3$ is zero, since the $Y_{2\bar{m}}$ are zero. Then
+\begin{align}
+    \kappa_{21m'}
+        &=
+            -\frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{2m'}(r, \theta)
+            e^{i2\phi}
+            \s{\frac{Y_{21}^* e^{i\phi}}{\tan\theta}
+                + Y_{22}^* \p{e^{2i\phi} - 1}},\\
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{2m'}(r, \theta)
+            e^{i2\phi}
+            Y_{22}^* = \kappa_{2m'}.
+\end{align}
+Nice! Another, for $m=1$, then there are two cases, and we will take the complex
+one $\bar{m} = 2$ (and we will take $m=-1$, $\bar{m} = -2$ for comparison):
+\begin{align}
+    \kappa_{12m'}
+        &=
+            -\frac{1}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \frac{r^2}{\tan\theta}
+                \delta\bar{\rho}_{1m'}(r, \theta)
+                e^{i\phi}
+                \p{
+                    2Y_{22}^* e^{i\phi}
+                },\\
+    Y_{22}^*
+        &= -\frac{1}{2}\tan\theta e^{-i\phi} Y_{21}^*,\\
+    \kappa_{12m'} &= \kappa_{1m'},\\
+    \kappa_{(-1)(-2)m'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{(-1)m'}(r, \theta)
+            e^{-i\phi}
+            Y_{2(-1)}^* = \kappa_{(-1)m'}.
+\end{align}
+Oh, this is nifty, we actually have to pull up the list of spherical harmonics
+to make this work!
+
+On the other hand, for $T_{y}$, which was neglected in Dong's treatment:
+\begin{align}
+    T_y
+        &=
+            T_0
+            \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}
+            \mathcal{U}_{\bar{m}m'}
+            \frac{e^{i\Delta_{mm'}}}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                \p{
+                    \pd{Y^*_{2\bar{m}}}{\theta}\cos\phi
+                    + \frac{i\bar{m}}{\tan \theta}
+                        Y^*_{2\bar{m}}\sin\phi
+                },\\
+        &=
+            T_0
+            \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}
+            \mathcal{U}_{\bar{m}m'}
+            \cos \Delta_{mm'}
+            \kappa'_{m\bar{m}m'},\\
+    \kappa'_{m\bar{m}m'}
+        &\equiv
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \delta\bar{\rho}_{mm'}\p{\bm{r}}
+                r^2
+                \p{
+                    \pd{Y^*_{2\bar{m}}}{\theta}\cos\phi
+                    + \frac{i\bar{m}}{\tan \theta}
+                        Y^*_{2\bar{m}}\sin\phi
+                }.
+\end{align}
+Again, $\kappa'_{m\bar{m}m'}$ is real, since $i\sin\phi$ contributes $e^{\pm
+i\phi}$ with real coefficients, and so does $\cos\phi$. Here, instead
+\begin{align}
+    \mathcal{I}'
+        &\equiv
+            \pd{Y_{2\bar{m}}^*}{\theta}
+                    \frac{e^{i\phi} + e^{-i\phi}}{2}
+                + \frac{\bar{m}}{\tan\theta}Y_{2\bar{m}}^*
+                    \frac{e^{i\phi} - e^{-i\phi}}{2}\nonumber\\
+        &=
+            \s{\frac{\bar{m}}{\tan\theta} Y_{2\bar{m}}^*
+                + \sqrt{(2-\bar{m})(3+\bar{m})}e^{i\phi}Y_{2(\bar{m} + 1)}^*}
+                \frac{e^{i\phi} + e^{-i\phi}}{2}
+            + \frac{\bar{m}}{\tan\theta}Y_{2\bar{m}}^*
+                \frac{e^{i\phi} - e^{-i\phi}}{2}\nonumber\\
+        &=
+            \frac{\bar{m}}{\tan\theta}Y_{2\bar{m}}^*e^{i\phi}
+                + \sqrt{(2-\bar{m})(3+\bar{m})}Y_{2(\bar{m} + 1)}^*
+                \frac{e^{2i\phi} + 1}{2}.
+\end{align}
+Now, can we try to directly compute any of these coefficients? Let's try another
+one
+\begin{align}
+    \kappa_{21m'}'
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{2m'}(r, \theta)
+            e^{i2\phi}
+            \s{\frac{Y_{21}^* e^{i\phi}}{\tan\theta}
+                + Y_{22}^* \p{e^{2i\phi} + 1}}\nonumber\\
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{2m'}(r, \theta)
+            e^{i2\phi} Y_{22}^* = \kappa_{2m'}.
+\end{align}
+And
+\begin{align}
+    \kappa_{12m'}'
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                \frac{r^2}{\tan\theta}
+                \delta\bar{\rho}_{1m'}(r, \theta)
+                e^{i\phi}
+                2Y_{22}^* e^{i\phi} = -\kappa_{1m'},\\
+    \kappa_{(-1)(-2)m'}'
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                r^2
+                \delta\bar{\rho}_{(-1)m'}(r, \theta)
+                e^{-i\phi}
+                \s{-\frac{2}{\tan\theta}Y_{2(-2)}e^{i\phi}
+                    + Y_{2(-1)}^*\p{e^{2i\phi} + 1}}\nonumber\\
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3\bm{r}\;
+                r^2
+                \delta\bar{\rho}_{(-1)m'}(r, \theta)
+                e^{-i\phi}
+                Y_{2(-1)}^*
+        = \kappa_{(-1)m'}.
+\end{align}
+We see that the signs are slightly different: while $\kappa_{12m'} /
+\kappa_{1m'} = \kappa_{(-1)(-2)m'} / \kappa_{(-1)m'}$ (same sign), we have
+$\kappa_{12m'}' / \kappa_{1m'} = -\kappa_{(-1)(-2)m'}' / \kappa_{(-1)m'}$. Thus,
+there should probably be some cancellations. But let's just do it all the way,
+we have 3/7 nontrivial terms already\dots
+\begin{align}
+    \kappa'_{(-2)(-1)m'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{(-2)m'}(r, \theta)
+            e^{-i2\phi}
+            \s{-\frac{Y_{2(-1)}^* e^{i\phi}}{\tan\theta}
+                + \sqrt{\frac{3}{2}}Y_{20}^* \p{e^{2i\phi} + 1}}\nonumber\\
+    -\frac{Y_{2(-1)}^* e^{i\phi}}{\tan\theta}
+            + \sqrt{\frac{3}{2}}Y_{20}^* e^{2i\phi}
+        &= - Y_{22}^*\nonumber\\
+    \kappa'_{(-2)(-1)m'} &= -\kappa_{(-2)m'},\\
+    \kappa'_{10m'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{1m'}(r, \theta)
+            e^{i\phi}
+            \sqrt{\frac{3}{2}}Y_{21}^* = \sqrt{\frac{3}{2}}\kappa_{1m'},\\
+    \kappa'_{(-1)0m'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{(-1)m'}(r, \theta)
+            e^{-i\phi}
+            \sqrt{\frac{3}{2}}Y_{21}^*e^{2i\phi}
+                = -\sqrt{\frac{3}{2}} \kappa_{(-1)m'},\\
+    \kappa'_{01m'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{0m'}(r, \theta)
+            \s{\frac{Y_{21}^* e^{i\phi}}{\tan\theta}
+                + Y_{22}^* \p{e^{2i\phi} + 1}}\nonumber\\
+        &=
+            -\frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{0m'}(r, \theta)
+            Y_{20} = -\sqrt{\frac{3}{2}}\kappa_{0m'},\\
+    \kappa'_{0(-1)m'}
+        &=
+            \frac{1}{MR^2}
+            \int\limits\mathrm{d}^3 \bm{r}\;
+            r^2
+            \delta \bar{\rho}_{0m'}(r, \theta)
+            \s{-\frac{Y_{2(-1)}^* e^{i\phi}}{\tan\theta}
+                + \sqrt{\frac{3}{2}}Y_{20}^* \p{e^{2i\phi} + 1}}\nonumber\\
+        &= \sqrt{\frac{3}{2}}\kappa_{0m'}.
+\end{align}
+In summary, our direct computation yields the following results:
+\begin{align}
+    \kappa_{21m'} = \kappa_{2m'}^- &= \kappa_{2m'}, &
+    \kappa_{(-2)(-1)m'} = \kappa_{(-2)m'}^+ &= -\kappa_{(-2)m'}, \nonumber\\
+    \kappa_{12m'} = \kappa_{1m'}^+ &= -\kappa_{1m'}, &
+    \kappa_{10m'} = \kappa_{1m'}^- &= \sqrt{3/2}\kappa_{1m'}, \nonumber\\
+    \kappa_{0(\pm 1)m'} = \kappa_{0m'}^{\pm} &= \mp \sqrt{3/2}\kappa_{0m'}, \nonumber\\
+    \kappa_{(-1)0m'} = \kappa_{(-1)m'}^+ &= -\sqrt{3/2}\kappa_{(-1)m'}, &
+    \kappa_{(-1)(-2)m'} = \kappa_{(-1)m'}^- &= \kappa_{(-1)m'},\\
+    \kappa_{m\bar{m}m'} &= -\kappa_{(-m)(-\bar{m})m'}.
+\end{align}
+Looking back at the torque, we need to sum an expression of the form
+\begin{align}
+    T_{y}
+        &\propto \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}\mathcal{U}_{\bar{m}m'}\kappa'_{m\bar{m}m'},\\
+    \mathcal{U}_{mm'}
+        &= W_{2m'}\mathcal{D}_{mm'}(\Theta),\\
+    (-1)^{m - m'}\mathcal{D}_{mm'} &= \mathcal{D}_{(-m)(-m')},\\
+    \mathcal{D}_{mm'}\mathcal{D}_{\bar{m}m'}
+        &= (-1)^{m + \bar{m} - 2m'}
+            \mathcal{D}_{(-m)(-m')}\mathcal{D}_{(-\bar{m})(-m')}.
+\end{align}
+There seems to be no natural symmetry to get this torque to vanish\dots What a
+mystery.
+
+
 \section{Tides with Fluid Envelope}
 
 Question: for a planet w/ thin fluid envelope (by mass), it affects the
