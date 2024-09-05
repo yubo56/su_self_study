@@ -1545,6 +1545,116 @@ Looking back at the torque, we need to sum an expression of the form
 There seems to be no natural symmetry to get this torque to vanish\dots What a
 mystery.
 
+\textbf{Update, next day:} Let's resume this for fun. It must vanish. The
+algebra is a little tedious, but fundamentally, when all the $\Delta_{mm'} = 0$,
+we're talking about a $\delta \bar{\rho}$, symmetric about the $\uv{l}$ axis,
+integrated against a torque that is antisymmetric; the complications just arise
+because the $Y_{lm}$ are not suited for evaluating the torque, whose symmetries
+are in the $L$ frame. Nevertheless, we're almost there\dots
+
+Recall that our goal is to evaluate, for $\Delta_{mm'} = 0$:
+\begin{equation}
+    T_y
+        =
+            T_0
+            \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}
+            \mathcal{U}_{\bar{m}m'}
+            \kappa'_{m\bar{m}m'},
+\end{equation}
+with
+\begin{align}
+    \kappa'_{m(m\pm 1)m'}
+        &\equiv (\kappa'_{mm'})^{\pm} = \mp \kappa_{mm'},\\
+    \mathcal{U}_{mm'}
+        &= W_{2m'}\mathcal{D}_{mm'}(\Theta).
+\end{align}
+Again, $W_{20} = -\sqrt{\pi / 5}$ and $W_{2(\pm 2)} = \sqrt{3\pi / 10}$. Here,
+the Wigner $\mathcal{D}$ matrix elements, more explicitly, are (using L12 6--11)
+{\scriptsize \begin{align}
+    \mathcal{D}_{22}
+        &= \frac{(1 + \cos \Theta)^2}{4}, &
+    \mathcal{D}_{12}
+        &= \frac{\sin\Theta(1 + \cos\Theta)}{2}, &
+    \mathcal{D}_{02}
+        &= \frac{\sqrt{6}\sin^2\Theta}{4}, &
+    \mathcal{D}_{(-1)2}
+        &= \frac{\sin\Theta(1 - \cos\Theta)}{2}, &
+    \mathcal{D}_{(-2)2}
+        &= \frac{(1 - \cos \Theta)^2}{4},\nonumber\\
+    \mathcal{D}_{20}
+        &= \frac{\sqrt{6}\sin^2\Theta}{4}, &
+    \mathcal{D}_{10}
+        &= -\frac{\sqrt{6}\sin\Theta \cos\Theta}{2}, &
+    \mathcal{D}_{00}
+        &= \frac{3\cos^2\Theta - 1}{2}, &
+    \mathcal{D}_{(-1)0}
+        &= \frac{\sqrt{6}\sin\Theta \cos\Theta}{2}, &
+    \mathcal{D}_{(-2)0}
+        &= \frac{\sqrt{6}\sin^2\Theta}{4},\nonumber\\
+    \mathcal{D}_{2(-2)}
+        &= \frac{(1 - \cos \Theta)^2}{4}, &
+    \mathcal{D}_{1(-2)}
+        &= -\frac{\sin\Theta(1 - \cos\Theta)}{2}, &
+    \mathcal{D}_{0(-2)}
+        &= \frac{\sqrt{6}\sin^2\Theta}{4}, &
+    \mathcal{D}_{(-1)(-2)}
+        &= -\frac{\sin\Theta(1 + \cos\Theta)}{2}, &
+    \mathcal{D}_{(-2)(-2)}
+        &= \frac{(1 + \cos \Theta)^2}{4}.
+\end{align}}
+We will eventually compare this to the equilibrium tidal scenario, so we
+eventually take all of the $\kappa_{mm'}$ to be equal, to some multiple of
+$k_2$, the usual Love number (we'll keep the indexing for bookkeeping). Then:
+\begin{align}
+    \hat{T}_y
+        ={}&
+            \sum\limits_{m\bar{m}m'}
+            \mathcal{U}_{mm'}
+            \mathcal{U}_{\bar{m}m'}
+            \kappa'_{m\bar{m}m'}\nonumber\\
+        ={}&
+            \mathcal{U}_{22}\mathcal{U}_{12}\kappa_{22}
+            - \mathcal{U}_{12}\mathcal{U}_{22}\kappa_{12}
+            + \mathcal{U}_{12}\mathcal{U}_{02}\kappa_{12}
+            - \mathcal{U}_{02}\mathcal{U}_{12}\kappa_{02}
+            + \mathcal{U}_{02}\mathcal{U}_{(-1)2}\kappa_{02}\nonumber\\
+        &+
+            - \mathcal{U}_{(-1)2}\mathcal{U}_{02}\kappa_{(-1)2}
+            + \mathcal{U}_{(-1)2}\mathcal{U}_{(-2)2}\kappa_{(-1)2}
+            + \mathcal{U}_{(-2)2}\mathcal{U}_{(-1)2}\kappa_{(-2)2}\nonumber\\
+        &+
+            \mathcal{U}_{20}\mathcal{U}_{10}\kappa_{20}
+            - \mathcal{U}_{10}\mathcal{U}_{20}\kappa_{10}
+            + \mathcal{U}_{10}\mathcal{U}_{00}\kappa_{10}
+            - \mathcal{U}_{00}\mathcal{U}_{10}\kappa_{00}
+            + \mathcal{U}_{00}\mathcal{U}_{(-1)0}\kappa_{00}\nonumber\\
+        &+
+            - \mathcal{U}_{(-1)0}\mathcal{U}_{00}\kappa_{(-1)0}
+            + \mathcal{U}_{(-1)0}\mathcal{U}_{(-2)0}\kappa_{(-1)0}
+            + \mathcal{U}_{(-2)0}\mathcal{U}_{(-1)0}\kappa_{(-2)0}\nonumber\\
+        &+
+            \mathcal{U}_{2(-2)}\mathcal{U}_{1(-2)}\kappa_{2(-2)}
+            - \mathcal{U}_{1(-2)}\mathcal{U}_{2(-2)}\kappa_{1(-2)}\nonumber\\
+            &\quad + \mathcal{U}_{1(-2)}\mathcal{U}_{0(-2)}\kappa_{1(-2)}
+            - \mathcal{U}_{0(-2)}\mathcal{U}_{1(-2)}\kappa_{0(-2)}
+            + \mathcal{U}_{0(-2)}\mathcal{U}_{(-1)(-2)}\kappa_{0(-2)}\nonumber\\
+        &+
+            - \mathcal{U}_{(-1)(-2)}\mathcal{U}_{0(-2)}\kappa_{(-1)(-2)}
+            + \mathcal{U}_{(-1)(-2)}\mathcal{U}_{(-2)(-2)}\kappa_{(-1)(-2)}
+            - \mathcal{U}_{(-2)(-2)}\mathcal{U}_{(-1)(-2)}\kappa_{(-2)(-2)}.
+\end{align}
+I guess if all the $\kappa$'s are equal, this vanishes by exchange of $m\bar{m}$
+to $\bar{m}m$, but this seems wrong, since it is the
+\begin{equation}
+    \tau_{mm'} = \frac{\Delta_{mm'}}{\tilde{\omega}_{mm'}}\kappa_{mm'},
+\end{equation}
+that are set equal in L12. In fact, maybe we did something wrong: Dong says
+$\kappa_{mm'} = \kappa_{(-m)(-m')}$, but this would seem to set a bunch of
+cancellations in the above expression for the $T_x$ components. Edit: probably
+not, since $\Delta_{mm'} = -\Delta_{(-m)(-m')}$, so that saves the $T_x$
+expression. But nevertheless, the $T_y$ expression still doesn't obviously
+vanish.
 
 \section{Tides with Fluid Envelope}
 
