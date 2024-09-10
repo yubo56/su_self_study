@@ -1656,6 +1656,174 @@ not, since $\Delta_{mm'} = -\Delta_{(-m)(-m')}$, so that saves the $T_x$
 expression. But nevertheless, the $T_y$ expression still doesn't obviously
 vanish.
 
+\clearpage
+
+\section{WASP-12b}
+
+\subsection{Quick Summary of Spin-Orbit Resonance: WASP-12b Case}
+
+The spin $\uv{s}$ of WASP-12b precesses about its orbit normal $\uv{l}$, and its
+orbit precesses about the invariable plane of the planetary system $\uv{\jmath}$
+following (Su \& Lai 2022)
+\begin{align}
+    \rd{\uv{s}}{t}
+        &= \omega_{\rm sl}\p{\uv{s} \cdot \uv{l}}\p{\uv{s} \times \uv{l}}
+        \equiv \alpha\p{\uv{s} \cdot \uv{l}}\p{\uv{s} \times
+        \uv{l}},\label{eq:dsdt1}\\
+    \rd{\uv{l}}{t} &= \omega_{\rm lp}
+        \p{\uv{l} \times \uv{\jmath}}\cos I,
+        \label{eq:wasp12b_g}
+\end{align}
+where
+\begin{align}
+    \omega_{\rm sl} &\equiv \alpha =
+        \frac{3GJ_2 mR^2 M_\star}{2a^3 \mathcal{I}\Omega_{\rm s}}
+        = \frac{k_2}{2k}\frac{M_\star}{m_b}\p{\frac{R_b}{a_b}}^3 \Omega_{\rm b}
+            \label{eq:wsl}.
+\end{align}
+$\Omega_{\rm b}$ is the spin rate of WASP-12b. The value of $\omega_{\rm lp}$
+comes from Laplace-Lagrange secular theory, and is given in general by
+(Millholland \& Laughlin 2018)
+\begin{equation}
+    \omega_{\rm lp}
+        = \frac{b_{3/2}^{(1)}(\alpha)}{4}\alpha
+            \p{n_b\frac{m_c}{M_\star + m_b}\alpha
+                + n_c\frac{m_b}{M_\star + m_c}},
+\end{equation}
+where the subscripts denote the values for planets $b$ and $c$, and $\alpha =
+a_b / a_c$. In our system, we anticipate that $m_b \gg m_c$, in which case this
+simplifies to
+\begin{equation}
+    \omega_{\rm lp}
+        \approx \frac{\tilde{b}}{4}\alpha^2
+            \p{n_b\frac{m_b}{M_\star}}\alpha^{3/2},
+\end{equation}
+where $\tilde{b} \equiv b_{3/2}^{(1)}(\alpha) / \alpha \sim 1$, around $1.25$
+for $\alpha = 1.29$ (Su \& Lai 2022).
+
+In intuitive terms, a spin-orbit resonance occurs when $\alpha \cos \theta =
+\omega_{\rm lp}$, where $\theta \equiv \arccos \uv{s} \cdot \uv{l}$ is the
+obliquity. In less-intuitive terms, the second Cassini State (CS2; Su \& Lai
+2022, Fig 1) is at substantial obliquity when the ratio $\eta_{\rm sync} \gtrsim
+1$, where
+\begin{align}
+    \eta_{\rm sync} \equiv \frac{\omega_{\rm lp}}{\alpha_{\Omega_{\rm s} = n_b}}
+        &=
+            \frac{\tilde{b}k}{2k_2}
+                \p{\frac{m_b}{M_\star}}^2
+                \p{\frac{a_b}{a_c}}^{7/2}
+                \p{\frac{a_b}{R_b}}^3,\\
+% >>> 1.25/6 * ((1.41 Mjup) / (1.36 Msun))^2 * (1.29)^(7/2) * ((0.029 AU) / (1.89 Rjup))^3
+% 0.017599
+        &= 0.0176
+            \p{\frac{a_{\rm b}}{0.029\;\mathrm{AU}}}^{3}
+            \p{\frac{a_{\rm c}}{1.29 a_{\rm b}}}^{-7/2}.\label{eq:etasync}
+\end{align}
+We've taken $k_2 \approx 1$ (Love number), $k \approx 1/3$ (normalized moment of
+inertia), and $\tilde{b} \approx 1.25$, and I've dropped the scalings $m_b =
+1.41M_J$, $M_\star = 1.36M_\odot$, and $R_b = 1.89R_J$ since they are
+well-constrained.
+
+Here, I've focused on $\alpha = 1.29$ because Hill stability (Gladman 1993)
+requires
+\begin{align}
+    \Delta &> 2\sqrt{3} \p{\frac{2 + \Delta}{2}}\p{\frac{m_b +
+            m_c}{3M_\star}}^{1/3},\\
+    a_c &\gtrsim \frac{9}{7}a_b \approx 1.28a_b.
+\end{align}
+I've used a slightly more accurate value quoted from my paper.
+
+% Another useful result is one I recently derived for Guerrero+24: the tidal
+% stability of CS2 requires that the tidal realignment timescale $t_{\rm s}$ be longer
+% than the critical timescale $t_{\rm s, c}$. This can be reexpressed as
+% \begin{align}
+%     \frac{t_{\rm s}}{t_{\rm s, c}}
+%         &=
+%             \eta_{\rm sync}^{3/2}
+%             \sin I
+%             \sqrt{\frac{\cos I}{2}}
+%             \frac{2Q}{3} \geq 1.
+% \end{align}
+% Note that $Q \sim 10^6$ for Jupiters. On the other hand, $I$ is the inclination
+% from WASP-12b to the invariable plane, which satisfies $\sin I \approx (L_c / J)
+% \sin i_{bc}$, where $J$ is the total AM of the planets and $i_{bc}$ is the
+% mutual inclination. However, for such a large $Q$, this does not strongly
+% constrain $\eta_{\rm sync}$.
+
+\subsection{Probabilistic Capture}
+
+One way of capturing WASP-12b into an obliquity tide scenario is to use the Su
+\& Lai 2022 mechanism. Naively, this scenario can be understood simply: an
+obliquity of $\sim 90^\circ$ is the CS2 spin-orbit resonance. If the planet
+forms with an isotropic spin orientation, then half the time its obliquity will
+damp to zero without crossing the resonance, and half the time it will. Thus,
+the ``probabilistic'' capture is when marginalizing over the initial spin
+orientation. Of course, a giant planet is much less likely to form with a large
+obliquity than a small planet, which undergoes a phase of giant impacts due to
+late-time dynamical instabilities (probably).
+
+The alternative to probabilistic capture is Sarah Millholland's scenarios, where
+orbital migration is invoked. The idea is that when $\eta_{\rm sync} > 1$, CS2
+is at low obliquity, so if the planets form at $\eta_{\rm sync} > 1$, then
+orbital migration drives $\eta_{\rm sync} < 1$, the planet follows CS2 from low
+to high obliquity.
+
+What conditions are necessary to set Eq.~\eqref{eq:etasync} to be $> 1$? Well,
+$a_{\rm b}$ would have been larger at earlier times. How much larger? Well, to
+borrow Eq.~(62) of SL22
+\begin{align}
+    \frac{1}{a_b}\rd{a_b}{t}
+        &= -\frac{1}{\tau_{\rm tide}}
+            \p{\frac{a_b}{0.038\;\mathrm{AU}}}^{-13/2}
+            \p{1 - \frac{\Omega_{b}}{n_b}\cos\theta},
+\end{align}
+where $\tau_{\rm tide} \simeq 1\;\mathrm{Gyr}$ for $Q = 10^6$ is the tidal decay
+timescale at $0.038\;\mathrm{AU}$ for a WASP-12b like planet. However, even at
+early times, we still must satisfy $1.29a_{\rm b, init} < a_{\rm c}$. Thus, with
+tides alone, the initial sma of WASP-12b cannot have been much larger than
+$0.038\;\mathrm{AU}$, which only pushes $\eta_{\rm sync} = 0.04$
+(Eq.~\ref{eq:etasync}).
+% Then we can define $x \equiv
+% a_b / 0.038\;\mathrm{AU}$ and obtain
+% \begin{align}
+%     \rd{x}{t} &= -\frac{1}{\tau_{\rm tide}} x^{-11/2},\\
+%     \int\limits_{x_0}^{x(t)} \xi^{11/2}\;\mathrm{d}\xi
+%         &= -\frac{t}{\tau_{\rm tide}},\\
+%     x(t) &= \p{x_0^{13/2} - \frac{13}{2}\frac{t}{\tau_{\rm tide}}}^{2/13}.
+% \end{align}
+% We've assumed that the geometric factor $1 - (\Omega_b / n_b)\cos\theta \simeq
+% 1$. This lets us straightforwardly see that a proto-WASP-12b at
+% $0.038\;\mathrm{AU}$ would decay in $\sim 150\;\mathrm{Myr}$
+
+We must invoke Sarah's other idea with orbital migration. However, this too
+keeps the $bc$ period ratio roughly constant, assuming that the orbital
+migration rate doesn't depend much on sma. Thus, we actually need
+\begin{align}
+    \eta_{\rm sync, init}
+% >>> 1/6 * ((1.41 Mjup) / (1.36 Msun))^2 * (1.29)^(7/2) * ((0.12 AU) / (1.89 Rjup))^3
+% 0.997542
+        &= \p{\frac{a_{\rm b, init}}{0.12\;\mathrm{AU}}}^{3}
+            \p{\frac{a_{\rm c}}{1.29 a_{\rm b}}}^{-7/2} > 1
+\end{align}
+in order for the HJ to have formed in CS2 (this assumes that the HJ had a puffy
+radius even at such wide separations, also somewhat unlikely). This requires a
+planet c at $0.1548\;\mathrm{AU}$, or a $19$ day orbit.
+
+For such a planet, does our approximation of neglecting the first term in
+the general $\omega_{\rm lp}$ work?
+\begin{equation}
+    \frac{n_bm_c\alpha}{n_cm_b}
+        = \frac{m_c}{m_b}\alpha^{-1/2} = \frac{L_c}{L_b} = 0.58
+            \frac{m_c}{80M_{\oplus}}.
+\end{equation}
+Not great, but it should be fine. Also, as Sarah points out, the AM constraint
+makes it even harder to tilt the HJ during migration (since the AM must come out
+of the outer planet's orbit, instead of the inner planet's orbit as would occur
+with tides). Thus, the tidal dissipation scenario is probably easier to make
+work.
+
+\clearpage
+
 \section{Tides with Fluid Envelope}
 
 Question: for a planet w/ thin fluid envelope (by mass), it affects the
