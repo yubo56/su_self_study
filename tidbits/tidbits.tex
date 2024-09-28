@@ -3039,4 +3039,136 @@ it is clear that $\Delta f$ can be written
         = [(m-1)k - (m-2)] \times m^{k - 1}.
 \end{equation}
 
+\section{Overlapping Regions}
+
+I was watching Twitch Trolls Grant (HAHA) when one of the events triggered, and
+it covers the screen with a bunch of Karax portraits. It didn't cover that much
+of the screen, but it got me thinking: what is the expected amount of screen
+left visible? In other words, on an $L_x \times L_y$ grid, if I cover it with
+$n$ randomly placed $s_x \times s_y$ pieces, what is the expected area left
+uncovered (or we can just get the distribution)?
+
+There are two generalizations we can explore: what is the result in $N$
+dimensions (and how can it be efficiently calculated), and how does the result
+change in the continuous limit?
+
+\subsection{1D}
+
+Let's start with the simplest 1D case. This is actually Eugene (Blend)'s
+interview problem haha, in disguise. The naive, approximate algorithm samples
+$M$ points over the $L$ interval, checks for membership among all $n$ pieces,
+which takes $\mathcal{O}\p{Mn}$ time. Very slow! Though it generalizes rather
+quickly to $D$ dimensions: each membership check takes $D$ time, so
+$\mathcal{O}(MnD)$.
+
+The best algorithm is a simple one. Create a sorted list of all the starts and
+ends, and start at $x=0$, where the covered count is zero. Then, for the
+interval from $x=0$ to the next ``critical point'', whether it be a start or an
+end, we account for the current cover count using the length of the interval,
+then we update the cover count ($\pm 1$ depending on whether we hit an interval
+start or end). This takes $\mathcal{O}(n)$ time, since we just need to dequeue
+$2n$ starts and ends!
+
+To construct a distribution, we should be able to vectorize this algorithm
+straightforwardly: just choose $Kn$ many starts and ends, assign them $K$ many
+indicies (corresponding to which sample they're in), and track the cover count
+for each $K$ index. \textbf{Actually, this makes no sense, since the while loop
+will still be done in Python, so there's no speedup to vectorizing! Oops!}. How
+does this compare to directly computing the cover count using all $Kn$
+intervals, then simply dividing the PDF by $K$ along the $x$ axis? I don't know
+how that discretizes from $x \in Kn$ to $x \in n$ though: presumably it's $x \in
+[0, K] \to x = 1$? \textbf{No, because the width of the binomial distribution is
+much narrower here!}
+
+What about the actual distribution, is it just a binomial distribution? The
+agreement is quite good, but it's not quite accurate for the lower occupancies!
+See Fig.~\ref{fig:1D}. This must be because of boundary effects? The expected
+smallest value of starts, and the expected largest value of ends, are both $L /
+n$, so for our unit interval, the expected zero-occupancy length does not go
+below $2/n$? \textbf{This is correct!}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\columnwidth]{overlaps/1D.png}
+    \caption{Aggregate means analyzing all the starts and ends together, data is
+    a truly parallelized trial, and binom is the binomial distribution $B(n,
+    l)$, so each point is occupied with probability $l$. The horizontal black
+    line is $2 / n$, the expected zero-occupancy length.
+    }\label{fig:1D}
+\end{figure}
+
+Given this, we can guess the scaling in $D$ dimensions: the zero-coverage
+fraction should scale like the larger of the binomial prediction and $2DL^{D -
+1}/n$: there are $2D$-many $D$-rectangles that are $(1 / n) \times L \times L
+\times\dots$ volume. Compared to the aggregate volume, this gives a visibility
+fraction of
+\begin{equation}
+    f_{\rm uncovered}
+        \approx \frac{2DL^{D - 1} / n}{L^D}
+            = \frac{2D}{nL}.
+\end{equation}
+For everything away from the boundaries, the occupancy fraction is just given by
+the multinomial distribution presumably.
+
+\subsection{$N$ Dimensions, and Computation}
+
+To efficiently compute in N-D\dots this is actually tricky! I think this must be
+the idea. Let's start in 2D. The idea is that, as we sweep along the $x$ axis,
+using the starts-ends algorithm above, we need to know which $y$-axis
+starts/ends are relevant. There are two ways one could go about this: either,
+with every $x$ start, we can set a flag on the start of the $y$ index that it
+should be factored in, then we do the 1D algorithm along the $y$ while selecting
+only for the flagged starts. In other words:
+\begin{lstlisting}[basicstyle=\ttfamily\tiny, language=python]
+def calculate_areas_1D(starts, ends, flags):
+    # 1D algorithm, but we skip every unflagged start and end
+
+def calculate_areas_2D(start_xs, start_ys, end_xs, end_ys):
+    start_x_args = np.argsort(start_xs)
+    start_y_args = np.argsort(start_ys)
+    end_x_args = np.argsort(end_xs)
+    end_y_args = np.argsort(end_ys)
+
+    overlap_count = 0
+    start_x_ptr = 0
+    end_x_ptr = 0
+
+    y_flags = [False] * n
+    while end_x_ptr < N:
+        # this loop assumes that the starts/ends are unique
+        # change to a while loop (and keep dequeueing if equal) otherwise
+        if (start_x_ptr == N) or \
+            (start_x[start_x_args[start_x_ptr]] < end_x[end_x_args[end_x_ptr]]):
+            # this interval should stop being accounted for
+            y_flags[end_x_args[end_x_ptr]] = False
+            end_x_ptr += 1
+        else:
+            # this interval should be accounted for
+            y_flags[start_x_args[start_x_ptr]] = True
+            start_x_ptr += 1
+        areas += calculate_areas_1D(starts, ends, flags)
+\end{lstlisting}
+Since now the 1D calculation reads all $n$ flags every loop, the 2D calculation
+will require $\mathcal{O}(n^2)$ time. If the filling fraction is low, it would
+make sense to keep track of a sorted list of relevant 1D starts and ends, so
+that the 1D piece needs to iterate through $m$-many intervals. Maintenance of
+the sorted list would take $\log m$ time per insert/remove, so it would be
+preferable if $m \log m \ll n$ (accounting for constant factors).
+
+This idea should recursively generalize to N-D, right, just keep flagging?
+
+\textbf{I don't think I'm gonna bother implementing this lol, we'll see.}
+
+\subsection{Continuous Limit}
+
+This actually turns out to be quite simple. The complexity of the above depends
+on keeping track of the overlap between all $n$ pieces. But as we take $n \to
+\infty$, with each piece contributing $V / n$ amount of $n$-volume, the pieces
+stop being able to overlap (e.g.\ the convolution of two delta functions is only
+nonzero when the $\Delta$ is exactly zero). Thus, in the continuum limit, we are
+studying the properties of the function $f(\vec{x})$ that has fixed integral $V$
+but is otherwise randomly valued. This doesn't seem to depend on the
+dimensionality of $f$ (at least in the discrete case, I can just rearrange the
+$n$-cubes $\mathrm{d}^D\vec{x}$ to be in a line).
+
 \end{document}
