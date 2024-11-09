@@ -1900,5 +1900,70 @@ magnitude terms are opposite. But this simply means that
 \end{equation}
 This really doesn't seem like adiabaticity\dots I wonder what went wrong
 
+\section{Distribution of a Cut Sphere}
+
+We've come across this problem in two contexts, but I finally solved it haha.
+
+Consider the surface of the unit sphere $S = \z{(x, y, z): x^2 + y^2 + z^2 =
+1}$. It's well-known that each of $x, y, z$ are uniformly distributed on $[-1,
+1]$ when uniformly sampling over $S$. However, now, consider if $y$ is
+constrained such that $\abs{y} < y_0$. What is the new distribution in $z$?
+
+This question came up once already when I was playing with the Madigan scenario
+of a self-gravitating scattered disk. However, more recently, it came up as
+follows: suppose that an inner transiting planet is known to form via ZLK\@. We
+thus know that the mutual misalignment between the transiting planet and the
+outer companion must be in the range $\s{40, 140}^\circ$ (if we want octupole,
+then it can be much smaller). The question then is: what is the distribution of
+$\sin i$ of the outer companion, its misalignment from the line of sight? If we
+choose the LOS to be along $\uv{z}$, and the transiting planet orbit normal to
+be along $\uv{y}$, then it is clear that the orbit normal of the companion
+cannot be within $40^\circ$ of the $y$ axis, i.e.\ it must be sampled on the
+restricted unit sphere with $\abs{y} < \cos 40^\circ$.
+
+With this insight, let's rearrange slightly and call the bound on $y$ to be $y_0
+= \sin i_0$.
+
+Now, the key insight is to consider the amount of surface area on the restricted
+sphere within some $dz$ of $z_0$ (proportional to $P(z_0)$, the distribution of
+$z$). For each $z_0$, it corresponds to some polar angle $\cos \theta = z_0$,
+and the intersection with the unit sphere is a circle and thus has length $2\pi
+\sin \theta$. Now, the key step: if $\theta > i_0$, then part of this arclength
+is restricted away by $y$ cut. In particular, we are just calculating the
+arclength of a circle satisfying $x^2 + y^2 = \sin^2\theta$ but restricting
+$\abs{y} < \sin i_0$. Doing some basic geometry, it can be shown that the angle
+of the arc subtended by $x > 0, 0 < y < \sin i_0$ (i.e.\ the contribution from
+the first quadrant) must be $\arcsin(\sin i_0 / \sin \theta)$. Thus, the total
+amount of arclength at $z_0$ on the restricted unit sphere is
+\begin{equation}
+    L = 4\sin\theta \arcsin\p{\frac{\sin i_0}{\sin \theta}}.
+\end{equation}
+Of course, we now want the area contained within a range $dz$ of this. The area
+element for a sphere scales like $1 / \sin\theta$, and so we find that the
+amount of surface area $\delta A$ within $\delta z$ of $z = \cos \theta$ is
+\begin{equation}
+    \frac{\delta A}{\delta z}
+        = 4 \arcsin\p{\frac{\sin i_0}{\sin\theta}}.
+\end{equation}
+Of course, when $\sin\theta < \sin i_0$, we just need the total arclength of the
+circle instead, $2\pi \sin \theta$, and dividing through by the mass element, we
+obtain the full expression for the PDF of z:
+\begin{equation}
+    f(z) \propto
+        \begin{cases}
+            2\pi & \sin \theta < \sin i_0,\\
+            4 \arcsin\p{\frac{\sin i_0}{\sin\theta}}
+                & \sin\theta > \sin i_0.
+        \end{cases}
+\end{equation}
+This works well, see Fig.~\ref{fig:sample_on_sphere}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\columnwidth]{research_misc/sample_on_sphere.png}
+    \caption{Numerical and analytical agreement of surface area of truncated
+    unit sphere. Numerical results are from $10^8$ draws from the unit sphere
+    (runs in $\sim 4$ seconds).}\label{fig:sample_on_sphere}
+\end{figure}
+
 \end{document}
 

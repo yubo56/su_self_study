@@ -1,0 +1,9 @@
+astropy
+cython
+matplotlib
+numpy
+scipy
+sympy
+gnureadline
+ipython
+setuptools
