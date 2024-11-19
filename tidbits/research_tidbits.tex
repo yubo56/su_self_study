@@ -1965,5 +1965,151 @@ This works well, see Fig.~\ref{fig:sample_on_sphere}.
     (runs in $\sim 4$ seconds).}\label{fig:sample_on_sphere}
 \end{figure}
 
+\section{11/11/24---Love Number and Tidal Inflation}
+
+I talked to Jeremy about this, better write it down before I forget. Inspired by
+discussions with Tiger. Tldr I think his model is quite optimistic (but may be
+demanded by nature), and I think that more accurate prescriptions should be
+easily doable.
+
+Consider a mini Neptune with a rocky core and envelope mass fraction $f_{\rm
+env} \lesssim 10\%$ and radius $R$.
+Now, inject some heat into the planet; this likely occurs at the CEB\@.
+Suppose this puffs the planet up to $R'$.
+What is the effect on the dynamics of the planet, most notably its $k_2$?
+
+Recall that $k_2$ defines the induced exterior potential of the planet in
+response to an external perturbation:
+\begin{equation}
+    \Phi_{\rm resp}\p{r > R}
+        = k_2\Phi_{\rm ext}\p{\frac{R}{r}}^3
+\end{equation}
+Recall that $k_2 = 1.5$ for a homogeneous (uniform density) fluid, and is
+something like $1$ for an $n=1$ polytrope (it can be done analytically, and I
+think it's in Jeremy's notes somewhere).
+
+Let's assume for now that $k_2$ is dominated by the planet's core.
+This probably occurs as long as the core is not perfectly rigid (otherwise, it
+would not deform, and $\Phi_{\rm resp} = 0$) and dominates the mass of the
+planet.
+
+If this is the case, then inflating the radius will not appreciably change the
+$\Phi_{\rm resp}$.
+However, the radius of the planet increased.
+Thus,
+\begin{equation}
+    \Phi_{\rm resp}'\p{r > R'}
+        = k_2'\Phi_{\rm ext}\p{\frac{R'}{r}}^3 = \Phi_{\rm resp}(r > R').
+\end{equation}
+Equating these two, we find that the quantity $k_2R^3$ should be conserved.
+
+\section{11/13/24---When can Torques Overcome Accretion?}
+
+Maybe this will go into a future paper, but I need to write it down.
+This is relevant for both planetary and stellar obliquities: if it accretes from
+the PPD, how can I check whether my obliquity excitation mechanisms can overcome
+the accretion?
+
+The key quantity to compare is the accreted angular momentum to the torques
+(which also effect a change to the angular momentum).
+While gas is accreted once it enters the Bondi radius, it cannot be added to the
+star unless it loses enough angular momentum to reach the stellar surface.
+Thus, I think that the specific AM of a parcel of gas that is successfully
+accreted onto the host star cannot exceed the Keplerian AM at the stellar
+surface, or
+\begin{align}
+    \mathrm{d}L
+        &\lesssim \mathrm{d}m \sqrt{GMR} = R^2 \Omega_{\rm dyn} \;\mathrm{d}m,\\
+    \dot{J}_{\rm acc}
+        &\lesssim \dot{M} R^2\Omega_{\rm dyn}.
+\end{align}
+On the other hand, precessional torques have characteristic strength (e.g.\ from
+a disk on equator of the star) [Lai 2014].
+\begin{align}
+    \bm{T}
+        &\sim \frac{3GM_{\rm d}}{4r_{\rm in}^2r_{\rm out}}M_\star R_\star^2J_2.
+\end{align}
+Comparing these two, we find that
+\begin{align}
+    \frac{\dot{J}_{\rm acc}}{\bm{T}}
+        &\sim \frac{4\dot{M}\sqrt{GM_\star R_\star}r_{\rm in}^2r_{\rm out}}{
+            3GM_{\rm d}M_\star R_\star^2 J_2},\\
+        &=
+            \frac{4\dot{M}}{3M_{\rm d}\Omega_{\rm dyn}}
+            \frac{r_{\rm in}^2r_{\rm out}}{R_\star^3}
+            \frac{1}{J_2}.
+\end{align}
+Note that $J_2 = k_2 \epsilon^2 / 3$, where $\epsilon = \Omega_\star /
+\Omega_{\rm dyn}$ should be $\sim 10^{-2}$ for a young star, where $\epsilon
+\simeq 0.1$. Evaluating, we find
+\begin{align}
+    \frac{\dot{J}_{\rm acc}}{\bm{T}}
+% >>> 4 / 3 * 4^2 * ((50 AU) / (2 Rsun)) * 100 / (G * Msun / (2 Rsun)^3)^(1/2) / yr
+% 1636.896849
+        &= \frac{10^3\mathrm{yr}}{M_{\rm d} / \dot{M}}
+            \p{\frac{r_{\rm in} / R_\star}{4}}^2
+            \p{\frac{r_{\rm out}}{50\;\mathrm{AU}}}
+            \p{\frac{R_\star}{2R_{\odot}}}^{1/2}
+            \p{\frac{M_\star}{M_{\odot}}}^{-1/2}
+            \p{\frac{J_2}{10^{-2}}}^{-1}.
+\end{align}
+For typical values (Fig.~3 of Manara review), $\dot{M} \lesssim
+10^{-8}M_{\odot}\;\mathrm{/yr}$.
+As such, this expression evaluates to $\sim 10^{-4}$.
+Thus, we can have a much larger inner disk truncation radius without breaking
+this inequality.
+In conclusion, accretion is significantly subdominant to gravitational torques
+in changing the angular momentum of a young protostar.
+
+\section{11/18/24---Maximum Eccentricity via ZLK}
+
+We start with LML15's equation evaluated at $i_0 = 90^\circ$, the maximal value
+% (edit: we re-include the angular dependence for posterity, the curly braces term
+% on the RHS).
+\begin{align}
+    \epsilon_{\rm GR} \p{\frac{1}{j_{1,\min}} - 1}
+        + \frac{\epsilon_{\rm tide}}{15}
+            \p{\frac{1 + 3e_{1,\max}^2 + 3e_{1,\max}^4/8}{j_{1,\min}^9} - 1}
+        + \frac{\epsilon_{\rm rot}}{3}
+            \p{\frac{1}{j_{1,\min}^3} - 1}
+        = \frac{9}{8}\p{1 - j_{1,\min}^2}.
+            % \z{1 - \frac{3\cos^2i_0}{j_{1,\min}^2}}.
+\end{align}
+What are the maximum eccentricities obtained when only one of the SRFs is
+relevant?
+
+Let's first do the GR case. This is simple:
+\begin{align}
+    \epsilon_{\rm GR} \p{\frac{1 - j_{1, \min}}{j_{1,\min}}}
+        &= \frac{9}{8} \p{1 - j_{1,\min}^2},\\
+    \frac{8}{9}\epsilon_{\rm GR}
+        &= j_{1,\min}\p{1 + j_{1,\min}}.
+\end{align}
+Since $j_{1,\min} \leq 1$, it is clear that the RHS maximizes to be $2$, and
+therefore no eccentricity excitation is possible if $\epsilon_{\rm GR} \geq
+9/4$. This is in agreement with Figure~6 of LML15.
+
+What about the rotation case? This is not much harder:
+\begin{align}
+    \frac{\epsilon_{\rm rot}}{3} \p{\frac{1 - j_{1,\min}^3}{j_{1,\min}^3}}
+        &= \frac{9}{8}\p{1 - j_{1,\min}^2},\\
+    \frac{8\epsilon_{\rm rot}}{27}
+        &= \frac{j_{1,\min}^3\p{1 + j_{1,\min}}}{1 + j_{1,\min} + j_{1,\min}^2}.
+\end{align}
+The RHS maximizes when $j_{1,\min} = 1$, where it is equal to $2/3$, and so
+again no ZLK when $\epsilon_{\rm rot} \geq 9/4$.
+
+Might as well do tides while we're here lmao. Again, we use the same idea:
+$e_{1, \max} \approx 0$ when ZLK is fully suppressed, so we should just solve
+\begin{align}
+    \frac{\epsilon_{\rm tide}}{15}\p{\frac{1}{j_{1,\min}^9} - 1}
+        &= \frac{9}{8}\p{1 - j_{1,\min}^2},\\
+    \frac{8\epsilon_{\rm tide}}{135}
+        &= \frac{j_{1,\min}^9\p{1 + j_{1,\min}}}{
+            1 + j_{1,\min} +\dots+ j_{1,\min}^8}.
+\end{align}
+Again, the LHS maximizes at $1/4$, so no eccentricity excitation is obtained
+when $\epsilon_{\rm tide} \geq 135/32$.
+
 \end{document}
 
