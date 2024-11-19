@@ -2061,7 +2061,9 @@ this inequality.
 In conclusion, accretion is significantly subdominant to gravitational torques
 in changing the angular momentum of a young protostar.
 
-\section{11/18/24---Maximum Eccentricity via ZLK}
+\section{11/18/24---ZLK Fun Stuff}
+
+\subsection{Maximum Eccentricity due to SRFs}
 
 We start with LML15's equation evaluated at $i_0 = 90^\circ$, the maximal value
 % (edit: we re-include the angular dependence for posterity, the curly braces term
@@ -2081,7 +2083,7 @@ relevant?
 Let's first do the GR case. This is simple:
 \begin{align}
     \epsilon_{\rm GR} \p{\frac{1 - j_{1, \min}}{j_{1,\min}}}
-        &= \frac{9}{8} \p{1 - j_{1,\min}^2},\\
+        u&= \frac{9}{8} \p{1 - j_{1,\min}^2},\\
     \frac{8}{9}\epsilon_{\rm GR}
         &= j_{1,\min}\p{1 + j_{1,\min}}.
 \end{align}
@@ -2110,6 +2112,110 @@ $e_{1, \max} \approx 0$ when ZLK is fully suppressed, so we should just solve
 \end{align}
 Again, the LHS maximizes at $1/4$, so no eccentricity excitation is obtained
 when $\epsilon_{\rm tide} \geq 135/32$.
+
+\subsection{Nonzero $e_0$ Effects}
+
+Two questions to answer here. (i) What is the range of $e_{\max}$ for a given
+$e_0$, $i_0$ and $\omega_0$, and (ii) is there such a thing as an ``inclination
+window'' for finite $e_0$?
+
+For the first one, it's clear that we just need to evaluate using the conserved
+quantities. The two are:
+\begin{align}
+    K &= \p{1 - e^2} \cos^2i \equiv x\cos^2i,\\
+    C_K
+        &= e^2\p{5\sin^2i \sin^2\omega - 2}
+        = \p{1 - x}\p{5\p{\frac{x - K}{x}} \sin^2\omega - 2}.
+\end{align}
+For a given $e_0$, the maximum $e_{\max}$ is attained when $\omega_0 = 0$ (a
+circulating orbit), and the minimum $e_{\max}$ is attained when $\omega_0 = \pi$
+(which can even be equal to $e_0$ if $e_0$ is below the center of the ZLK
+resonance, i.e.\ the fixed point)
+We can solve these two cases separately:
+\begin{itemize}
+    \item For the circulating case ($C_K < 0$), i.e.\ the maximum $e_{\max}$, we
+        simply need to equate:
+        \begin{align}
+            \p{1 - x_{\min}}\s{5\p{\frac{x_{\min} - K}{x_{\min}}} - 2}
+                &= -2\p{1 - x_0}\nonumber\\
+            \frac{5K}{2} - \frac{3x_{\min}}{2}
+                &= x_{\min}\frac{1 - x_0}{1 - x_{\min}}.
+        \end{align}
+        Of course, when $x_0 = 1$, this reduces to the standard ZLK result.
+        Note that $x_{\min} > 0$, but the LHS must be positive as well, so $0 <
+        x_{\min} < 5K/3$. Since the RHS vanishes for $x_{\min} = 0$, the LHS
+        vanishes for $x_{\min} = 5K/3$, and both sides are positive, it's clear
+        that by the intermediate value theorem that there will be an
+        intersection that determines $x_{\min}$.
+        Furthermore, if we simply rearrange
+        \begin{equation}
+            \frac{5K}{2} - x_{\min}\frac{1 - x_0}{1 - x_{\min}}
+                = \frac{3x_{\min}}{2},
+        \end{equation}
+        it is clear that as $x_0$ decreases from $1$ (i.e.\ nonzero initial
+        eccentricity) that the LHS decreases, thus decreasing $x_{\min}$. A
+        perturbative calculation can probably give us the leading-order
+        dependence if we must.
+
+    \item For the librating case ($C_K > 0$), we instead must solve for the two
+        roots of (I've included the second line to show that it's manifestly
+        quadratic)
+        \begin{align}
+            C_K &= \p{1 - x}\s{5\p{\frac{x - K}{x}} - 2}\nonumber\\
+            C_Kx &= \p{1 - x}\s{5\p{x - K} - 2x}.\label{eq:lib_cond}
+        \end{align}
+        I've plotted this function on Wolframalpha, but we can see the broad
+        features quite easily: when $x = 0$, this function is negative (not a
+        valid solution to our ``librating'' assumption), becomes positive at
+        just above $x = K$, and asymptotes to $0$ again as $x \to 1$.
+
+        Thus, for all values of $C_K > 0$ (as long as it's not too large\dots),
+        there must be at least two roots, one just above $x=K$ and one out at $x
+        \to 1$.
+        We can hammer out the details when we need this expression, but this is
+        the core result.
+\end{itemize}
+
+Now, the second point: what does it mean to have a ZLK window? Even at low
+mutual inclinations, there will still be eccentricity and inclination
+oscillations.
+I guess what we want to describe is the window within which a libration region
+appears.
+But if libration is set by $C_K > 0$, we see that it is actually
+\emph{eccentricity independent}, since it just depends on whether the expression
+$(5\sin^2i\sin^2\omega - 2)$ exceeds zero anywhere.
+Since this is maximized at $\omega = \pi/2$ of course, we recover the standard
+result, that $\cos^2i < 3/5$ for $C_K > 0$!
+Since when $C_K < 0$, there is only one root to Eq.~\eqref{eq:lib_cond}, it is
+clear that $C_K > 0$ is indeed the condition for the ZLK resonance feature to
+appear.
+
+So then, why do eccentricity oscillations become larger in amplitude, even at
+small mutual inclinations, and when we don't rely on different resonances
+(coplanar ZLK, Li+14, Petrovich15)?
+This must be a consequence of the circulating regime calculation.
+So the question is: when $x_0$ and $K$ are comparable, but are small, what does
+$x_{\min}$ look like?
+We first note that
+\begin{align}
+    \frac{5K}{2} - \frac{5x_{\min}}{2}
+        &= x_{\min}\frac{x_{\min} - x_0}{1 - x_{\min}},\\
+    \frac{5}{2}\sin^2 i_{x_{\min}}
+        &= \frac{x_0 - x_{\min}}{1 - x_{\min}}.
+\end{align}
+Note that $i_{x_{\min}}$ occurs at eccentricity maximum, which is also the
+inclination minimum, and at $\omega = \pi/2$. Taking $x_{\min} \ll 1$, we can
+finally arrive at
+\begin{equation}
+    \frac{5}{2}\sin^2 i_{\pi/2}
+        \approx x_{\pi/2} - x_0.
+\end{equation}
+Thus, when the LHS is of order the RHS, the eccentricity cycles can still result
+in substantial changes to the $x$ values. Thus, we arrive at the condition that
+the inclination can still cycle due to non-resonant secular dynamics as long as
+\begin{equation}
+    1 - e_0^2 \lesssim \frac{5}{2}\sin^2 i_{\pi/2}.
+\end{equation}
 
 \end{document}
 
