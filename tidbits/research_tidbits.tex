@@ -2217,5 +2217,197 @@ the inclination can still cycle due to non-resonant secular dynamics as long as
     1 - e_0^2 \lesssim \frac{5}{2}\sin^2 i_{\pi/2}.
 \end{equation}
 
+\section{12/07/24---Viscosity and Convective Front Propagation}
+
+As Daniel [Lecoanet] rightfully points out, in Masa's simulations, the
+convective front propagates due to microturbulent viscosity alone, so this
+complicates the interpretation of our results somewhat.
+What is the shape and rate of this propagation?
+We just need to recall that
+\begin{align}
+    N^2 &= N^2_{\rm structure} - R_{\rm rho}^{-1}\pd{\mu}{z},\\
+    \pd{\bar{\mu}}{t}
+        &= \frac{\tau_0}{\mathrm{Pe}}\nabla^2\bar{\mu}
+            + \dots.
+\end{align}
+Considering the IC as $\bar{\mu}$ being a wedge function
+\begin{equation}
+    \bar{\mu}
+        =
+        \begin{cases}
+            1 & z < 1,\\
+            (2 - z) & 1 < z < 2.
+        \end{cases}
+\end{equation}
+we can pose the question: what is the rate of advance of the Ledoux-stabilized
+region due to the diffusivity of the mean $\bar{\mu}$ instead?
+We've neglected the $z \in [2, 3]$ region from our paper.
+
+This can be solved analytically. Consider the 1D diffusion equation
+\begin{equation}
+    \pd{y}{t}
+        = D\ptd{y}{x},
+\end{equation}
+where $D = \tau_0 / \mathrm{Pe}$ and $y = \bar{\mu}$.
+Take the initial condition above.
+We want to calculate where $N^2$ increases above some critical value, which is
+equivalently where $\bar{\mu}$ decreases below some critical value $1 -
+\epsilon$.
+
+Let's take the second of $y_0$, which also obeys a diffusion equation
+\begin{equation}
+    \pd{y''}{t}
+        = D\ptd{y''}{x}.
+\end{equation}
+$y_0''$ is a delta function $y_0'' = \delta\p{x - 1}$. It has analytic solution
+to the diffusion equation (I looked this up, too lazy to do)
+\begin{equation}
+    y''(t, x) = \sqrt{\frac{D}{4\pi t}}\exp\s{-\frac{Dx^2}{4t}}.
+\end{equation}
+Thus, the analytic solution to $y'(t)$ must then be
+\begin{align}
+    y'(t, x)
+        &= \sqrt{\frac{D}{4\pi t}}
+            \int\limits_{-\infty}^x\;\mathrm{d}\xi\exp\s{-\frac{D\xi^2}{4t}}
+            \nonumber\\
+        &= \sqrt{\frac{1}{\pi}}
+            \int\limits_{-\infty}^s\;\mathrm{d}\sigma\;e^{-\sigma^2}
+            \nonumber\\
+        &= \sqrt{\frac{1}{\pi}}\;\mathrm{erf}\s{x\sqrt{\frac{D}{4t}}}.
+\end{align}
+Not sure if I have the right definition of erf, but yeah it should be like this.
+Thus, the $x$ at which $y'(t, x)$ crosses some critical $y'_{\rm crit}$ at a
+given $t$ should be related to
+\begin{equation}
+    x_{\rm crit}
+        = \sqrt{\frac{4t}{D}}\;\mathrm{erf}^{-1}\p{y'_{\rm crit}\sqrt{\pi}}
+            \propto \sqrt{t}.
+\end{equation}
+I have trouble seeing how this can be avoided.
+
+\section{12/09/24---Ivection Resonance and Broken Disks?}
+
+Let's check some frequencies first. Consider a host star, binary companion,
+inner and outer disk. Then
+\begin{align}
+    \omega_{\rm io}
+        &= \frac{3}{16}\frac{m_{\rm o}}{M_\star}
+            \p{\frac{r_{\rm i,out}^3}{r_{\rm o, in}^2r_{\rm o,out}}}
+            n_{\rm i,out},\\
+    \frac{\omega_{\rm io}}{n_{\rm b}}
+        &= \frac{3}{16}\frac{m_{\rm o}}{M_\star}
+            \p{\frac{r_{\rm i,out}^3}{r_{\rm o, in}^2r_{\rm o,out}}}
+            \p{\frac{m_\star a_{\rm b}^3}{(m_\star + m_{\rm b})r_{\rm
+            i,out}^3}}^{1/2}
+                ,\\
+        &\approx
+            \frac{3}{16}
+            \frac{m_{\rm o}}{M_\star}
+            \p{\frac{r_{\rm i,out}^{3/2}a_{\rm b}^{3/2}}
+                {r_{\rm o, in}^2r_{\rm o,out}}},\\
+        &\approx
+% >>> 3/16 * 1e-2 * (15 AU)^(3/2) * (1000 AU)^(3/2) / ((20 AU)^2 * (80 AU))
+% 0.107644
+            0.1
+            \p{\frac{m_{\rm o} / M_\star}{10^{-2}}}
+            \p{\frac{r_{\rm i,out}}{15\;\mathrm{AU}}}^{3/2}
+            \p{\frac{a_{\rm b}}{10^3\;\mathrm{AU}}}^{3/2}
+            \p{\frac{r_{\rm o, in}}{20\;\mathrm{AU}}}^{-2}
+            \p{\frac{r_{\rm o, out}}{80\;\mathrm{AU}}}^{-1}.
+\end{align}
+This is if the disk obeys $\Sigma \propto r^{-1}$. But if it's a $r^{-3/2}$
+disk, then\dots well, we should do this more carefully.
+
+But also, for a $p=1$ disk, the mass is uniformly distributed $dr$. For a
+$p=3/2$ disk, the local AM $2\pi r \Sigma \sqrt{r}\;\mathrm{d}r$ is uniformly
+distributed.
+Thus, the outer disk doesn't have much more AM than the inner disk.
+Does this help us at all? TBD\@.
+
+\section{12/17/24---IW Dissipation in Envelope}
+
+We often hear this $(r_c/R)^5$ scaling of the IW $Q$, but can we do better in a
+thin envelope? Just writing this down after chatting it through with Eliot
+[Quataert].
+
+From Ogilvie 2013 (Eq.~B3) and Barker 2020 (Eq.~39), the full tidal $Q$ for IW
+should be
+\begin{align}
+    \frac{1}{Q'}
+        = \frac{3k_2}{2Q}
+        ={}&
+            \epsilon^2\frac{200\pi}{189}
+            \p{\frac{\alpha^5}{1 - \alpha^5}}
+            \p{1 - \gamma}^2
+            \p{1 - \alpha}^4\nonumber\\
+        &\times
+            \p{1 + 2\alpha + 3\alpha^2 + \frac{3\alpha^3}{2}}^2
+            \s{1 + \p{\frac{1 - \gamma}{\gamma}}\alpha^3}\nonumber\\
+        &\times
+            \p{1 + \frac{3\gamma}{2}
+                + \frac{5}{2\gamma}\p{1 + \frac{\gamma}{2} - \frac{3\gamma^2}{2}}
+                    \alpha^3
+                - \frac{9(1-\gamma)\alpha^5}{4}}^{-2}.
+\end{align}
+Note that this is an exact result, for the simplified two-zone model, despite
+its appearance as an expansion in $\alpha$. Note that
+\begin{align}
+    \epsilon &= \frac{\Omega_{\star}}{\sqrt{GM_\star/R_\star^3}},&
+    \alpha &= \frac{r_{\rm c}}{R},&
+    \gamma &= \frac{\alpha(1 - \beta)}{\beta(1 - \alpha^3)},&
+    \beta &= \frac{m_{\rm c}}{M}.
+\end{align}
+
+It's common to see this expression written as $\propto\epsilon^2\alpha^5$.
+However, this only holds when $\alpha \ll 1$. In the other limit, that we're
+working on with Luke, we want $\alpha \to 1$ and $\beta \to 1$, but where
+$\beta$ approaches much faster. Thus, we first take the limit for $\beta \to 1$,
+or $\gamma \to 0$ (if $\alpha \to 1$ slowly, certainly $\alpha^3 \to 1$ even
+more slowly):
+\begin{align}
+    \lim_{\gamma \to 0}
+        \frac{1}{Q'}
+        \approx{}&
+            \epsilon^2\frac{200\pi}{189}
+            \p{\frac{\alpha^5}{1 - \alpha^5}}
+            \p{1 - \alpha}^4\nonumber\\
+        &\times
+            \p{1 + 2\alpha + 3\alpha^2 + \frac{3\alpha^3}{2}}^2
+            \s{\frac{\alpha^3}{\gamma}}
+            \p{\frac{5\alpha^3}{2\gamma}}^{-2}\\
+    \lim_{\gamma \to 0}
+        \frac{1}{\gamma Q'}
+        \approx{}&
+            \epsilon^2\frac{200\pi}{189}
+            \p{\frac{\alpha^5}{1 - \alpha^5}}
+            \p{1 - \alpha}^4\nonumber\\
+        &\times
+            \p{1 + 2\alpha + 3\alpha^2 + \frac{3\alpha^3}{2}}^2
+            \frac{4}{25\alpha^3}.
+\end{align}
+Now, we correspondingly take $\alpha \to 1$, and obtain
+\begin{align}
+    \lim_{\alpha \to 1}
+        \frac{1}{\gamma Q'}
+            &= \epsilon^2\frac{40\pi}{21} \p{1 - \alpha}^3,\\
+    \lim_{\alpha \to 1}
+    \lim_{\gamma \to 0}
+        \frac{1}{Q'}
+            &=
+                \epsilon^2 \frac{40\pi}{21}
+                \gamma \p{1 - \alpha}^3 \nonumber\\
+            &=
+                \epsilon^2 \frac{40\pi}{21}
+                \frac{\alpha(1 - \beta)}{\beta\p{1 + \alpha + \alpha^2}}
+                    (1 - \alpha)^2
+                    \nonumber\\
+    \lim_{r_{\rm c} \to R}
+    \lim_{m_{\rm c} \to M}
+        \frac{1}{Q'}
+            &\approx
+                \epsilon^2 \frac{40\pi}{63}
+                (1 - \beta) (1 - \alpha)^2.
+\end{align}
+
 \end{document}
 
