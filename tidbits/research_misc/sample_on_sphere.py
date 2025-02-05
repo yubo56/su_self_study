@@ -53,7 +53,7 @@ def hist_for_i0(
         )[0]
     return bin_centers, counts, bin_width
 
-def hist_theory(cos_i, dx, i0_d=50):
+def hist_theory(cos_i, i0_d=50):
     '''
     calculate analytical distribution
     '''
@@ -77,16 +77,16 @@ def calc_mean_sini(x, dist, dx):
 if __name__ == '__main__':
     fig, (ax1, ax2) = plt.subplots(
         1, 2,
-        figsize=(10, 6),
+        figsize=(10, 5),
         sharex=True, sharey=True)
     for i0_d in [1, 20, 50, 80, 90]:
         x, counts, dx = hist_for_i0(i0_d=i0_d)
         ax1.plot(
             x,
             norm_hist(counts, dx),
-            label=(r'$i_0 = %d^\circ$' % i0_d),
+            label=(r'$i_{\min} = %d^\circ$' % (90 - i0_d)),
         )
-        counts_th = hist_theory(x, dx, i0_d=i0_d)
+        counts_th = hist_theory(x, i0_d=i0_d)
         norm_th = norm_hist(counts_th, dx)
         ax2.plot(x, norm_th)
 
@@ -95,10 +95,32 @@ if __name__ == '__main__':
     ax1.legend(fontsize=14, ncol=2)
     ax1.set_ylim(0, 1)
     ax1.set_xlim(-1, 1)
-    ax1.set_xlabel(r'$\cos \phi$')
-    ax2.set_xlabel(r'$\cos \phi$')
-    ax1.set_ylabel(r'$P(\cos \phi)$')
-    ax1.set_title('Numerical')
-    ax2.set_title('Analytical')
+    ax1.set_xlabel(r'$\cos i_1$')
+    ax2.set_xlabel(r'$\cos i_1$')
+    ax1.set_ylabel(r'$P(\cos i_1)$')
     plt.tight_layout()
-    plt.savefig('sample_on_sphere.png')
+    plt.savefig('sample_on_sphere.pdf')
+    plt.close()
+
+    fig = plt.figure(figsize=(6, 5))
+    i0d_arr = np.linspace(0.3, 89.9, 401)
+    cosi_arr = np.linspace(-1, 1, 100001)
+    mean_sinis = []
+    for i0d in i0d_arr:
+        counts_th = hist_theory(cosi_arr, i0_d=i0d)
+        dx = np.mean(np.diff(cosi_arr))
+        norm_th = norm_hist(counts_th, dx)
+        mean_sini = calc_mean_sini(cosi_arr, norm_th, dx)
+        mean_sinis.append(mean_sini)
+    plt.plot(90 - i0d_arr, mean_sinis, c='tab:green')
+    plt.xlabel(r'$i_{\min}$ [Deg]')
+    plt.ylabel(r'$\langle \sin i_1 \rangle$')
+    plt.ylim(0.6, 0.8)
+    plt.xlim(0, 90)
+    plt.xticks([0, 30, 60, 90])
+    plt.axhline(np.pi / 4, c='k', ls='--')
+    plt.axhline(2 / np.pi, c='k', ls='-.')
+    plt.axvline(48, c='b', ls='--')
+    plt.tight_layout()
+    plt.savefig('mean_sini.pdf')
+    plt.close()
