@@ -2409,5 +2409,55 @@ Now, we correspondingly take $\alpha \to 1$, and obtain
                 (1 - \beta) (1 - \alpha)^2.
 \end{align}
 
+\section{02/18/25---Pseudosynchronization at High Obliquity}
+
+Josh asked me once why pseudosynchronization is so slow at high obliquity.
+To analyze this, let's look to the tidal torque along the spin axis, with all
+time lags set to be equal (Eq.~27 of Lai2012):
+{\small
+\begin{align}
+    \frac{T_z}{T_0\tau}
+        &= \frac{3\pi}{20} \s{
+            (1 + c)^4 (\Omega - \omega)
+            + s^2(1 + c)^2(2\Omega - \omega)
+            - s^2(1 - c)^2(2\Omega + \omega)
+            - (1 - c)^4 (\Omega + \omega)
+            }
+        - \frac{3\pi}{5}
+        \omega\p{s^4 + s^2c^2}.
+\end{align}}
+Here, $s = \sin\theta$ and $c=\cos\theta$.
+When $\theta$ is close to $90^\circ$, we can set $s = 1$ and expand $c \ll 1$
+to obtain
+{\small
+\begin{align}
+    \frac{T_z}{T_0\tau}
+        &\approx \frac{3\pi}{20} \s{
+            (1 + 4c) (\Omega - \omega)
+            + (1 + 2c)(2\Omega - \omega)
+            - (1 - 2c)(2\Omega + \omega)
+            - (1 - 4c) (\Omega + \omega)
+            }
+        - \frac{3\pi}{5} \omega\p{1 - c^4},\\
+        &=
+        \frac{3\pi}{20} \s{
+            16c\Omega - 4\omega
+            }
+        - \frac{3\pi}{5} \omega\p{1 - c^4}.
+\end{align}}
+Setting this equal to zero, we get the usual result
+\begin{equation}
+    2\cos\theta = \frac{\omega}{\Omega} + \mathcal{O}\p{\cos^2\theta}.
+\end{equation}
+Expanding to higher order gives better precision.
+But the key point is that, instead of the dominant torque being the $(22)$
+component ($(1 + c)^4(\Omega - \omega)$, the only one that doesn't vanish when
+$s = 0$ and $c = 1$), the only component overlapping with the orbital motion
+$\Omega$ scales with $\cos\theta$ (for a highly misaligned $m'=2$ component, it
+gets broken up into nearly-equal $m=\pm 2$ components, with only the
+$\cos\theta$ splitting the degeneracy).
+Put another way, the highly misaligned potential is much more ring-like than
+orbital like, and ring-like will tend to favor zero-spin.
+
 \end{document}
 
