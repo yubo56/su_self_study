@@ -2459,5 +2459,274 @@ $\cos\theta$ splitting the degeneracy).
 Put another way, the highly misaligned potential is much more ring-like than
 orbital like, and ring-like will tend to favor zero-spin.
 
+\section{03/21/25---Mixed Modes Maybe?}
+
+We already know that the ``mixed modes'' Dong and I found in our Paper III are
+due to high-order SORs.
+These must also be identifiable in the vector formalism too though, but we can't
+seem to find it.
+The vector formulation is important to characterize since, when $\uv{l}$
+experiences crazy evolution, no good coordinate system can be written down.
+
+We will approximate a bit.
+Consider the inertial frame equations
+\begin{align}
+    \rd{\uv{s}}{t}
+        &=
+            \alpha\p{\uv{s} \cdot \uv{l}}
+                \p{\uv{s} \times \uv{l}},\\
+    \uv{l}
+        &\approx
+            \uv{z}
+            + \Re(\mathcal{I}) \uv{x}
+            + \Im(\mathcal{I}) \uv{y},\\
+    \mathcal{I}
+        &=
+            I_1e^{ig_1t}
+            + I_2e^{ig_2t}.\label{eq:dsdt_inertial}
+\end{align}
+
+\subsection{Total AM approach}
+
+Let's instead adopt the celestial mechanics approach, where we keep the total AM
+$\uv{l}_{\rm p}$ along the $z$-axis.
+
+Start again from the inertial frame equations, Eq.~\eqref{eq:dsdt_inertial}.
+Consider a rotation with rate $\bar{g}$.
+\begin{align}
+    \p{\rd{\uv{s}}{t}}'
+        &=
+            \alpha\p{\uv{s} \cdot \uv{l}}
+                \p{\uv{s} \times \uv{l}}
+            + \bar{g}\p{\uv{s} \times \uv{z}}
+                ,\\
+    \mathcal{I}
+        &=
+            I_1e^{i(g_1 - \bar{g})t}
+            + I_2e^{i(g_2 - \bar{g})t}.
+\end{align}
+This problem is somewhat difficult because $\uv{l}$ contains two parameters:
+$I_2 \ll I_1 \ll 1$, the last expressing the point that $\uv{l} \approx \uv{z}$.
+Denote $\uv{s}_{ij}$ to be $i$th order in $I_1$ and $j$th order in $I_2$
+
+Let's first evaluate the ODE at the lowest order, $\uv{l} \approx \uv{z}$:
+\begin{align}
+    \rd{\uv{s}_{00}}{t}
+        &=
+            \alpha\p{\uv{s}_{00} \cdot \uv{z}}
+                \p{\uv{s}_{00} \times \uv{z}}
+            + \bar{g}\p{\uv{s}_{00} \times \uv{z}},\\
+    \alpha \p{\uv{s}_{00} \cdot \uv{z}} &= -\bar{g}.
+\end{align}
+This is the simple result.
+
+Now, what about at leading order in $I_1$, assuming $I_2 = 0$?
+Note that the next-order correction to $\uv{s}$, denoted $\uv{s}_{10}$, is not a
+unit vector.
+\begin{align}
+    \rd{\bm{s}_{10}}{t}
+        ={}&
+            \alpha
+                \p{\bm{s}_{10} \cdot \uv{z}}
+                \p{\uv{s}_{00} \times \uv{z}}
+            + \cancel{\alpha
+                \p{\uv{s}_{00} \cdot \uv{z}}
+                \p{\bm{s}_{10} \times \uv{z}}
+            + \bar{g}\p{\bm{s}_{10} \times \uv{z}}}\nonumber\\
+        &+ \alpha
+                \p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
+                \p{\uv{s}_{00} \times \uv{z}}
+            + \cancelto{-\bar{g}}{\alpha
+                \p{\uv{s}_{00} \cdot \uv{z}}}
+                \p{\uv{s}_{00} \times \bm{l}_{\perp}}.\label{eq:ds10dt}
+\end{align}
+Note now that $\bm{s}_{10}$ is not constant.
+We expect it to look like a uniformly rotating matrix though, so let's demand
+that
+\begin{equation}
+    \rd{\bm{s}_{10}}{t} = \bm{\omega} \times \uv{s}_{10},
+\end{equation}
+where $\bm{\omega} \perp \bm{s}_{10}$.
+
+We can perhaps see a path forward.
+Let's guess that $\bm{\omega} \propto \uv{s}_{00}$, and $\bm{s}_{10}$ oscillates
+in phase with $\bm{l}_{\perp}$, i.e.\
+\begin{align}
+    \bm{s}_{10} &\propto \bm{l}_{\perp} - \p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
+        \uv{s}_{00},\\
+    \bm{\omega} &= -\bar{g}\uv{s}_{00},\label{eq:s10_prec}
+\end{align}
+The amplitude of $\bm{s}_{10}$ is fixed by demanding that the first two terms in
+Eq.~\eqref{eq:ds10dt} cancel:
+\begin{align}
+    0 &= \bm{s}_{10} \cdot \uv{z} + \uv{s}_{00} \cdot \bm{l}_{\perp},\\
+        &= C\p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
+            \frac{\bar{g}}{\alpha}
+            + \uv{s}_{00} \cdot \bm{l}_{\perp},\\
+    C &= -\frac{\alpha}{\bar{g}},\\
+    \bm{s}_{10}
+        &= -\frac{\alpha}{\bar{g}}
+            \bm{l}_{\perp} - \p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
+        \uv{s}_{00}.
+\end{align}
+Thus, indeed such a solution for $\bm{s}_{10}$ exists.
+
+Now, note that $\bm{s}_{10}$ has time-varying components along
+$\bm{l}_{\perp}$ (implying oscillation frequencies $(g_1 - \bar{g})$ and $(g_2 -
+\bar{g})$), whiel its rotation has frequency $\bar{g}$ (Eq.~\ref{eq:s10_prec}).
+Consistency among all of these frequencies demands $\bar{g} = (g_1 + g_2) / 2$.
+
+\subsection{Co-precessing, co-nutating approach}
+
+\textbf{For posteritty, I include the erroneous approach I started with\dots}
+
+We will go to the co-precessing, co-nutating frame, and point $\uv{z}$ along the
+vertical axis.
+This means that $\uv{l} \to \uv{z}$ while $\uv{l}_{\rm p} = \uv{z} \to -\uv{l}$.
+So
+\begin{align}
+    \p{\rd{\uv{s}}{t}}_{\rm co-p}
+        &=
+            \alpha\p{\uv{s} \cdot \uv{z}}
+                \p{\uv{s} \times \uv{z}}
+                - \dot{\Omega}\p{\uv{l}_{\rm p} \times \uv{s}}
+                - \dot{I}\s{\p{\uv{l}_{\rm p} \times \uv{z}} \times \uv{s}}
+                ,\\
+    \uv{l}_{\rm p}
+        &\approx
+            \uv{z}
+            - \abs{\mathcal{I}} \uv{x}
+\end{align}
+Note that $\dot{\Omega}$ has contributions from both modes, but $\dot{I} \sim
+\mathcal{O}(I_2 / I_1)$ is small in amplitude.
+While there are a lot more terms (and this looks ugly), it will be easier to do
+expansions since there are no crazy cross terms with $s^2l^2$.
+Of course, in the limit $I_2 = 0$, we have $\dot{I} = 0$ and we recover the
+standard CS EOM\@.
+
+Note that in the limit $I_2 \ll I_1$, we should have that
+\begin{align}
+    \Omega
+        &=
+            \arctan\p{\frac{I_1 \sin g_1t + I_2\sin g_2t}{I_1\cos g_1t + I_2\cos
+            g_2t}},\\
+        &\approx
+            \arctan\p{\tan g_1t
+                + \frac{I_2\cos g_2t}{I_1\cos g_1t}\p{\tan g_2t - \tan g_1t}},\\
+        &\approx
+            g_1t +
+                \frac{I_2 \cos g_1t\cos g_2t}{I_1}\p{\tan g_2t - \tan g_1t}
+                    \nonumber\\
+        &= g_1t +
+                \frac{I_2}{I_1}\sin\p{g_2 - g_1}t,\\
+    \dot{\Omega} &= g_1 + \Delta g\frac{I_2}{I_1}\sin\Delta gt,
+\end{align}
+while
+\begin{align}
+    I(t)
+        &=
+            \p{I_1^2 + I_2^2 \cos\p{g_2 - g_1}t}^{1/2},\\
+        &\approx
+            I_1
+                + \frac{I_2^2}{2I_1^2}\cos\p{g_2 - g_1}t,\\
+    \dot{I}
+        &= \Delta g\frac{I_2^2}{2I_1^2}\cos\Delta gt.
+\end{align}
+
+Now, let's consider further rotating into a new reference frame.
+Consider a rotation by some $-\bar{g}$ (which we will later set to be $-(g_1 +
+g_2) / 2$):
+\begin{align}
+    \p{\rd{\uv{s}}{t}}_{\rm co-p}
+        &=
+            \alpha\p{\uv{s} \cdot \uv{z}}
+                \p{\uv{s} \times \uv{z}}
+                - \dot{\Omega}\p{\uv{l}_{\rm p} \times \uv{s}}
+                - \dot{I}\s{\p{\uv{l}_{\rm p} \times \uv{z}} \times \uv{s}}
+                + \bar{g}\p{\uv{z} \times \uv{s}}
+                \label{eq:dsdt_toexpand}
+                ,\\
+    \uv{l}_{\rm p}
+        &\approx
+            \uv{z}
+            - \Re(\mathcal{I}) \uv{x}
+            - \Im(\mathcal{I}) \uv{y},\\
+    \mathcal{I}
+        &=
+            Ie^{i\bar{g}t}.
+\end{align}
+
+At leading order, $\uv{l}_{\rm p} \approx \uv{z}$, while $\dot{\Omega} \approx
+g_1$ (this may not be the dominant term by magnitude, but in a time-averaged
+sense the $g_2I_2$ contribution vanishes), and $\dot{I} \approx 0$, and we
+obtain
+\begin{equation}
+    \rd{\uv{s}_0}{t}
+        =
+            \alpha\p{\uv{s}_0 \cdot \uv{z}}
+                \p{\uv{s}_0 \times \uv{z}}
+                - g_1\p{\uv{z} \times \uv{s}}
+                + \bar{g}\p{\uv{z} \times \uv{s}}.
+\end{equation}
+This admits constant solutions if $\uv{s}_0 \cdot \uv{z} = (g_1 - \bar{g}) /
+\alpha$.
+Easy enough.
+In order for there to be librating solutions, let's further demand that
+$\uv{s}_0$ be in the $\uv{x}$--$\uv{z}$ plane.
+
+What about the next order terms?
+(there should be seven, because in Eq.~\ref{eq:dsdt_toexpand}, the first term
+has two terms that depend on $\uv{s}$, the second term has three terms that have
+leading order behavior, the third term is small so only contributes one term at
+leading (small) order, and the fourth only needs to be expanded in $\uv{s}$)
+\begin{align}
+    \rd{\uv{s}_1}{t}
+        ={}&
+            \alpha\p{\uv{s}_1 \cdot \uv{z}}
+                \p{\uv{s}_0 \times \uv{z}}
+            + \cancel{\alpha\p{\uv{s}_0 \cdot \uv{z}}
+                \p{\uv{s}_1 \times \uv{z}}}
+                - \frac{\Delta gI_2}{I_1}\sin\Delta g t
+                    \p{\uv{z} \times \uv{s}_0}
+                - \cancel{g_1\p{\uv{z} \times \uv{s}_1}}\nonumber\\
+            &- g_1\p{\uv{l}_{\rm p, \perp} \times \uv{s}_0}
+                - \Delta g\frac{I_2^2}{2I_1^2}\cos\Delta gt
+                    \s{\p{\uv{l}_{\rm p} \times \uv{z}} \times \uv{s}_0}
+                + \cancel{\bar{g}\p{\uv{z} \times \uv{s}_1}}.
+\end{align}
+The cancelled terms vanish from the zeroth order term, so
+\begin{align}
+    \rd{\uv{s}_1}{t}
+        ={}&
+            \alpha\p{\uv{s}_1 \cdot \uv{z}}
+                \p{\uv{s}_0 \times \uv{z}}
+                - \frac{\Delta gI_2}{I_1}\sin\Delta g t
+                    \p{\uv{z} \times \uv{s}_0}\nonumber\\
+            &- g_1\p{\uv{l}_{\rm p, \perp} \times \uv{s}_0}
+                - \Delta g\frac{I_2^2}{2I_1^2}\cos\Delta gt
+                    \s{\p{\uv{l}_{\rm p, \perp} \times \uv{z}} \times \uv{s}_0}.
+\end{align}
+Note that $(\uv{l}_{\rm p, \perp} \times \uv{z}) \times \uv{s}_0 =
+\uv{z}\p{\uv{l}_{\rm p, \perp} \cdot \uv{s}_0} - \uv{l}_{\rm p, \perp}(\uv{s}
+\cdot \uv{z})$.
+
+The first two terms point along the $\uv{y}$ axis, while the last two point
+along all three.
+The third term is much larger in magnitude than the fourth term though, so its
+non-$\uv{y}$ contributions must be cancelled by corrections to the zeroth-order
+solution.
+From this, we see that $\uv{s}_1 \times \uv{z}$ must have a $\bar{g}$ time
+dependence.
+But the first two terms immediately show that $\uv{s}_1$ must have a $\Delta g$
+time dependence.
+Thus, we recover that $\bar{g} = \pm \Delta g$.
+We've just shown that the other first-order solution are the mode-2 Cassini
+States!
+That won't do.
+
+The reason is obvious: the spin-orbit resonance we were looking for must exist
+at higher order, and we've only taken our expansion up to first order.
+To expand this to second order would be quite a lengthy task.
+
 \end{document}
 

@@ -81,11 +81,11 @@ if __name__ == '__main__':
         sharex=True, sharey=True)
     for i0_d in [1, 20, 50, 80, 90]:
         x, counts, dx = hist_for_i0(i0_d=i0_d)
-        ax1.plot(
-            x,
-            norm_hist(counts, dx),
-            label=(r'$i_{\min} = %d^\circ$' % (90 - i0_d)),
-        )
+        if i0_d == 1:
+            label = r'$i_{\rm \min, ZLK} = %d^\circ$' % (90 - i0_d),
+        else:
+            label = r'$%d^\circ$' % (90 - i0_d)
+        ax1.plot(x, norm_hist(counts, dx), label=label)
         counts_th = hist_theory(x, i0_d=i0_d)
         norm_th = norm_hist(counts_th, dx)
         ax2.plot(x, norm_th)
@@ -113,7 +113,7 @@ if __name__ == '__main__':
         mean_sini = calc_mean_sini(cosi_arr, norm_th, dx)
         mean_sinis.append(mean_sini)
     plt.plot(90 - i0d_arr, mean_sinis, c='tab:green')
-    plt.xlabel(r'$i_{\min}$ [Deg]')
+    plt.xlabel(r'$i_{\rm min, ZLK}$ [Deg]')
     plt.ylabel(r'$\langle \sin i_1 \rangle$')
     plt.ylim(0.6, 0.8)
     plt.xlim(0, 90)
