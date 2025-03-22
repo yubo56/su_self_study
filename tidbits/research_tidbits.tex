@@ -2548,7 +2548,7 @@ that
 \end{equation}
 where $\bm{\omega} \perp \bm{s}_{10}$.
 
-We can perhaps see a path forward.
+There is one solution.
 Let's guess that $\bm{\omega} \propto \uv{s}_{00}$, and $\bm{s}_{10}$ oscillates
 in phase with $\bm{l}_{\perp}$, i.e.\
 \begin{align}
@@ -2566,19 +2566,42 @@ Eq.~\eqref{eq:ds10dt} cancel:
     C &= -\frac{\alpha}{\bar{g}},\\
     \bm{s}_{10}
         &= -\frac{\alpha}{\bar{g}}
-            \bm{l}_{\perp} - \p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
-        \uv{s}_{00}.
+            \s{\bm{l}_{\perp} - \p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
+        \uv{s}_{00}}.
 \end{align}
 Thus, indeed such a solution for $\bm{s}_{10}$ exists.
 
 Now, note that $\bm{s}_{10}$ has time-varying components along
 $\bm{l}_{\perp}$ (implying oscillation frequencies $(g_1 - \bar{g})$ and $(g_2 -
-\bar{g})$), whiel its rotation has frequency $\bar{g}$ (Eq.~\ref{eq:s10_prec}).
-Consistency among all of these frequencies demands $\bar{g} = (g_1 + g_2) / 2$.
+\bar{g})$), while its rotation has frequency $\bar{g}$ (Eq.~\ref{eq:s10_prec}).
+Consistency among all of these frequencies demands $\bar{g} = (g_1 +
+g_2) / 2$ (excepting the trivial solutions $\bar{g} = g_1$ and $g_2$).
+
+Looking back at my paper, it looks like we can have $\bm{s}_{10}$ oscillate in
+the $xy$ plane, just with no $z$ component.
+But this makes sense: the $z$ component oscillation is just because the true
+$z$ axis should be $\uv{l}$, not $\uv{l}_{\rm p}$.
+So our $\bm{s}_{10}$ should be such that
+\begin{align}
+    \p{\uv{s}_{00} + \bm{s}_{10}} \cdot \p{\uv{z} + \bm{l}_{\perp}}
+        &= \uv{s}_{00} \cdot \uv{z}
+            + \frac{\alpha}{\bar{g}}\p{\uv{s}_{00} \cdot \bm{l}_{\perp}}
+                \uv{s}_{00} \cdot \uv{z}
+            + \uv{s}_{00} \cdot \bm{l}_{\perp},\\
+        &= \uv{s}_{00} \cdot \uv{z}.
+\end{align}
+Yay!
+
+Well, I guess at this point, we've successfully shown that $\bm{s}_{10}$ must
+have an azimuthal component $\sim \mathcal{O}\p{I_1}$, and the polar component
+must be $\lesssim \mathcal{O}\p{I_2}$ (which it is), and the frequency of
+oscillation still does demand that $\bar{g} = g_1 - \bar{g} = -g_2 + \bar{g}$.
+Is this enough? Maybe we should expand to one more order, $\bm{s}_{01}$, to show
+that we've truly found the correct state\dots
 
 \subsection{Co-precessing, co-nutating approach}
 
-\textbf{For posteritty, I include the erroneous approach I started with\dots}
+\textbf{For posterity, I include the erroneous approach I started with\dots}
 
 We will go to the co-precessing, co-nutating frame, and point $\uv{z}$ along the
 vertical axis.
