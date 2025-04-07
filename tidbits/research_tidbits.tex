@@ -2686,5 +2686,65 @@ The reason is obvious: the spin-orbit resonance we were looking for must exist
 at higher order, and we've only taken our expansion up to first order.
 To expand this to second order would be quite a lengthy task.
 
+\section{04/01/25---Eccentricity Dynamics and Coplanar High-E Migration}
+
+Let's teach ourselves exactly what's going on here.
+
+\subsection{Fun: Brouwer Fixed Point Theorem}
+
+I was just watching a Youtube video about category theory and they mentioned
+this very useful theorem:
+Consider a continuous map from the unit disk to itself.
+It must have at least one fixed point.
+This can be generalized to any domain homeomorphic to a closed $N$-ball.
+This is called the Brouwer Fixed-Point Theorem.
+
+Is it useful?
+Of course!
+Consider the secular interaction between two coplanar planets.
+The planets are coplanar, and the interaction is secular, so each planet just
+has its $(e, \varpi)$.
+This is a 3DOF system, with coordinates $(e, e_{\rm out}, \Delta \varpi)$.
+These three coordinates describe a cylinder with unit radius ($e$) and unit
+height ($e_{\rm out}$); call this domain $D$.
+
+We aren't quite ready to apply Brouwer's Theorem, since this domain is not
+closed: it's a little sus for the domain to include $e=1$.
+However, we can invoke a second constraint: depending on the system's AMD, if it
+is sufficiently low, then there are no unbound orbits.
+Then, the entire space of AM-conserving solutions must form a closed (compact)
+subset of $D$.
+
+We are ready to apply Brouwer's Theorem: it shows that the secular evolution of
+the two orbits must admit a fixed point.
+In the inclination case, this is an obvious result: it's just the total AM of
+the system.
+In the eccentricity case, I'm sure it's well-known, but it's new to me.
+Of course, in the Laplace-Lagrange case, if $m_2 \gg m_1$, this is just the
+forced eccentricity for the inner planet, or the COM eccentricity of the
+two-planet system (Hadden must have such a paper?).
+In the multipolar expansion case, it's the center of libration of the CHEM
+Hamiltonian.
+
+But the key point is that we don't need to assume either LL or hierarchical
+systems to show that there must be a ``center of mass eccentricity'' in the
+system.
+So long as the system's evolution is bounded by AMD constraints and secular
+interactions, the Brouwer Fixed-Point Theorem is enough to guarantee such a
+solution.
+
+Now, proving the BFPT is true is far beyond me.
+I know some of the famous topology results are on 3blue1brown, but I don't think
+this one is there?
+The proof I saw uses some category theory\dots
+I think the rough idea is that: any map from D (call it the disk) to itself maps
+a point $p_1$ to $p_1'$.
+If these two are not equal, we can draw the line $p_1p_1'$ and mark the
+intersection with the boundary of the disk, and thus every map from $D$ to
+itself corresponds to a map from $D$ onto its boundary.
+But it's apparently possible to show that something about the categories of
+these two maps is incompatible\dots
+Sounds nifty, but I'm never gonna understand it.
+
 \end{document}
 
