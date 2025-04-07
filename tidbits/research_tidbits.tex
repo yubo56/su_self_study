@@ -2708,65 +2708,61 @@ This is a 3DOF system, with coordinates $(e, e_{\rm out}, \Delta \varpi)$.
 These three coordinates describe a cylinder with unit radius ($e$) and unit
 height ($e_{\rm out}$); call this domain $D$.
 
-We aren't quite ready to apply Brouwer's Theorem, since this domain is not
-closed: it's a little sus for the domain to include $e=1$.
-However, we can invoke a second constraint: depending on the system's AMD, if it
-is sufficiently low, then there are no unbound orbits.
-Then, the entire space of AM-conserving solutions must form a closed (compact)
-subset of $D$.
+Now, it's a little tricky to apply the BFPT\@.
+However, we consider it this way: for a given total AM of the system $L_{\rm
+tot}$, this corresponds to a 2D slice in $D$ satisfying:
+\begin{align}
+    L\sqrt{1 - e^2} + L_{\rm out}\sqrt{1 - e_{\rm out}^2} = L_{\rm tot}.
+\end{align}
+This has the shape of a little dimple in $D$; note that $\Delta \varpi$ does not
+enter into AM conservation, so the system is azimuthally symmetric.
+Call it $D'$.
 
-I lied, the correct theorem to apply here is the hairy ball theorem.
-Note that AMD conservation restricts us to a 2D subspace of $D$, which is
-isomorphic to $S^2$ but \emph{not} any unit disk!
-Does BFPT also apply to $S^2$?
-Probably, but I'm not smart enough to prove it.
+Over this restricted domain $D'$, so long as it does not reach $e \geq 1$, the
+BFPT can be applied:
+Note that $D'$ is compact and clearly homeomorphic to the unit disk (just
+project out $e_{\rm out}$ and scale $e_{\rm in}$, probably, idk what a
+homeomorphism is).
+Thus, for any AM-conserving secular map in systems, the BFPT guarantees a fixed
+point, corresponding to the forced eccentricity.
 
-But with the hairy ball theorem, our problem is done.
-The secular evolution will map every point in $D_t$ to its point at $D_{t +
-\delta t}$.
-We have a map, or a vector field, on a surface homeomorphic to $S^2$ (probably,
-though may need to check).
-By the HBT, there must be a point where the vector field vanishes.
-This is the fixed point of the secular evolution.
+Is there truly a restriction on the total AMD of the system restraining us to $e
+< 1$ though?
+As a formal matter, probably not:
+in the double averaged limit, even unbound rings can gravitationally interact
+with one another lol.
+So we can probably compute $D'$ as the restricted sub-domain of the full domain
+$D$ over $e, e_{\rm out} \in [0, \infty]$!
+However, now we run into another problem: the BFPT only tells us that the fixed
+point is in $D'$, but it may not correspond to a physical eccentricity---it
+could reach $e \geq 1$!
 
-In the inclination case, this is an obvious result: it's just the total AM of
-the system.
-In the eccentricity case, I'm sure it's well-known, but it's new to me.
-Of course, in the Laplace-Lagrange case, if $m_2 \gg m_1$, this is just the
-forced eccentricity for the inner planet, or the COM eccentricity of the
-two-planet system (Hadden must have such a paper?).
-In the multipolar expansion case, it's the center of libration of the CHEM
-Hamiltonian.
+Maybe this isn't so useful after all, but it's at least useful in the LL
+system: as eccentricities get large, as long as AMD is not capable of unbinding
+the inner planet, then it must have a free-eccentricity-like solution.
+For the hierarchical case, it's very easy to have enough AMD to unbind the inner
+planet, and nothing rigorous can be said.
 
-But the key point is that we don't need to assume either LL or hierarchical
-systems to show that there must be a ``center of mass eccentricity'' in the
-system.
-So long as the system's evolution is bounded by AMD constraints and secular
-interactions, the Brouwer Fixed-Point Theorem is enough to guarantee such a
-solution.
+\subsection{Comparison of LL, Octupole, and Ring-Averaged Hamiltonians}
 
-Now, proving the BFPT or HBT is true is far beyond me.
-I know some of the famous topology results are on 3blue1brown, but I don't think
-this one is there?
-The proof I saw of BFPT (that spawned this writeup) uses some category
-theory\dots
-I think the rough idea is that: any map from D (call it the disk) to itself maps
-a point $p_1$ to $p_1'$.
-If these two are not equal, we can draw the line $p_1p_1'$ and mark the
-intersection with the boundary of the disk, and thus every map from $D$ to
-itself corresponds to a map from $D$ onto its boundary.
-But it's apparently possible to show that something about the categories of
-these two maps is incompatible\dots
-Sounds nifty, but I'm never gonna understand it.
+% TODO
 
-But also, note that the HBT only guarantees a single fixed point.
-Thus, this is only enough to show that, for a given set of precessional
-dynamics, there is one fixed point.
-This contrasts with our intuition from the inclination case, where both $\pm$
-the total AM correspond to fixed points.
-A quick Wikipedia read shows that only pretty convoluted maps will give exactly
-one ``pole'' of the vector field (where it vanishes), so in the astrophysical
-setting, we're probably fine.
+\section{04/07/25---ZLK Circulation and Libration}
+
+People often talk about the circulation and libration of $\omega$ as a way to
+distinguish ZLK cycles.
+It makes it seem very mysterious.
+There's a simple alternative explanation for what's going on.
+
+Consider the inner orbit with $\uv{l}$ and $\uv{e}$ executing ZLK about
+$\uv{z}$.
+Define $\uv{l}$--$\uv{z}$ to be the $\uv{x}$--$\uv{z}$ plane.
+Then $\omega = 0$ corresponds to the initial eccentricity vector starting along
+$\uv{y}$.
+I assert that the circulating solution corresponds to the case where $\uv{e}$
+executes a small twirly loop (technical term) about $\uv{y}$, while the
+librating solution corresponds to the same about $\uv{z}$.
+Can this be seen from the equations?
 
 \end{document}
 
