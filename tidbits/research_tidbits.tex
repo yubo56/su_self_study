@@ -2764,5 +2764,81 @@ executes a small twirly loop (technical term) about $\uv{y}$, while the
 librating solution corresponds to the same about $\uv{z}$.
 Can this be seen from the equations?
 
+\subsection{Bifuration}
+
+Well, to build intuition for the equations, let's first write out the usual
+equations and identify the bifurcation.
+We note that the ZLK resonance corresponds to a fixed point where both $\bm{e}$
+and $\bm{j}$ precess at the same rate about $\uv{z}$.
+Thus, call $I_1$ the angle between $\bm{j}$ and $\uv{z}$, and $I_2 = 90^\circ -
+I_1$ is the angle between $\bm{e}$ and $\uv{z}$.
+Then the fixed point must satisfy
+\begin{align}
+    \rd{\bm{j}}{t}
+        &=
+            \p{\bm{j} \cdot \uv{z}} \p{\bm{j} \times \uv{z}}
+            - 5 \p{\bm{e} \cdot \uv{z}} \p{\bm{e} \times \uv{z}},\\
+    \rd{\bm{e}}{t}
+        &=
+            \p{\bm{j} \cdot \uv{z}} \p{\bm{e} \times \uv{z}}
+            - 5 \p{\bm{e} \cdot \uv{z}} \p{\bm{j} \times \uv{z}}
+            + 2\bm{j} \times \bm{e},\label{eq:ZLKbifurc_dedt}\\
+    \abs{\rd{\bm{j}}{t}}
+        &=
+            (1 - e^2)\cos I_1 \sin I_1
+                - 5e^2 \cos I_2\sin I_2,\\
+    \abs{\rd{\bm{e}}{t}}
+        &=
+            e\sqrt{1 - e^2}
+                \s{\cos I_1 \sin I_2
+                    + 2
+                    - 5\cos I_2 \sin I_1}.
+\end{align}
+In order for uniform precession to occur, the magnitude of change of $\bm{j}$
+must $\propto \sqrt{1 - e^2}\sin I_1$, while that of $\bm{e}$ must be $\propto
+e\sin I_2$.
+Noting that $\cos I_2 = \sin I_1$ and vice versa, this condition simplifies to:
+\begin{align}
+    \s{(1 - e^2)\cos I_1 \sin I_1
+               - 5e^2 \cos I_1\sin I_1}\frac{1}{j\sin I_1}
+        &=
+            \s{e\sqrt{1 - e^2}
+                   \s{\cos^2 I_1
+                       + 2
+                       - 5\sin^2 I_1}}\frac{1}{e\cos I_1},\\
+    (1 - 6e^2)\cos^2I_1
+        &=
+            \s{\p{1 - e^2}
+                   \s{\cos^2 I_1
+                       + 2
+                       - 5\sin^2 I_1}},\\
+    \frac{\cos^2 I_1}{
+            \cos^2 I_1 + 2 - 5\sin^2 I_1}
+        &=
+            \frac{1 - e^2}{1 - 6e^2},\\
+    \frac{\cos^2 I_1}{
+            6\cos^2 I_1 - 3}
+        &=
+            \frac{1 - e^2}{1 - 6e^2}.
+\end{align}
+Note that the RHS $> 1$, with equality only attained at $e=0$, a degenerate
+solution (there would be no eccentricity vector).
+Thus, we demand that the LHS also be greater than $1$, giving that
+\begin{equation}
+    \cos^2 I_1 > 6\cos^2 I_1 - 3.
+\end{equation}
+This is exactly the $\cos^2 I_1 < 3/5$ condition, and is the ZLK resonance.
+
+Physically, this is exactly what Shevchenko told us: for a near circular orbit,
+the orbital precession is always retrograde, while the eccentricity vector's
+precession can be either prograde or retrograde, depending on $I_1$ (whether the
+first or second term in Eq.~\ref{eq:ZLKbifurc_dedt} dominates, since everything
+in the equation is of magnitude $je$).
+A commensurability occurs when these two are equal.
+
+\subsection{Circulation and Libration}
+
+How about this case, can it also be understood?
+
 \end{document}
 
