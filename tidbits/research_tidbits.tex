@@ -2828,6 +2828,12 @@ Thus, we demand that the LHS also be greater than $1$, giving that
     \cos^2 I_1 > 6\cos^2 I_1 - 3.
 \end{equation}
 This is exactly the $\cos^2 I_1 < 3/5$ condition, and is the ZLK resonance.
+And of course then, as $I_1 \to 90^\circ$, we see that $e \to 1$ is the center
+of the resonance.
+However, since there are no other fixed points in the system, we know that $e=0$
+must be the other fixed point, and therefore the amplitude of libration must be
+$e=0$ to $e \approx 1$ when $I_1 = 90^\circ$!!
+I think this is great omg.
 
 Physically, this is exactly what Shevchenko told us: for a near circular orbit,
 the orbital precession is always retrograde, while the eccentricity vector's
@@ -2839,6 +2845,25 @@ A commensurability occurs when these two are equal.
 \subsection{Circulation and Libration}
 
 How about this case, can it also be understood?
+Let's look at the following time derivative:
+\begin{align}
+    \rd{(\bm{j} \times \bm{e})}{t}
+        ={}&
+            \p{\bm{j} \cdot \uv{z}} \p{\bm{j} \times \uv{z}}
+                \times \bm{e}
+            - 5 \p{\bm{e} \cdot \uv{z}} \p{\bm{e} \times \uv{z}}
+                \times \bm{e}\nonumber\\
+        &+ \p{\bm{j} \cdot \uv{z}} \bm{j} \times \p{\bm{e} \times \uv{z}}
+            - 5 \p{\bm{e} \cdot \uv{z}} \bm{j} \times \p{\bm{j} \times \uv{z}}
+            + 2\bm{j} \times (\bm{j} \times \bm{e}),\\
+        ={}&
+            5 e\cos \theta_e (e^2\cos \theta_e + j^2\cos \theta_j)\uv{z}
+            - 2j^2\bm{e}.
+\end{align}
+We have defined $\cos \theta_e = \uv{e} \cdot \uv{z}$ and vice versa.
+The question now is, over a full ZLK cycle, does $\bm{j} \times \bm{e}$ point in
+a different direction or not?
+I guess that's not obvious haha.
 
 \end{document}
 
