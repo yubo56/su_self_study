@@ -2865,5 +2865,216 @@ The question now is, over a full ZLK cycle, does $\bm{j} \times \bm{e}$ point in
 a different direction or not?
 I guess that's not obvious haha.
 
+\clearpage
+
+\section{05/01/25---Tidal Steady State}
+
+Consider a population of planets born with some source function $S(P)$ that
+experience tidal decay.
+Denote $\tau_{\rm d}(a)$ to be the remaining lifetime of the planet at period
+$P$, which is equal to\footnote{When we have exact resonance locking, and
+$\alpha = -13/3$, $\tau_{\rm d}$ is infinite, since we never reach $a=0$.
+This can be circumvented in popsynths by calculating the time it takes for $a
+\simeq R_\star$.}
+\begin{align}
+    \tau_{\rm d}
+        &\propto
+            \frac{2}{13 + 3\alpha}P^{13/3 + \alpha},
+\end{align}
+where $\alpha$ encodes the frequency dependence of the tidal quality factor $Q =
+Q_0 P^{-\alpha}$.
+
+The idea is to try to constrain $\alpha$ from the observed PDF $n(P)$.
+Note that $n(P)$ obeys a continuity equation
+\begin{align}
+    \pd{n}{t}
+        + \pd{(nu)}{P}
+        = S(P),
+\end{align}
+where in general $u$ depends on $P$.
+
+\subsection{In $\tau_{\rm d}$ Space}
+
+Instead, let's look at the continuity equation in $\tau_{\rm d}$ space, where
+$u = -1$ (since after time $t$ passes, every point moves from having $\tau_{\rm
+d}$ remaining time to $\tau_{\rm d} - t$).
+Then, the steady state is easy to discern:
+\begin{align}
+    \cancel{\pd{n}{t}} - \pd{n}{\tau_{\rm d}}
+        &= S(\tau_{\rm d}),\\
+    n\p{t \to \infty, \tau_{\rm d}}
+        &=
+            -\int\limits^{\tau_{\rm d}} S(t')
+                \;\mathrm{d}t'\nonumber\\
+        &=
+            \int\limits_{\tau_{\rm d}}^\infty S(t')
+                \;\mathrm{d}t'.\label{eq:taud_steady}
+\end{align}
+In fact, the continuity equation can be fully solved explicitly and exactly by
+writing down the Green's Function (by inspection):
+\begin{align}
+    G\p{t - \tau_{\rm d}', \tau_{\rm d}}
+        &=
+            \begin{cases}
+                1 & \tau_{\rm d} \in \s{\tau_{\rm d}' - t, \tau_{\rm d'}}\\
+                0 & \mathrm{otherwise}
+            \end{cases},\\
+    n\p{t, \tau_{\rm d}}
+        &=
+            \int\limits_{\tau_{\rm d}}^{\tau_{\rm d} + t}
+                S(t')\;\mathrm{d}t'.
+\end{align}
+We see that, as long as $S(t')$ vanishes above some $\tau_{\rm d, \max}$, that
+$n\p{t, \tau_{\rm d}}$ must reach a steady state when $t > \tau_{\rm d, \max}$.
+
+What about the power law index of $n(\tau_{\rm d})$?
+Intuitively, we should look at objects about to inspiral, so we seek the slope
+of $n$ at small $\tau_{\rm d}$.
+In general, the derivative is easy to write down:
+\begin{align}
+    \pd{n}{\tau_{\rm d}}
+        &=
+            S\p{\tau_{\rm d} + t} - S\p{\tau_{\rm d}},
+\end{align}
+just by the fundamental theorem of calculus.
+As long as the $\tau_{\rm d}$ we study at is \emph{smaller} than the minimum
+$\tau_{\rm d}$ where planets are being formed ($\tau_{\rm d} < \tau_{\rm d,
+\min}$), then $S\p{\tau_{\rm d}} = 0$, and we find that
+\begin{align}
+    \pd{n}{\tau_{\rm d}}\p{\tau_{\rm d} < \tau_{\rm d, \min}}
+        &=
+            S\p{\tau_{\rm d} + t}.
+\end{align}
+Thus, for sufficiently small $\tau_{\rm d}$, the slope of $n\p{\tau_{\rm d}}$ is
+\emph{purely} set by the source function!
+
+Now, how do we recover the slope in any other arbitrary variables?
+We use the standard chain rule for PDFs:
+\begin{align}
+    n\p{\tau_{\rm d}}
+        &=
+            n(P) \rd{P}{\tau_{\rm d}},\\
+        &\propto n(P) P^{-(10/3 + \alpha)}.
+\end{align}
+Thus, we find the simple result that the time-dependent $n(P)$ is determined by
+\begin{align}
+    n(t, P)
+        &\propto
+            P^{10/3 + \alpha}
+                \int\limits_0^{P}
+                    S\p{\tau_{\rm d}(P) + t}\;\mathrm{d}P.
+\end{align}
+This will be zero when $t$ is too small ($t < \tau_{\rm d, \min}$; since no
+planets have decayed yet),
+will be source-function dependent at intermediate times ($\tau_{\rm d, \min} < t
+< \tau_{\rm d, \max}$; as some of the source-function planets have decayed), and
+will be $\propto P^{10/3 + \alpha}$ at late times, when $n$ has reached a full
+steady state ($t > \tau_{\rm d, \max}$).
+
+Most of the time, we expect to be in the regime where $\tau_{\rm d, \min} < t
+< \tau_{\rm d, \max}$.
+Here, the power law index seen by analyzing $n(P)$ must depend on the source
+function.
+Suppose that $S(\tau_{\rm d}(P)) \propto P^{\gamma_{\rm S}}$, then we obtain
+that
+\begin{equation}
+    n(t, P)
+        \propto
+            P^{13/3 + \alpha + \gamma_{\rm S}}.
+\end{equation}
+So we only obtain constraints on the \emph{combination} of the tidal and source
+power law indicies!
+
+\subsection{Direct Continuity Equation in $P$}
+
+To do this, we must recall that
+\begin{align}
+    \frac{\dot{a}}{a}
+        &= \frac{2}{3}\frac{\dot{P}}{P}
+        = \frac{1}{\tau_{\rm a}},\\
+        &= -\frac{2}{13 + 3\alpha}\frac{1}{\tau_{\rm d}},\\
+    \rd{\ln P}{t}
+        &\propto
+            -P^{-(13/3 + \alpha)},
+\end{align}
+and so (let $u_0$ be the constant of proportionality for $\rdil{\ln P}{t}$)
+\begin{equation}
+    \pd{n(\ln P)}{t}
+        - \pd{}{\ln P}\p{n u_0P^{-(13/3 + \alpha)}}
+        = S(\ln P).
+\end{equation}
+
+Again, it is easy to see that the steady state must be
+\begin{align}
+    nP^{-(13/3 + \alpha)}
+        &\propto
+            \int\limits_{\ln P}^\infty
+                S(\ln P')\;\mathrm{d}\ln P',
+\end{align}
+and for sufficiently small $\ln P$ (less than the minimum $\ln P_{\min}$ where
+planets are being formed),
+\begin{align}
+    n\p{\ln P < \ln P_{\min}}
+        \propto
+            P^{13/3 + \alpha}S_{\rm tot},\label{eq:lnp_steady}
+\end{align}
+where $S_{\rm tot}$ is the integrated planet formation rate.
+This is in agreement with our previous finding, Eq.~\eqref{eq:taud_steady}.
+
+What about the fully time-dependent evolution though?
+I don't remember a procedural way to compute this Green's function, but the PDE
+can be solved by inspection.
+For notational convenience, consider a general advective PDE of form
+\begin{align}
+    \pd{f}{t} + \pd{(fu)}{x} = g(x),
+\end{align}
+Consider a source that is $\delta$-like in both space and time, then
+\begin{equation}
+    \pd{f}{t} + \pd{(fu)}{x} = \delta\p{t - t_0}\delta\p{x - x_0}.
+\end{equation}
+At some future time $t_1 > t_0$, the pulse will be advected to some $x_1$
+satisfying
+\begin{equation}
+    \rd{x_1}{t_1} = u(x_1).
+\end{equation}
+This is called the \emph{characteristic line} in the method of characteristics
+(this is probably the textbook way to do the problem).
+But the point is that, for a $\delta$ source at $t_0, x_0$, the impulse response
+is
+\begin{align}
+    G\p{t - t_0, x - x_0}
+        &=
+            \delta\p{x - x_0 + \Delta x\p{t - t_0}}.
+\end{align}
+so we sum over it as
+\begin{align}
+    f
+        &=
+            \int\limits_{-\infty}^\infty
+            \int\limits_{-\infty}^\infty
+            G\p{t - t_0, x - x_0}
+            g(x_0)
+            \;\mathrm{d}x_0\;\mathrm{d}t_0,\\
+        &=
+            \int\limits_{-\infty}^\infty
+            \int\limits_{-\infty}^\infty
+            \delta\p{x - x_0 + \Delta x\p{t - t_0}}
+            g(x_0)
+            \Theta\p{t - t_0}
+            \;\mathrm{d}x_0\;\mathrm{d}t_0,\\
+        &=
+            \int\limits_{0}^t
+            g(x + \Delta x\p{t - t_0})
+            \;\mathrm{d}t_0.
+\end{align}
+In the case where $u = -1$ (as in the $\tau_{\rm d}$ case), $\Delta x\p{t - t_0}
+= -\p{t - t_0}$, and we can change the variables of integration using that $t_0=
+-x_0$ to obtain that
+\begin{equation}
+    f = \int\limits_{x}^{x + t}
+        g\p{x}\;\mathrm{d}x.
+\end{equation}
+This is exactly the result we had before.
+
 \end{document}
 
