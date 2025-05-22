@@ -2865,6 +2865,35 @@ The question now is, over a full ZLK cycle, does $\bm{j} \times \bm{e}$ point in
 a different direction or not?
 I guess that's not obvious haha.
 
+\subsection{Libation at Arbitrary Eccentricity: Eccentric ZLK Mechanism}
+
+If we reconsider the condition for co-precession:
+\begin{equation}
+    \frac{\cos^2 I_1}{
+            6\cos^2 I_1 - 3}
+        =
+            \frac{1 - e^2}{1 - 6e^2},
+\end{equation}
+but at a general eccentricity, and ask at what value of $I_1$ the condition can
+be satisfied for a particular $e$.
+To get some intuition, for large $e$, we can approximate $1 - e \equiv \delta e$
+and:
+\begin{align}
+    \frac{\cos^2 I_1}{
+            6\cos^2 I_1 - 3}
+        &\approx
+            \frac{2\delta e}{-5},\\
+    \cos^2 I_1
+        &\approx
+            \frac{6}{5}\delta e.
+\end{align}
+For $\delta e = 0.95$, the eccentricity of 2017 TNO201, we find $I_1 \approx
+76^\circ$.
+
+Interestingly, this shows that the ZLK \emph{resonance} appears at higher and
+higher $I$ as $e$ increases!
+This is borne out by our phase space portraits.
+
 \clearpage
 
 \section{05/01/25---Tidal Steady State}
