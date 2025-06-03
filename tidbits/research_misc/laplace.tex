@@ -256,5 +256,237 @@ obvious that they should? Setting $u = 1$, we find that
 \end{align}
 Not obvious.
 
+\clearpage
+
+\section{Constraints on Perturber}
+
+For the mechanism to work, we need a host star with mass $m_\star$ and a
+distant perturber with mass $m_2$.
+We will denote the planet's properties with $p$ subscripts.
+
+In order for the mechanism to work, we need to know the Laplace radius of the
+star as it spins down.
+This is easy to do by generalizing the expression in my paper with Melaine.
+The Laplace radius should be:
+\begin{align}
+    r_{\rm M}^5
+        &=
+            \frac{2k_{2,\star}}{3}
+                \frac{m_\star + m_2}{m_2}
+                \p{\frac{\omega_\star}{n_b}}^2
+                R_\star^5,\\
+% >>> (2 * 0.02 / 3 * 2 * ((2 * pi / (3 day))^2 / (G * (2 Msun) / (300 AU)^3)) * Rsun^5)^(1/5) / au
+% 0.410014
+    r_{\rm M}
+        &= 0.41\;\mathrm{au}
+            \p{\frac{k_2}{0.02}}^{1/5}
+            \p{\frac{\omega_\star}{2\pi / \p{3\;\mathrm{day}}}}^{2/5}
+            \p{\frac{m_2}{M_{\odot}}}^{-1/5}
+            \p{\frac{a_{\rm b}}{300\;\mathrm{AU}}}^{3/5}
+            \p{\frac{R_\star}{R_{\odot}}}.
+\end{align}
+Here, b subscripts denotes properties of the binary, and we've taken $m_\star =
+m_2 = M_{\odot}$.
+Thus, if a star spins down by $10\times$, its Laplace radius migrates by
+$10^{2/5} \approx 2.5$, or $r_{\rm M} \sim 0.16\;\mathrm{au}$.
+For reference, a planet on a $10\;\mathrm{day}$ orbit (typical of polar
+Neptunes) is located at $\sim 0.1\;\mathrm{au}$.
+% >>> (G * Msun / (2 * pi / (10 day))^2)^(1/3) / au
+% 0.090844
+
+In order for this mechanism to work, we really need to be looking at stellar
+companions a factor of $\sim 10 \times$ closer, since $10^{3/5} \sim 4$, so that
+it sweeps through the $0.1\;\mathrm{au}$ range.
+Moreover, considering that high-e migration typically circularizes the planet at
+$\sim 3\;\mathrm{day}$ (a few times the tidal radius $R_{\rm p} / (M_\star /
+m_{\rm p})^{1/3} \sim 0.01\;\mathrm{au}$), the Laplace plane transition will
+generally struggle to do much for post-high-e-migration.
+
+However, interestingly, if we consider instead CJ companions:
+\begin{equation}
+% >>> (2 * 0.02 / 3 * 2 * ((2 * pi / (3 day))^2 / (G * (Mjup) / (5 AU)^3)) * Rsun^5)^(1/5) / au
+% 0.162249
+    r_{\rm M}
+        = 0.16\;\mathrm{au}
+            \p{\frac{k_2}{0.02}}^{1/5}
+            \p{\frac{\omega_\star}{2\pi / \p{3\;\mathrm{day}}}}^{2/5}
+            \p{\frac{m_2}{M_{\rm J}}}^{-1/5}
+            \p{\frac{a_{\rm b}}{5\;\mathrm{AU}}}^{3/5}
+            \p{\frac{R_\star}{R_{\odot}}}.
+\end{equation}
+Thus, a CJ misaligned from an inner Neptune may introduce nontrivial Laplace
+plane transitions.
+Such a mechanism naturally arises from Petrovich+20, the current (only?) favored
+mechanism for polar Neptunes.
+However, if there is just primordial disk misalignment, then as the star spins
+down, the SE+CJ systems may experience this transition.
+Of course, there is no preferennce for $90^\circ$ once the star spins down, and
+since there is no dissipation, we should roughly have $\theta_{\rm \star-p, i}
+\sim \theta_{\rm p-CJ, f}$.
+But the obliquity will broadly oscillate!
+
+\clearpage
+
+\subsection{ZLK and Laplace Plane Transition Parameter Space}
+
+If we want the planet to undergo high-eccentricity migration via the ZLK +
+tides mechanism, then it will circularize no closer\footnote{It can circularize
+wider, if the eccentricity is so extreme that the eccentricity tide circularize
+the orbit before $a_{\rm  peri, \min}$ is reached, and it may not circularize at
+all, if the pericenter distance is too large to give efficient tidal
+dissipation.} than $\simeq 2a_{\rm peri, \min}$, where $a_{\rm peri, \min}$ is
+set by the combination of ZLK and short range forces.
+This is because orbital AM ($\propto \sqrt{a(1 - e^2)}$) is conserved by the
+eccentricity tide (driven by the pseudosynchronously-spinning planet).
+
+We can express $a_{\rm peri, \min}$ in terms of $j_{\min} \equiv \sqrt{1 -
+e_{\max}^2}$
+\begin{align}
+    a_{\rm peri, \min}
+        &=
+            aj_{\min},
+\end{align}
+where $j_{\min}$ satisfies (Liu, Munoz \& Lai 2015, with $m_\star + m_{\rm p}
+\approx m_\star$ taken)
+\begin{align}
+        \frac{9}{8}e_{\max}^2 &=
+        \frac{\epsilon_{\rm tide}}{15}
+            \p{\frac{1 + 3e_{\max}^2 + \tfrac{3e_{\max}^4}{8}}{j_{\min}^9} - 1}
+        +
+        \frac{\epsilon_{\rm rot}}{3}
+            \p{\frac{1}{j_{\min}^3} - 1}
+        +
+        \epsilon_{\rm GR} \p{\frac{1}{j_{\min}} - 1},\\
+        \label{eq:emax_srfs}
+    \epsilon_{\rm GR}
+        &= \frac{3Gm_{\star}^2 a_{\rm out}^3}{a^4c^2m_2},\\
+    \epsilon_{\rm tide}
+        &= \frac{15 m_{\rm p}
+            a_{\rm out}^3 k_{2,\star}R_\star^5}{
+                a^8 m_2},\\
+    \epsilon_{\rm rot}
+        &=
+            \frac{a_{\rm out}^3\,
+                k_{2,\star}R_\star^5}{2Ga^5 m_2}
+                \omega_{\rm \star}^2\nonumber\\
+        &=
+            \frac{(m_\star + m_2)
+                k_{2,\star}R_\star^5}{2a^5 m_2}
+                \p{\frac{\omega_{\rm \star}}{n_{\rm out}}}^2,
+\end{align}
+where the host star uses $\star$ subscripts, the planet $p$, and the
+perturbing/binary companion $2$; $a$ is the sma of the inner binary, and
+$a_{\rm out}$ refers to that of the outer binary (which we take to be circular
+for convenience).
+
+For young stellar hosts, which are typically rotating rapidly, $\epsilon_{\rm
+rot}$ dominates the short range force contributions.
+Taking $e_{\max} \approx 1$, we obtain
+\begin{align}
+    \frac{9}{8} &\approx \frac{\epsilon_{\rm rot}}{3j_{\min}^3},\\
+    j_{\min} &\approx
+        \frac{2}{3}\epsilon_{\rm rot}^{1/3},\\
+    \frac{a_{\rm peri, \min}}{a}
+        &\approx \frac{2}{3}\epsilon_{\rm rot}^{1/3},\\
+    \frac{a_{\rm peri, \min}}{R_\star}
+        &=
+            \frac{2}{3}
+            \p{\frac{(m_\star + m_2)k_{2,\star}}{2m_2}}^{1/3}
+            \p{\frac{R_\star}{a_0}}^{2/3}
+            \p{\frac{\omega_{\rm \star, 0}}{n_{\rm out}}}^{2/3},
+\end{align}
+where we have denoted $\omega_{\rm \star, 0}$ to point out that $a_{\rm peri,
+\min}$ is set by the star's early spin rate, and $a_0$ to remind us that this is
+the \emph{starting} sma of the planet.
+
+As such, we need $r_{\rm M}$, the Laplace radius, to cross $2a_{\rm peri, \min}$,
+where:
+\begin{align}
+    \frac{r_{\rm M, [0, f]}}{R_\star}
+        &=
+            \p{\frac{2k_{2,\star}}{3}
+                \frac{m_\star + m_2}{m_2}}^{1/5}
+                \p{\frac{\omega_{\rm \star,[0, f]}}{n_{\rm out}}}^{2/5}
+                ,
+\end{align}
+where the subscripts $0, f$ denote the dependence of the initial/final
+Laplace radii on the initial/final stellar spin frequency.
+The hierarchy demanded by our scenario is, to be explicit:
+{\small
+\begin{align}
+    \p{\frac{2k_{2,\star}}{3}
+        \frac{m_\star + m_2}{m_2}}^{1/5}
+        \p{\frac{\omega_{\rm \star,f}}{n_{\rm out}}}^{2/5}
+        &<
+            \frac{4}{3}
+            \p{\frac{(m_\star + m_2)k_{2,\star}}{2m_2}}^{1/3}
+            \p{\frac{R_\star}{a_0}}^{2/3}
+            \p{\frac{\omega_{\rm \star, 0}}{n_{\rm out}}}^{2/3}
+        <
+    \p{\frac{2k_{2,\star}}{3}
+        \frac{m_\star + m_2}{m_2}}^{1/5}
+        \p{\frac{\omega_{\rm \star,0}}{n_{\rm out}}}^{2/5},\\
+    \p{\frac{\omega_{\rm \star,f}}{\omega_{\rm \star,0}}}^{2/5}
+        &<
+            \frac{4}{3}
+            \p{\frac{3}{2}}^{1/5}
+            \p{\frac{1}{2}}^{1/3}
+            \p{\frac{R_\star}{a_0}}^{2/3}
+            \p{\frac{k_{2,\star}(m_\star + m_2)}{m_2}}^{2/15}
+            \p{\frac{\omega_{\rm \star, 0}}{n_{\rm out}}}^{4/15}
+        <
+    1.\label{eq:constr}
+\end{align}}
+The key quantity to evaluate then is the middle quantity:
+\begin{align}
+    \frac{2a_{\rm peri, \min}}{r_{\rm M, 0}}
+        &\approx
+% >>> 4/3 * (3/2)^(1/5) * (1/2)^(1/3) * (Rsun / AU)^(2/3) * (0.04 * 2)^(2/15) * ((2 * pi / (3 day)) / (G * (2 Msun) / (100 AU)^3)^(1/2))^(4/15)
+% 0.472549
+        0.5
+            \p{\frac{R_\star}{R_{\odot}}}^{2/3}
+            \p{\frac{a_0}{\mathrm{au}}}^{-2/3}
+            \p{\frac{\omega_{\star, 0}}{2\pi / (3\;\mathrm{day})}}^{4/15}
+            \p{\frac{(m_\star + m_2) / m_2}{2}}^{2/15}
+            \p{\frac{a_{\rm out}}{100\;\mathrm{au}}}^{2/5}.
+\end{align}
+We've also taken $m_{\star} = m_2 = M_{\odot}$ and $k_{2,\star} = 0.04$, typical
+for Sun-like stars.
+
+Recalling that spindown can take us from $3\;\mathrm{day}$ to $30\;\mathrm{day}$
+spin periods, roughly, the quantity on the left hand side of
+Eq.~\eqref{eq:constr} evaluates to
+\begin{equation}
+    \p{\frac{\omega_{\rm \star,f}}{\omega_{\rm \star,0}}}^{2/5}
+        \simeq 0.4.
+\end{equation}
+So for the fiducial parameters above, the required hierarchy of scales works:
+$r_{\rm M}$ will indeed sweep through the location of the planet's present-day
+semi-major axis ($\simeq 2a_{\rm peri, \min}$).
+
+Of course, this is all conditional on the requirement that $a_{\rm peri, \min}$
+be close-in enough to induce merger.
+Using the standard planetary equilibrium tide, (e.g.\ Leconte+2010) and taking
+$e \to 1$, we obtain
+\begin{align}
+    \rd{\ln a}{t}
+        &\sim
+            \frac{3k_{\rm 2p}}{Q}
+            \frac{M_\star}{M_{\rm p}}
+            \p{\frac{R_{\rm p}}{a}}^5 n
+            \frac{231}{480\p{1 - e}^6},\\
+% >>> 1 / (3 * 0.3 / 1e3 * Msun / Mneptune * (Rneptune / (0.06 AU))^5 * (G * Msun / ((1 AU) * (0.06 AU)^2))^(1/2) * (231/480)) / yr
+% 7.279403e+09
+        &\sim
+            \frac{1}{8\;\mathrm{Gyr}}
+            \p{\frac{a_{\rm peri}}{0.06\;\mathrm{au}}}^{-6}
+            \p{\frac{a}{\mathrm{au}}}^{-1/2}
+            \p{\frac{M_\star / M_{\rm p}}{M_{\odot} / M_{\rm Nep}}}
+            \p{\frac{k_{\rm 2p} / Q}{0.3 / 10^3}}
+            \p{\frac{R_{\rm p}}{R_{\rm Nep}}}^{5}.
+\end{align}
+This can be helped somewhat by using that $R_{\rm p}$ likely larger for young
+planets, and may also be inflated by tidal heating.
+
 \end{document}
 
