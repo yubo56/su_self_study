@@ -3105,5 +3105,49 @@ In the case where $u = -1$ (as in the $\tau_{\rm d}$ case), $\Delta x\p{t - t_0}
 \end{equation}
 This is exactly the result we had before.
 
+\section{07/26/25---ZLK SRF}
+
+I think I've had the rotational SRF wrong for a while now.
+But it's very simple, so I just want to write it down.
+According to Fabrycky \& Tremaine 2007, the orbit average gravitational
+potential is
+\begin{equation}
+    \Phi_{\rm rot}
+        =
+            -\frac{m_1m_2}{3a^3 j^3}
+            \sum\limits_i
+            \frac{k_{2,i}R_i^5\Omega_i^2}{m_i}
+            P_2\p{\uv{\Omega} \cdot \uv{\jmath}},
+\end{equation}
+where $P_2(x) = (3x - 1) / 2$.
+Isolating the essential pieces that affect the apsidal precession, we write
+\begin{equation}
+    \Phi_{\rm rot, i}
+        \propto
+            \frac{3\p{\uv{\Omega} \cdot \bm{j}}^2}{j^5}
+            - \frac{1}{j^3}.
+\end{equation}
+Then, the Milankovitch equations give that (note that $\Phi$ has no explicit
+dependence on $\bm{e}$)
+\begin{align}
+    \rd{\bm{e}}{t}
+        &=
+            -\frac{1}{L}\p{\bm{e} \times \nabla_{\bm{j}}\Phi
+                + \bm{j} \times \nabla_{\bm{e}}\Phi},\\
+        &=
+            -\frac{1}{L}\bm{e} \times \s{
+                -\frac{15\bm{j}\p{\uv{\Omega} \cdot \bm{j}}^2}{j^7}
+                + \frac{6\uv{\Omega}\p{\uv{\Omega} \cdot \bm{j}}}{j^5}
+                + \frac{3\bm{j}}{j^5}
+            },\\
+        &\propto
+            -\frac{1}{6j^4}\s{
+                - \frac{5\cos^2\theta - 1}{2}(\bm{e} \times \uv{\jmath})
+                + (\bm{e} \times \uv{\Omega})\cos\theta
+            }.
+\end{align}
+Thus, just using the correct potential is sufficient to recover this result,
+which is given in Correia+11 and Anderson+21.
+
 \end{document}
 
