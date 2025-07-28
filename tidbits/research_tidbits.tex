@@ -3109,23 +3109,28 @@ This is exactly the result we had before.
 
 I think I've had the rotational SRF wrong for a while now.
 But it's very simple, so I just want to write it down.
-According to Fabrycky \& Tremaine 2007, the orbit average gravitational
-potential is
+According to Fabrycky \& Tremaine 2007 \emph{(EDIT\@: after careful
+consideration and reading, I've misread their result by a factor of $2$, since
+$k_2$ refers to the apsidal motion constant rather than the Love number)}, the
+orbit average gravitational potential is
 \begin{equation}
     \Phi_{\rm rot}
         =
-            -\frac{m_1m_2}{3a^3 j^3}
+            -\frac{m_1m_2}{6a^3 j^3}
+            P_2\p{\uv{\Omega} \cdot \uv{\jmath}}
             \sum\limits_i
-            \frac{k_{2,i}R_i^5\Omega_i^2}{m_i}
-            P_2\p{\uv{\Omega} \cdot \uv{\jmath}},
+            \frac{k_{2,i}R_i^5\Omega_i^2}{m_i},
 \end{equation}
 where $P_2(x) = (3x - 1) / 2$.
 Isolating the essential pieces that affect the apsidal precession, we write
 \begin{equation}
     \Phi_{\rm rot, i}
-        \propto
-            \frac{3\p{\uv{\Omega} \cdot \bm{j}}^2}{j^5}
-            - \frac{1}{j^3}.
+        =
+            -\frac{m_1m_2}{12a^3}
+            \sum\limits_i
+            \frac{k_{2,i}R_i^5\Omega_i^2}{m_i}
+            \p{\frac{3\p{\uv{\Omega}_i \cdot \bm{j}}^2}{j^5}
+               - \frac{1}{j^3}}.
 \end{equation}
 Then, the Milankovitch equations give that (note that $\Phi$ has no explicit
 dependence on $\bm{e}$)
@@ -3133,21 +3138,41 @@ dependence on $\bm{e}$)
     \rd{\bm{e}}{t}
         &=
             -\frac{1}{L}\p{\bm{e} \times \nabla_{\bm{j}}\Phi
-                + \bm{j} \times \nabla_{\bm{e}}\Phi},\\
+                + \bm{j} \times \nabla_{\bm{e}}\Phi}\nonumber\\
         &=
-            -\frac{1}{L}\bm{e} \times \s{
-                -\frac{15\bm{j}\p{\uv{\Omega} \cdot \bm{j}}^2}{j^7}
-                + \frac{6\uv{\Omega}\p{\uv{\Omega} \cdot \bm{j}}}{j^5}
+            \frac{1}{L_0}
+               \frac{m_1m_2}{12a^3}
+               \sum\limits_i
+               \frac{k_{2,i}R_i^5\Omega_i^2}{m_i}
+            \bm{e} \times \s{
+                -\frac{15\bm{j}\p{\uv{\Omega}_i \cdot \bm{j}}^2}{j^7}
+                + \frac{6\uv{\Omega}_i\p{\uv{\Omega}_i \cdot \bm{j}}}{j^5}
                 + \frac{3\bm{j}}{j^5}
+            }\nonumber\\
+        &=
+            \frac{m_{12}}{m_1m_2 a^2n}
+               \frac{m_1m_2}{a^3j^4}
+               \sum\limits_i
+               \frac{k_{2,i}R_i^5\Omega_i^2}{2m_i}
+            \s{
+                \frac{5\cos^2\theta_i - 1}{2}(\uv{\jmath} \times \bm{e})
+                - (\uv{\Omega}_i \times \bm{e})\cos\theta_i
             },\\
-        &\propto
-            -\frac{1}{6j^4}\s{
-                - \frac{5\cos^2\theta - 1}{2}(\bm{e} \times \uv{\jmath})
-                + (\bm{e} \times \uv{\Omega})\cos\theta
+        &=
+           n\frac{1}{j^4}
+               \sum\limits_i
+               \frac{k_{2,i}\hat{\Omega}_i^2}{2}
+               \p{\frac{R_i}{a}}^2
+            \s{
+                \frac{5\cos^2\theta_i - 1}{2}(\uv{\jmath} \times \bm{e})
+                - (\uv{\Omega}_i \times \bm{e})\cos\theta_i
             }.
 \end{align}
 Thus, just using the correct potential is sufficient to recover this result,
 which is given in Correia+11 and Anderson+21.
+Note that $k_{2,i} / 2$ is the key prefactor, which is probably why the Love
+number and the apsidal motion constant are named as such and differ by a factor
+of $2$.
 
 \end{document}
 
